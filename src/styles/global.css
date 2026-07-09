@@ -1,0 +1,371 @@
+/* =========================================================================
+   Alexandra — Design System
+   Mood: cald, liniștit, Provence, floral, autentic, aerisit, feminin discret.
+   O casă mică de piatră cu lavandă la geam și ceai cald pe masă.
+   ========================================================================= */
+
+:root {
+  /* --- Palette (spec) --- */
+  --bg-page: #f4ede6;        /* page background — warm cream */
+  --bg-soft: #fbf7f2;        /* soft raised surfaces / near-white */
+  --bg-card: #f6efe9;        /* cards */
+
+  --text-main: #312d1d;      /* main text — deep warm brown */
+  --text-secondary: #6e6050; /* muted text */
+  --text-muted: #907458;     /* labels / very muted */
+
+  --accent-lavender: #9a7a84;    /* dusty mauve — headline accent */
+  --accent-lavender-deep: #7d5f68;
+  --accent-sage: #aba286;        /* olive/sage — buttons */
+  --accent-sage-dark: #605132;
+  --accent-terracotta: #c79b77;
+  --accent-terracotta-deep: #b5865f;
+  --accent-pink: #ccbcc3;
+
+  --border-soft: #e7ddd2;
+  --button-bg: #aba286;
+  --button-bg-hover: #948b6f;
+  --button-text: #fff9f2;
+
+  /* --- Soft tints for section surfaces --- */
+  --tint-lavender: #efe7ea;
+  --tint-sage: #eae7db;
+  --tint-terracotta: #f2e7db;
+
+  /* --- Typography --- */
+  --font-script: 'The Girl Next Door', 'Segoe Script', 'Bradley Hand', cursive;
+  --font-display: 'Cormorant Garamond', ui-serif, Georgia, 'Times New Roman', serif;
+  --font-body: 'Lora', ui-serif, Georgia, 'Times New Roman', serif;
+
+  /* --- Rhythm & layout --- */
+  --container: 1280px;
+  --container-narrow: 760px;
+  --container-reading: 680px;
+  --pad-inline: clamp(1.25rem, 4vw, 3rem);   /* 20px mobile → 48px desktop */
+  --space-section: clamp(2.5rem, 6vw, 4.5rem); /* 40px mobile → 72px desktop */
+
+  --radius: 10px;            /* cards */
+  --radius-sm: 4px;          /* buttons / inputs */
+  --radius-lg: 18px;
+  --shadow-card: 0 8px 24px rgba(49, 45, 29, 0.06);
+  --shadow-soft: 0 16px 44px rgba(49, 45, 29, 0.1);
+
+  /* =====================================================================
+     Legacy aliases — keep older pages/components mapped to the new palette
+     so nothing goes uncolored. New work should use the tokens above.
+     ===================================================================== */
+  --cream: var(--bg-page);
+  --cream-deep: var(--bg-card);
+  --paper: var(--bg-soft);
+
+  --ink: var(--text-main);
+  --ink-soft: var(--text-secondary);
+  --ink-faint: var(--text-muted);
+
+  --lavender: var(--accent-lavender);
+  --lavender-deep: var(--accent-lavender-deep);
+  --lavender-soft: var(--accent-pink);
+  --lavender-tint: var(--tint-lavender);
+
+  --terracotta: var(--accent-terracotta);
+  --terracotta-deep: var(--accent-terracotta-deep);
+  --terracotta-tint: var(--tint-terracotta);
+
+  --sage: var(--accent-sage);
+  --sage-deep: var(--accent-sage-dark);
+  --sage-tint: var(--tint-sage);
+
+  --gold: var(--accent-terracotta);
+
+  --line: var(--border-soft);
+  --line-soft: #f0e8de;
+}
+
+/* --- Reset --- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font-body);
+  font-size: 1rem;          /* 16px */
+  line-height: 1.75;
+  color: var(--text-main);
+  background-color: var(--bg-page);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+
+img,
+picture,
+svg {
+  max-width: 100%;
+  display: block;
+}
+
+/* --- Typography --- */
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-display);
+  font-weight: 500;
+  line-height: 1.15;
+  color: var(--text-main);
+  letter-spacing: -0.02em;
+}
+
+h1 {
+  font-size: clamp(2.75rem, 6vw, 4rem);   /* up to 64px */
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+}
+
+h2 {
+  font-size: clamp(1.9rem, 3.5vw, 2.25rem); /* up to 36px */
+  line-height: 1.2;
+}
+
+h3 {
+  font-size: clamp(1.3rem, 2vw, 1.5rem);
+  line-height: 1.3;
+}
+
+p {
+  max-width: 68ch;
+}
+
+a {
+  color: var(--accent-sage-dark);
+  text-decoration-color: var(--accent-pink);
+  text-underline-offset: 3px;
+  transition: color 0.2s ease;
+}
+
+a:hover {
+  color: var(--accent-lavender-deep);
+}
+
+strong {
+  font-weight: 600;
+}
+
+/* --- Script accents --- */
+.script {
+  font-family: var(--font-script);
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  color: var(--accent-lavender);
+  line-height: 1.1;
+}
+
+/* --- Layout helpers --- */
+.container {
+  width: 100%;
+  max-width: var(--container);
+  margin-inline: auto;
+  padding-inline: var(--pad-inline);
+}
+
+.container-narrow {
+  max-width: var(--container-narrow);
+}
+
+.section {
+  padding-block: var(--space-section);
+}
+
+.eyebrow {
+  font-family: var(--font-body);
+  font-size: 0.6875rem;      /* 11px */
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  display: inline-block;
+  margin-bottom: 1rem;
+}
+
+.lead {
+  font-size: 1.125rem;       /* 18px */
+  line-height: 1.75;
+  color: var(--text-secondary);
+}
+
+.text-center {
+  text-align: center;
+}
+
+.mx-auto {
+  margin-inline: auto;
+}
+
+/* --- Buttons --- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 0.95rem;
+  letter-spacing: 0.01em;
+  padding: 0.875rem 1.75rem;  /* 14px 28px */
+  border-radius: var(--radius-sm);
+  border: 1.5px solid transparent;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background-color 0.2s ease, border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.btn-primary {
+  background-color: var(--button-bg);
+  color: var(--button-text);
+}
+
+.btn-primary:hover {
+  background-color: var(--button-bg-hover);
+  color: var(--button-text);
+}
+
+/* warm variant — used sparingly */
+.btn-warm {
+  background-color: var(--accent-terracotta);
+  color: var(--button-text);
+}
+
+.btn-warm:hover {
+  background-color: var(--accent-terracotta-deep);
+  color: var(--button-text);
+}
+
+/* outlined — e.g. "Abonează-te" in header */
+.btn-outline {
+  background-color: transparent;
+  color: var(--accent-sage-dark);
+  border-color: var(--accent-sage);
+}
+
+.btn-outline:hover {
+  background-color: var(--accent-sage);
+  color: var(--button-text);
+  border-color: var(--accent-sage);
+}
+
+.btn-ghost {
+  background-color: transparent;
+  color: var(--text-main);
+  border-color: var(--border-soft);
+}
+
+.btn-ghost:hover {
+  border-color: var(--accent-sage);
+  color: var(--accent-sage-dark);
+}
+
+/* --- Surfaces --- */
+.surface-cream {
+  background-color: var(--bg-card);
+}
+
+.surface-lavender {
+  background-color: var(--tint-lavender);
+}
+
+.surface-sage {
+  background-color: var(--tint-sage);
+}
+
+.card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-card);
+}
+
+/* --- Photo placeholder (swap for a real <img> when photos are ready) --- */
+.photo-ph {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background:
+    radial-gradient(120% 120% at 20% 15%, var(--tint-lavender) 0%, transparent 55%),
+    radial-gradient(120% 120% at 85% 90%, var(--tint-sage) 0%, transparent 55%),
+    linear-gradient(150deg, #efe7dd, #e9e2d4);
+  color: var(--accent-sage-dark);
+}
+
+.photo-ph::after {
+  content: attr(data-note);
+  position: absolute;
+  bottom: 1rem;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-family: var(--font-script);
+  font-size: 1.05rem;
+  color: var(--text-muted);
+  opacity: 0.75;
+  padding-inline: 1rem;
+}
+
+.photo-ph svg {
+  width: 64px;
+  height: 64px;
+  opacity: 0.5;
+}
+
+/* --- Botanical divider --- */
+.botanical-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent-sage);
+  opacity: 0.85;
+  margin-block: clamp(2rem, 5vw, 3.5rem);
+}
+
+.botanical-divider svg {
+  width: 120px;
+  height: auto;
+}
+
+/* --- Accessibility --- */
+:focus-visible {
+  outline: 2.5px solid var(--accent-lavender-deep);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

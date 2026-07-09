@@ -1,0 +1,184 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  article: CollectionEntry<'biblioteca'>;
+  featured?: boolean;
+}
+
+const { article, featured = false } = Astro.props;
+const { title, description, pubDate, category, image, imageAlt } = article.data;
+
+const dateLabel = pubDate
+  .toLocaleDateString('ro-RO', { day: 'numeric', month: 'short', year: 'numeric' })
+  .replace('.', '');
+
+// A soft botanical tint per category for the photo slot.
+const tints: Record<string, string> = {
+  Plante: 'var(--tint-sage)',
+  Aromaterapie: 'var(--tint-lavender)',
+  Ceaiuri: 'var(--tint-terracotta)',
+  'Stil de viață': 'var(--tint-sage)',
+  Familie: 'var(--tint-lavender)',
+  'Cărți & Conferințe': 'var(--tint-terracotta)',
+  Jurnal: 'var(--tint-lavender)',
+};
+const tint = tints[category] ?? 'var(--bg-card)';
+---
+
+<article class:list={['article-card', { featured }]}>
+  <a href={`/biblioteca/${article.id}`} class="card-link">
+    <div class="card-thumb photo-ph" style={`--tint:${tint}`}>
+      {image ? (
+        <img
+          class="card-photo"
+          src={image}
+          alt={imageAlt ?? ''}
+          loading="lazy"
+          decoding="async"
+          onerror="this.remove()"
+        />
+      ) : (
+        <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M20 34 V16" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" />
+          <path d="M20 17 c0-4 2.2-7.2 5.6-8.4 -0.3 4-2.2 7.2-5.6 8.4Z" fill="currentColor" fill-opacity="0.22" />
+          <path d="M20 17 c0-4 -2.2-7.2 -5.6-8.4 0.3 4 2.2 7.2 5.6 8.4Z" fill="currentColor" fill-opacity="0.22" />
+          <path d="M20 24 c0-3.2 2-5.8 5-7" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" />
+          <path d="M20 24 c0-3.2 -2-5.8 -5-7" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" />
+        </svg>
+      )}
+    </div>
+    <div class="card-body">
+      <p class="card-meta">
+        <span class="card-cat">{category}</span>
+        <span class="card-dot" aria-hidden="true">·</span>
+        <time datetime={pubDate.toISOString()}>{dateLabel}</time>
+      </p>
+      <h3 class="card-title">{title}</h3>
+      <p class="card-desc">{description}</p>
+      <span class="card-more">Citește mai mult →</span>
+    </div>
+  </a>
+</article>
+
+<style>
+  .article-card {
+    height: 100%;
+  }
+
+  .card-link {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    text-decoration: none;
+    color: inherit;
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow-card);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  }
+
+  .card-link:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-soft);
+  }
+
+  .card-thumb {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 16 / 10;
+    color: var(--accent-sage-dark);
+    background:
+      radial-gradient(120% 120% at 25% 20%, var(--tint) 0%, transparent 60%),
+      linear-gradient(150deg, #efe7dd, #e8e1d2);
+  }
+
+  .card-thumb::after {
+    content: none; /* no placeholder note on cards */
+  }
+
+  .card-thumb svg {
+    width: 52px;
+    height: 52px;
+    opacity: 0.7;
+  }
+
+  .card-photo {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .card-body {
+    padding: 1.25rem 1.3rem 1.4rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    flex: 1;
+  }
+
+  .card-meta {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.15rem 0.4rem;
+    font-size: 0.6875rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    max-width: none;
+  }
+
+  .card-meta time {
+    white-space: nowrap;
+  }
+
+  .card-cat {
+    font-weight: 600;
+    color: var(--accent-sage-dark);
+  }
+
+  .card-title {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 1.1875rem;
+    line-height: 1.3;
+    color: var(--text-main);
+    letter-spacing: -0.01em;
+  }
+
+  .card-desc {
+    color: var(--text-secondary);
+    font-size: 0.92rem;
+    line-height: 1.6;
+    flex: 1;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    max-width: none;
+  }
+
+  .card-more {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--accent-sage-dark);
+    margin-top: 0.25rem;
+  }
+
+  .card-link:hover .card-more {
+    color: var(--accent-lavender-deep);
+  }
+
+  .featured .card-link {
+    background-color: var(--bg-soft);
+  }
+
+  .featured .card-thumb {
+    aspect-ratio: 16 / 8;
+  }
+</style>

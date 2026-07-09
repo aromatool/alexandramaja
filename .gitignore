@@ -1,0 +1,20 @@
+# build output
+dist/
+# generated types
+.astro/
+# dependencies
+node_modules/
+# cloudflare / wrangler local runtime state
+.wrangler/
+# design mockups & AI image references (kept on disk, not in the deploy repo)
+generate/
+# logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+# environment variables
+.env
+.env.production
+# macOS
+.DS_Store

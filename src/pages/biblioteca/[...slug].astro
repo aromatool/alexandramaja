@@ -1,0 +1,309 @@
+---
+import { getCollection, render } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import NewsletterSignup from '../../components/NewsletterSignup.astro';
+import BotanicalDivider from '../../components/BotanicalDivider.astro';
+import ArticleCard from '../../components/ArticleCard.astro';
+
+export async function getStaticPaths() {
+  const articles = await getCollection('biblioteca', ({ data }) => !data.draft);
+  return articles.map((article) => ({
+    params: { slug: article.id },
+    props: { article },
+  }));
+}
+
+interface Props {
+  article: CollectionEntry<'biblioteca'>;
+}
+
+const { article } = Astro.props;
+const { title, description, pubDate, updatedDate, category, readingTime } = article.data;
+const { Content } = await render(article);
+
+const dateLabel = pubDate.toLocaleDateString('ro-RO', {
+  day: 'numeric',
+  month: 'long',
+  year: 'numeric',
+});
+const updatedLabel = updatedDate?.toLocaleDateString('ro-RO', {
+  day: 'numeric',
+  month: 'long',
+  year: 'numeric',
+});
+
+// A couple of related reads (same category first, then newest), excluding self.
+const all = (await getCollection('biblioteca', ({ data }) => !data.draft)).filter(
+  (a) => a.id !== article.id
+);
+const related = all
+  .sort((a, b) => {
+    const sameA = a.data.category === category ? 0 : 1;
+    const sameB = b.data.category === category ? 0 : 1;
+    if (sameA !== sameB) return sameA - sameB;
+    return b.data.pubDate.valueOf() - a.data.pubDate.valueOf();
+  })
+  .slice(0, 2);
+---
+
+<BaseLayout title={title} description={description} article>
+  <article class="post">
+    <!-- Article header -->
+    <header class="post-header">
+      <div class="container-reading mx-auto post-header-inner">
+        <a href="/biblioteca" class="post-back">← Biblioteca</a>
+        <span class="post-cat">{category}</span>
+        <h1 class="post-title">{title}</h1>
+        <p class="post-desc">{description}</p>
+        <p class="post-meta">
+          <time datetime={pubDate.toISOString()}>{dateLabel}</time>
+          {readingTime && <span aria-hidden="true"> · </span>}
+          {readingTime && <span>{readingTime}</span>}
+          {updatedLabel && <span class="post-updated"> · actualizat {updatedLabel}</span>}
+        </p>
+      </div>
+    </header>
+
+    <div class="post-divider" aria-hidden="true">
+      <BotanicalDivider />
+    </div>
+
+    <!-- Body -->
+    <div class="container-reading mx-auto prose">
+      <Content />
+    </div>
+
+    <!-- Signature -->
+    <div class="container-reading mx-auto post-signature">
+      <p class="post-signature-line">Cu drag,</p>
+      <p class="post-signature-name">Alexandra</p>
+    </div>
+  </article>
+
+  <!-- Newsletter -->
+  <section class="section post-newsletter">
+    <div class="container">
+      <NewsletterSignup
+        eyebrow="Ți-a plăcut?"
+        title="Hai să ținem legătura"
+        text="Dacă ți-a fost de folos, îți scriu o dată pe săptămână — gânduri, plante și lucruri pe care le învăț. Fără spam, poți renunța oricând."
+      />
+    </div>
+  </section>
+
+  {
+    related.length > 0 && (
+      <section class="section post-related">
+        <div class="container">
+          <h2 class="post-related-title">Continuă lectura</h2>
+          <div class="post-related-grid">
+            {related.map((a) => (
+              <ArticleCard article={a} />
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+</BaseLayout>
+
+<style>
+  .container-reading {
+    width: 100%;
+    max-width: var(--container-reading);
+    padding-inline: clamp(1.25rem, 5vw, 2rem);
+  }
+
+  .post-header {
+    padding-top: clamp(2.5rem, 6vw, 4.5rem);
+    text-align: center;
+  }
+
+  .post-back {
+    display: inline-block;
+    font-size: 0.9rem;
+    font-weight: 700;
+    text-decoration: none;
+    color: var(--ink-soft);
+    margin-bottom: 1.5rem;
+  }
+
+  .post-back:hover {
+    color: var(--lavender-deep);
+  }
+
+  .post-cat {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--terracotta);
+    margin-bottom: 0.9rem;
+  }
+
+  .post-title {
+    font-size: clamp(2.1rem, 5vw, 3.4rem);
+    margin-bottom: 1.1rem;
+  }
+
+  .post-desc {
+    font-size: clamp(1.1rem, 2vw, 1.3rem);
+    line-height: 1.6;
+    color: var(--ink-soft);
+    max-width: 54ch;
+    margin-inline: auto;
+  }
+
+  .post-meta {
+    margin-top: 1.5rem;
+    font-size: 0.9rem;
+    color: var(--ink-faint);
+    max-width: none;
+  }
+
+  .post-updated {
+    font-style: italic;
+  }
+
+  .post-divider {
+    margin-block: clamp(1.5rem, 4vw, 2.5rem);
+  }
+
+  /* ---- Prose / reading typography ---- */
+  .prose {
+    font-size: 1.15rem;
+    line-height: 1.85;
+    color: var(--ink);
+  }
+
+  .prose :global(> * + *) {
+    margin-top: 1.5rem;
+  }
+
+  .prose :global(p) {
+    max-width: none;
+  }
+
+  .prose :global(h2) {
+    font-size: clamp(1.6rem, 3vw, 2.1rem);
+    margin-top: 3rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .prose :global(h3) {
+    font-size: clamp(1.3rem, 2.4vw, 1.55rem);
+    margin-top: 2.25rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .prose :global(a) {
+    text-decoration: underline;
+    text-decoration-thickness: 1.5px;
+  }
+
+  .prose :global(strong) {
+    color: var(--ink);
+    font-weight: 700;
+  }
+
+  .prose :global(em) {
+    font-style: italic;
+  }
+
+  .prose :global(ul),
+  .prose :global(ol) {
+    padding-left: 1.4rem;
+  }
+
+  .prose :global(li) {
+    margin-top: 0.6rem;
+  }
+
+  .prose :global(li)::marker {
+    color: var(--sage);
+  }
+
+  .prose :global(blockquote) {
+    margin-inline: 0;
+    padding: 1.25rem 1.75rem;
+    border-left: 3px solid var(--lavender-soft);
+    background-color: var(--lavender-tint);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    font-style: italic;
+    color: var(--ink);
+  }
+
+  .prose :global(blockquote p) {
+    margin-top: 0;
+  }
+
+  .prose :global(img) {
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-card);
+    margin-block: 2rem;
+  }
+
+  .prose :global(hr) {
+    border: none;
+    height: 1px;
+    background-color: var(--line);
+    margin-block: 2.5rem;
+  }
+
+  .prose :global(code) {
+    font-size: 0.92em;
+    background-color: var(--cream-deep);
+    padding: 0.15em 0.4em;
+    border-radius: 6px;
+  }
+
+  /* Signature */
+  .post-signature {
+    margin-top: clamp(2.5rem, 6vw, 4rem);
+    padding-top: 2rem;
+    border-top: 1px solid var(--line);
+  }
+
+  .post-signature-line {
+    color: var(--ink-soft);
+    margin-bottom: 0.25rem;
+  }
+
+  .post-signature-name {
+    font-family: var(--font-display);
+    font-size: 1.8rem;
+    color: var(--lavender-deep);
+  }
+
+  .post-newsletter {
+    padding-top: clamp(3rem, 7vw, 5rem);
+  }
+
+  /* Related */
+  .post-related {
+    padding-top: 0;
+  }
+
+  .post-related-title {
+    text-align: center;
+    margin-bottom: 2.5rem;
+  }
+
+  .post-related-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.75rem;
+    max-width: 820px;
+    margin-inline: auto;
+  }
+
+  @media (max-width: 620px) {
+    .post-related-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

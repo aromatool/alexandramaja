@@ -1,0 +1,353 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ArticleCard from '../../components/ArticleCard.astro';
+import NewsletterSignup from '../../components/NewsletterSignup.astro';
+import BotanicalDivider from '../../components/BotanicalDivider.astro';
+
+const articles = (await getCollection('biblioteca', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
+
+// The library's shelves. These are the enduring structure of Alexandra's
+// knowledge base — shown in full even before every shelf is stocked, so the
+// vision is legible from day one. `slug` powers deep-links (/biblioteca#plante).
+const shelves = [
+  { name: 'Plante', emoji: '🌿', slug: 'plante' },
+  { name: 'Aromaterapie', emoji: '🌸', slug: 'aromaterapie' },
+  { name: 'Ceaiuri', emoji: '🍵', slug: 'ceaiuri' },
+  { name: 'Stil de viață', emoji: '🌞', slug: 'stil-de-viata' },
+  { name: 'Familie', emoji: '💛', slug: 'familie' },
+  { name: 'Cărți & Conferințe', emoji: '📚', slug: 'carti-conferinte' },
+  { name: 'Jurnal', emoji: '✍️', slug: 'jurnal' },
+];
+
+// A haystack per article for the client-side search (title + description +
+// category), normalized to lowercase without diacritics on the client.
+const items = articles.map((article) => ({
+  article,
+  category: article.data.category,
+  search: `${article.data.title} ${article.data.description} ${article.data.category}`,
+}));
+
+const total = articles.length;
+---
+
+<BaseLayout
+  title="Biblioteca Alexandrei"
+  description="Un loc unde adun plante, experiențe, conferințe, cărți și toate lucrurile care m-au ajutat să înțeleg mai bine omul și natura."
+>
+  <!-- Header -->
+  <section class="section lib-hero">
+    <div class="container text-center">
+      <span class="eyebrow">Biblioteca</span>
+      <h1 class="lib-title">Biblioteca Alexandrei</h1>
+      <p class="lead mx-auto lib-subtitle">
+        Un loc unde adun plante, experiențe, conferințe, cărți și toate
+        lucrurile care m-au ajutat să înțeleg mai bine omul și natura.
+      </p>
+    </div>
+  </section>
+
+  <!-- Search + filters -->
+  <section class="lib-controls">
+    <div class="container">
+      <form class="lib-search" role="search" onsubmit="return false;">
+        <svg class="lib-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true">
+          <circle cx="11" cy="11" r="7" />
+          <path d="M20 20l-3.2-3.2" />
+        </svg>
+        <input
+          type="search"
+          id="lib-q"
+          class="lib-search-input"
+          placeholder="Caută în bibliotecă — o plantă, un gând, un titlu…"
+          aria-label="Caută în bibliotecă"
+          autocomplete="off"
+        />
+      </form>
+
+      <nav class="lib-filters" aria-label="Categorii">
+        <button type="button" class="lib-chip is-active" data-filter="all" data-slug="toate">
+          Toate articolele
+        </button>
+        {
+          shelves.map((s) => (
+            <button type="button" class="lib-chip" data-filter={s.name} data-slug={s.slug}>
+              <span class="lib-chip-emoji" aria-hidden="true">{s.emoji}</span>
+              {s.name}
+            </button>
+          ))
+        }
+      </nav>
+    </div>
+  </section>
+
+  <!-- Grid -->
+  <section class="section lib-grid-section">
+    <div class="container">
+      {
+        total === 0 ? (
+          <div class="lib-empty">
+            <p class="lead mx-auto">
+              Primele rânduri sunt pe drum. Rafturile se umplu încet, cu grijă. 🌿
+            </p>
+          </div>
+        ) : (
+          <>
+            <div class="lib-grid" id="lib-grid">
+              {items.map(({ article, category, search }) => (
+                <div class="lib-item" data-category={category} data-search={search}>
+                  <ArticleCard article={article} />
+                </div>
+              ))}
+            </div>
+            <div class="lib-empty lib-no-results" id="lib-no-results" hidden>
+              <p class="lead mx-auto">
+                Încă nu am scris nimic aici — dar raftul acesta așteaptă. Între
+                timp, caută altceva sau răsfoiește <button type="button" class="lib-reset" data-reset>toate articolele</button>.
+              </p>
+            </div>
+          </>
+        )
+      }
+    </div>
+  </section>
+
+  <BotanicalDivider />
+
+  <section class="section">
+    <div class="container">
+      <NewsletterSignup
+        eyebrow="Rămâi aproape"
+        title="Primește fiecare rând nou în inbox"
+        text="Scriu o dată pe săptămână — plante, gânduri și lucruri pe care le învăț. Direct ție, fără spam. Poți renunța oricând."
+      />
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  const strip = (s: string) =>
+    s
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[̀-ͯ]/g, '');
+
+  const grid = document.getElementById('lib-grid');
+  const items = Array.from(document.querySelectorAll<HTMLElement>('.lib-item'));
+  const chips = Array.from(document.querySelectorAll<HTMLButtonElement>('.lib-chip'));
+  const input = document.getElementById('lib-q') as HTMLInputElement | null;
+  const noResults = document.getElementById('lib-no-results');
+
+  // Pre-compute a normalized haystack once.
+  for (const el of items) {
+    el.dataset.haystack = strip(el.dataset.search || '');
+  }
+
+  let activeFilter = 'all';
+
+  const apply = () => {
+    const q = input ? strip(input.value.trim()) : '';
+    let shown = 0;
+    for (const el of items) {
+      const matchCat = activeFilter === 'all' || el.dataset.category === activeFilter;
+      const matchQ = !q || (el.dataset.haystack || '').includes(q);
+      const show = matchCat && matchQ;
+      el.hidden = !show;
+      if (show) shown++;
+    }
+    if (noResults) noResults.hidden = shown !== 0;
+  };
+
+  const setFilter = (filter: string, slug: string, push = true) => {
+    activeFilter = filter;
+    for (const chip of chips) {
+      chip.classList.toggle('is-active', chip.dataset.filter === filter);
+    }
+    if (push) {
+      const hash = filter === 'all' ? ' ' : `#${slug}`;
+      history.replaceState(null, '', filter === 'all' ? location.pathname : hash);
+    }
+    apply();
+  };
+
+  for (const chip of chips) {
+    chip.addEventListener('click', () => {
+      setFilter(chip.dataset.filter || 'all', chip.dataset.slug || 'toate');
+    });
+  }
+
+  input?.addEventListener('input', apply);
+
+  document.querySelector('[data-reset]')?.addEventListener('click', () => {
+    if (input) input.value = '';
+    setFilter('all', 'toate');
+  });
+
+  // Deep-link support: /biblioteca#plante preselects that shelf.
+  const fromHash = () => {
+    const slug = location.hash.replace('#', '');
+    const chip = chips.find((c) => c.dataset.slug === slug);
+    if (chip) setFilter(chip.dataset.filter || 'all', slug, false);
+  };
+  fromHash();
+  window.addEventListener('hashchange', fromHash);
+</script>
+
+<style>
+  .lib-hero {
+    padding-bottom: clamp(1.25rem, 3vw, 2rem);
+  }
+
+  .lib-title {
+    margin-block: 0.5rem 1.1rem;
+    letter-spacing: -0.01em;
+  }
+
+  .lib-subtitle {
+    max-width: 58ch;
+    font-style: italic;
+  }
+
+  /* ---- Controls ---- */
+  .lib-controls {
+    position: sticky;
+    top: var(--header-h, 72px);
+    z-index: 5;
+    padding-block: 1rem 1.1rem;
+    background-color: color-mix(in srgb, var(--bg-body) 88%, transparent);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border-soft);
+  }
+
+  .lib-search {
+    position: relative;
+    max-width: 560px;
+    margin-inline: auto;
+  }
+
+  .lib-search-icon {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 18px;
+    height: 18px;
+    color: var(--text-muted);
+    pointer-events: none;
+  }
+
+  .lib-search-input {
+    width: 100%;
+    font-family: var(--font-body);
+    font-size: 1rem;
+    color: var(--text-main);
+    background-color: var(--bg-soft);
+    border: 1px solid var(--border-soft);
+    border-radius: 999px;
+    padding: 0.8rem 1.2rem 0.8rem 2.9rem;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .lib-search-input::placeholder {
+    color: var(--text-muted);
+  }
+
+  .lib-search-input:focus {
+    outline: none;
+    border-color: var(--accent-sage);
+    box-shadow: 0 0 0 3px var(--tint-sage);
+  }
+
+  .lib-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    justify-content: center;
+    margin-top: 1rem;
+  }
+
+  .lib-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    background-color: var(--bg-soft);
+    border: 1px solid var(--border-soft);
+    border-radius: 999px;
+    padding: 0.4rem 0.95rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  }
+
+  .lib-chip:hover {
+    border-color: var(--accent-sage);
+    color: var(--text-main);
+  }
+
+  .lib-chip.is-active {
+    background-color: var(--accent-sage);
+    border-color: var(--accent-sage);
+    color: var(--button-text);
+  }
+
+  .lib-chip-emoji {
+    font-size: 0.95rem;
+    line-height: 1;
+  }
+
+  /* ---- Grid ---- */
+  .lib-grid-section {
+    padding-top: clamp(2rem, 5vw, 3rem);
+  }
+
+  .lib-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.75rem;
+  }
+
+  .lib-item {
+    display: block;
+  }
+
+  .lib-item[hidden] {
+    display: none;
+  }
+
+  .lib-empty {
+    text-align: center;
+    padding-block: clamp(2rem, 6vw, 4rem);
+  }
+
+  .lib-reset {
+    font: inherit;
+    color: var(--accent-sage-dark);
+    background: none;
+    border: none;
+    padding: 0;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+
+  .lib-reset:hover {
+    color: var(--accent-lavender-deep);
+  }
+
+  @media (max-width: 900px) {
+    .lib-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  @media (max-width: 560px) {
+    .lib-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

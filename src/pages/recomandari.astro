@@ -1,0 +1,225 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import NewsletterSignup from '../components/NewsletterSignup.astro';
+import BotanicalDivider from '../components/BotanicalDivider.astro';
+
+// Free things Alexandra hands over gladly. Most are still on the way — shown
+// now so the shape of the shelf is visible, with a gentle "get notified" door.
+const picks = [
+  {
+    emoji: '📄',
+    title: 'Ghiduri',
+    text: 'Ghiduri așezate, pe teme care revin des — de citit în tihnă și de păstrat.',
+    status: 'soon',
+  },
+  {
+    emoji: '✅',
+    title: 'Checklist-uri',
+    text: 'Liste simple, de pus pe frigider. Câțiva pași clari, fără complicații.',
+    status: 'soon',
+  },
+  {
+    emoji: '📚',
+    title: 'Cărțile care m-au format',
+    text: 'Ce citesc, ce recitesc și ce aș pune în mâna cuiva drag — cu un cuvânt despre fiecare.',
+    status: 'available',
+    action: { href: '/biblioteca#carti-conferinte', label: 'Vezi în bibliotecă' },
+  },
+  {
+    emoji: '🌿',
+    title: 'Recomandări de încredere',
+    text: 'Lucruri, locuri și oameni în care am încredere. Fără reclame, doar ce folosesc cu adevărat.',
+    status: 'soon',
+  },
+];
+---
+
+<BaseLayout
+  title="Recomandările mele"
+  description="Lucrurile pe care ți le pun cu drag în mână — ghiduri, checklist-uri, cărți și recomandări de încredere. Adunate încet, oferite din inimă."
+>
+  <!-- Hero -->
+  <section class="section rec-hero">
+    <div class="container text-center">
+      <span class="eyebrow">Recomandările mele</span>
+      <h1 class="rec-title">Lucrurile pe care ți le pun cu drag în mână</h1>
+      <p class="lead mx-auto rec-sub">
+        Aici adun, încet, ce m-a ajutat pe mine: ghiduri, liste simple, cărți și
+        recomandări în care am încredere. Nimic vândut — doar lucruri oferite din
+        inimă, atunci când sunt gata.
+      </p>
+    </div>
+  </section>
+
+  <!-- Picks -->
+  <section class="section rec-grid-section">
+    <div class="container">
+      <div class="rec-grid">
+        {
+          picks.map((p) => (
+            <article class:list={['rec-card', `is-${p.status}`]}>
+              <span class="rec-emoji" aria-hidden="true">{p.emoji}</span>
+              <h3 class="rec-card-title">
+                {p.title}
+                {p.status === 'soon' && <span class="rec-badge">În curând</span>}
+              </h3>
+              <p class="rec-card-text">{p.text}</p>
+              {p.action ? (
+                <a href={p.action.href} class="rec-link">
+                  {p.action.label} →
+                </a>
+              ) : (
+                <a href="#rec-newsletter" class="rec-link rec-link-muted">
+                  Anunță-mă când apare →
+                </a>
+              )}
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Someday: premium zone (kept as a gentle promise, not a sale) -->
+  <section class="section">
+    <div class="container-narrow mx-auto rec-someday">
+      <span class="eyebrow">Într-o zi</span>
+      <h2>Un colț doar pentru cei apropiați</h2>
+      <p>
+        Cu timpul, o parte dintre materiale vor trăi într-un spațiu mai liniștit,
+        pentru cei care vor să meargă mai în profunzime. Fără grabă și fără
+        presiune — se va deschide când va fi cu adevărat gata.
+      </p>
+      <p class="rec-someday-note">
+        Până atunci, tot ce e mai bun rămâne aici, la vedere. 🌿
+      </p>
+    </div>
+  </section>
+
+  <BotanicalDivider />
+
+  <section id="rec-newsletter" class="section">
+    <div class="container">
+      <NewsletterSignup
+        eyebrow="Primești tu, primul"
+        title="Îți scriu de îndată ce apare ceva nou"
+        text="Când public un ghid, o listă sau o recomandare, cei de pe scrisoare află primii. O dată pe săptămână, fără spam. Poți renunța oricând."
+      />
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .rec-hero {
+    padding-bottom: clamp(1.5rem, 4vw, 2.5rem);
+  }
+
+  .rec-title {
+    margin-block: 0.5rem 1.25rem;
+    max-width: 18ch;
+    margin-inline: auto;
+  }
+
+  .rec-sub {
+    max-width: 60ch;
+  }
+
+  /* Grid */
+  .rec-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.75rem;
+    max-width: 900px;
+    margin-inline: auto;
+  }
+
+  .rec-card {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius);
+    padding: 1.75rem 1.6rem;
+    box-shadow: var(--shadow-card);
+  }
+
+  .rec-emoji {
+    font-size: 1.6rem;
+    line-height: 1;
+    width: 3rem;
+    height: 3rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background-color: var(--tint-sage);
+    margin-bottom: 0.4rem;
+  }
+
+  .rec-card-title {
+    font-size: 1.25rem;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+  }
+
+  .rec-badge {
+    font-family: var(--font-body);
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    background-color: var(--bg-soft);
+    border: 1px solid var(--border-soft);
+    border-radius: 999px;
+    padding: 0.2rem 0.7rem;
+  }
+
+  .rec-card-text {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    flex: 1;
+    max-width: none;
+  }
+
+  .rec-link {
+    margin-top: 0.5rem;
+    font-weight: 600;
+    color: var(--accent-sage-dark);
+    text-decoration: none;
+  }
+
+  .rec-link:hover {
+    color: var(--accent-lavender-deep);
+  }
+
+  .rec-link-muted {
+    color: var(--text-muted);
+    font-weight: 500;
+  }
+
+  /* Someday */
+  .rec-someday h2 {
+    margin-block: 0.5rem 1rem;
+  }
+
+  .rec-someday p {
+    color: var(--text-secondary);
+  }
+
+  .rec-someday-note {
+    margin-top: 1rem;
+    font-style: italic;
+    color: var(--text-muted);
+  }
+
+  @media (max-width: 620px) {
+    .rec-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

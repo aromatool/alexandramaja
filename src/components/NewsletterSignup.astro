@@ -1,0 +1,204 @@
+---
+interface Props {
+  id?: string;
+  eyebrow?: string;
+  title?: string;
+  text?: string;
+  variant?: 'panel' | 'card' | 'slim';
+}
+
+const { variant = 'panel', id = 'newsletter' } = Astro.props;
+
+// Sensible per-variant defaults (overridable via props).
+const defaults = {
+  panel: {
+    eyebrow: 'Scrisoarea Alexandrei',
+    title: 'O scrisoare pe săptămână, la cafeaua de dimineață',
+    text: 'Fără zgomot, fără spam. Doar gânduri, plante și lucruri pe care le-am învățat — trimise direct ție. Poți renunța oricând.',
+  },
+  card: {
+    eyebrow: '',
+    title: 'Scrisori de suflet',
+    text: 'Gânduri, inspirație și recomandări direct în inboxul tău. O scrisoare pe săptămână, de la mine pentru tine.',
+  },
+  slim: {
+    eyebrow: 'Scrisoarea Alexandrei',
+    title: 'Rămâi aproape',
+    text: 'O scrisoare pe săptămână — gânduri, plante și lucruri pe care le învăț.',
+  },
+};
+
+const d = defaults[variant];
+const {
+  eyebrow = d.eyebrow,
+  title = d.title,
+  text = d.text,
+} = Astro.props;
+---
+
+<section id={id} class:list={['newsletter', variant]}>
+  <div class="newsletter-inner">
+    {variant === 'card'
+      ? <span class="script newsletter-script">{title}</span>
+      : (
+        <>
+          {eyebrow && <span class="eyebrow">{eyebrow}</span>}
+          <h2>{title}</h2>
+        </>
+      )}
+    <p class="newsletter-text">{text}</p>
+
+    {/*
+      TODO (integrare reală): înlocuiește logica cu endpoint-ul de la
+      MailerLite / Kit (ConvertKit). Lista de email = activul vostru; rămâne
+      a voastră indiferent de tool. Deocamdată formularul afișează un mesaj
+      de mulțumire, ca demonstrație.
+    */}
+    <form class="newsletter-form" name="newsletter" data-newsletter>
+      <label class="visually-hidden" for={`${id}-email`}>Adresa ta de email</label>
+      <input
+        id={`${id}-email`}
+        type="email"
+        name="email"
+        required
+        autocomplete="email"
+        placeholder="Adresa ta de email"
+      />
+      <button type="submit" class="btn btn-primary">Mă abonez</button>
+    </form>
+    <p class="newsletter-note" data-newsletter-note hidden>
+      Mulțumesc — te-ai abonat. Ne vedem în inbox. 🌿
+    </p>
+    <p class="newsletter-fineprint">Fără spam. Doar conținut valoros.</p>
+  </div>
+</section>
+
+<style>
+  /* ---------- Panel (default, big centered) ---------- */
+  .newsletter.panel {
+    background-color: var(--tint-lavender);
+    border-radius: var(--radius-lg);
+    padding: clamp(2.5rem, 6vw, 4.5rem);
+    text-align: center;
+  }
+
+  .newsletter.panel .newsletter-inner {
+    max-width: 620px;
+    margin-inline: auto;
+  }
+
+  .newsletter.panel h2 {
+    margin-bottom: 0.75rem;
+  }
+
+  .newsletter.panel .newsletter-text {
+    font-size: 1.125rem;
+    color: var(--text-secondary);
+    margin-inline: auto;
+  }
+
+  .newsletter.panel .newsletter-form {
+    max-width: 480px;
+    margin-inline: auto;
+  }
+
+  /* ---------- Card (homepage column) ---------- */
+  .newsletter.card {
+    background-color: var(--tint-lavender);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius);
+    padding: 1.75rem 1.6rem;
+  }
+
+  .newsletter-script {
+    font-size: 1.9rem;
+    display: block;
+    margin-bottom: 0.6rem;
+  }
+
+  .newsletter.card .newsletter-text {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+  }
+
+  .newsletter.card .newsletter-form {
+    flex-direction: column;
+    gap: 0.7rem;
+  }
+
+  .newsletter.card .newsletter-form .btn {
+    width: 100%;
+  }
+
+  /* ---------- Slim ---------- */
+  .newsletter.slim {
+    background: transparent;
+    padding: 0;
+  }
+
+  /* ---------- Shared ---------- */
+  .newsletter-text {
+    max-width: none;
+  }
+
+  .newsletter-form {
+    display: flex;
+    gap: 0.6rem;
+    margin-top: 1.5rem;
+  }
+
+  .newsletter-form input {
+    flex: 1;
+    font-family: var(--font-body);
+    font-size: 1rem;
+    padding: 0.85rem 1.1rem;
+    border-radius: var(--radius-sm);
+    border: 1.5px solid var(--border-soft);
+    background-color: var(--bg-soft);
+    color: var(--text-main);
+    width: 100%;
+  }
+
+  .newsletter-form input::placeholder {
+    color: var(--text-muted);
+  }
+
+  .newsletter-form input:focus {
+    outline: none;
+    border-color: var(--accent-sage);
+  }
+
+  .newsletter-note {
+    margin-top: 1rem;
+    font-weight: 600;
+    color: var(--accent-sage-dark);
+  }
+
+  .newsletter-fineprint {
+    margin-top: 0.9rem;
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    max-width: none;
+  }
+
+  @media (max-width: 520px) {
+    .newsletter.panel .newsletter-form {
+      flex-direction: column;
+    }
+    .newsletter.panel .newsletter-form .btn {
+      width: 100%;
+    }
+  }
+</style>
+
+<script>
+  // Demo behaviour until the real email provider is connected.
+  document.querySelectorAll<HTMLFormElement>('form[data-newsletter]').forEach((form) => {
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const note = form.parentElement?.querySelector<HTMLElement>('[data-newsletter-note]');
+      form.hidden = true;
+      if (note) note.hidden = false;
+    });
+  });
+</script>
