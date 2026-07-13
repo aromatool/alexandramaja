@@ -4,18 +4,30 @@ import sitemap from '@astrojs/sitemap';
 import markdoc from '@astrojs/markdoc';
 import react from '@astrojs/react';
 import keystatic from '@keystatic/astro';
-// import cloudflare from '@astrojs/cloudflare'; // Pasul 2 (deploy) — see note below
 
 // Site URL used for SEO, canonical links and sitemap generation.
 // Change to https://alexandramaja.com if that becomes the primary domain.
 //
-// Architecture note: the public site stays static (every article/page is
-// prerendered to plain HTML on the free Cloudflare CDN). Only Keystatic's
-// admin routes (/keystatic, /api/keystatic) run on-demand — that's why we
-// have an adapter. React is required because Keystatic's editor UI is a React
-// app; it is NOT used by the public pages.
+// Architecture note (Pasul 2 — deploy):
+// The public site is 100% STATIC. Every page and article is prerendered to
+// plain HTML and served from Cloudflare Pages' free CDN — no server, no
+// adapter, no running cost.
+//
+// Keystatic (the content editor) and React (which its admin UI needs) are
+// loaded ONLY DURING LOCAL DEV (`npm run dev` → /keystatic). They are left
+// OUT of the production build on purpose, so `astro build` produces a pure
+// static `dist/` that deploys anywhere for free. Alexandra keeps editing on
+// this computer; changes go live by pushing to GitHub.
+//
+// Pasul 3 (later): switch Keystatic to GitHub storage + add an adapter so the
+// editor can run on the live site and she can publish straight from a browser.
+const isDev = process.argv.includes('dev');
+
 export default defineConfig({
   site: 'https://alexandramaja.ro',
-  integrations: [markdoc(), react(), keystatic(), sitemap()],
-  // adapter: cloudflare(),
+  integrations: [
+    markdoc(),
+    sitemap(),
+    ...(isDev ? [react(), keystatic()] : []),
+  ],
 });
