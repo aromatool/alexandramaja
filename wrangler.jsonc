@@ -1,15 +1,16 @@
 {
-  // Cloudflare Workers — static assets deploy.
-  // The public site is 100% static HTML/CSS/JS built by `npm run build` into
-  // ./dist. There is NO server code (no "main"): Cloudflare just serves the
-  // files from ./dist on its global CDN. `npx wrangler deploy` reads this file.
+  // Cloudflare Workers deploy (Astro Cloudflare adapter, Workers-only).
   //
-  // Pasul 3 (later): when Keystatic runs on the live site, we add a "main"
-  // Worker entry (via the Astro Cloudflare adapter) here, keeping this same
-  // assets binding.
+  // The public site is prerendered to static files in ./dist and served from
+  // the CDN via the ASSETS binding. Keystatic's admin API route runs on-demand
+  // in the Worker (entrypoint below). `nodejs_compat` is required because
+  // Keystatic's server code uses Node APIs. `npx wrangler deploy` reads this.
   "name": "alexandramaja",
+  "main": "./dist/_worker.js/index.js",
   "compatibility_date": "2025-07-01",
+  "compatibility_flags": ["nodejs_compat"],
   "assets": {
-    "directory": "./dist"
+    "directory": "./dist",
+    "binding": "ASSETS"
   }
 }

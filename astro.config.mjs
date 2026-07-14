@@ -4,30 +4,27 @@ import sitemap from '@astrojs/sitemap';
 import markdoc from '@astrojs/markdoc';
 import react from '@astrojs/react';
 import keystatic from '@keystatic/astro';
+import cloudflare from '@astrojs/cloudflare';
 
 // Site URL used for SEO, canonical links and sitemap generation.
 // Change to https://alexandramaja.com if that becomes the primary domain.
 //
-// Architecture note (Pasul 2 — deploy):
-// The public site is 100% STATIC. Every page and article is prerendered to
-// plain HTML and served from Cloudflare Pages' free CDN — no server, no
-// adapter, no running cost.
+// Architecture (Pasul 3 — publicare din browser):
+// The PUBLIC site stays STATIC — every page/article is prerendered to plain
+// HTML and served from Cloudflare's free CDN. The ONLY on-demand route is
+// Keystatic's admin API (/api/keystatic/...), which runs inside the Cloudflare
+// Worker so Alexandra can log in with GitHub and publish straight from the
+// browser. A failed build never takes the site down — Cloudflare keeps the
+// last good deploy live.
 //
-// Keystatic (the content editor) and React (which its admin UI needs) are
-// loaded ONLY DURING LOCAL DEV (`npm run dev` → /keystatic). They are left
-// OUT of the production build on purpose, so `astro build` produces a pure
-// static `dist/` that deploys anywhere for free. Alexandra keeps editing on
-// this computer; changes go live by pushing to GitHub.
-//
-// Pasul 3 (later): switch Keystatic to GitHub storage + add an adapter so the
-// editor can run on the live site and she can publish straight from a browser.
-const isDev = process.argv.includes('dev');
-
+// React powers Keystatic's editor UI. The `react-dom/server.edge` alias below
+// is a REQUIRED Cloudflare + React 19 workaround — without it the Worker
+// throws "MessageChannel is not defined" at deploy time.
 export default defineConfig({
   site: 'https://alexandramaja.ro',
-  integrations: [
-    markdoc(),
-    sitemap(),
-    ...(isDev ? [react(), keystatic()] : []),
-  ],
+  integrations: [react(), markdoc(), keystatic(), sitemap()],
+  adapter: cloudflare(),
+  vite: import.meta.env.PROD
+    ? { resolve: { alias: { 'react-dom/server': 'react-dom/server.edge' } } }
+    : {},
 });

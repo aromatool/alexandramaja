@@ -4,12 +4,15 @@ import { config, fields, collection } from '@keystatic/core';
 // It writes plain Markdoc + images straight back into the repo, so the
 // content stays an owned, portable asset (never locked into a platform).
 //
-// storage: 'local' = Pasul 1. The editor edits files on this computer via
-// `npm run dev` → /keystatic. Later (Pasul 3) we switch this to
-// { kind: 'github', repo: 'utilizator/alexandramaja' } so Alexandra can
-// publish from the browser on the live site.
+// Storage mode is chosen automatically by environment:
+//  • LOCAL dev (`npm run dev` → /keystatic): edits files on THIS computer.
+//  • PRODUCTION (live site): GitHub mode — Alexandra logs in with GitHub and
+//    her changes are committed straight to the repo, which auto-rebuilds the
+//    site. This is what makes browser publishing (Pasul 3) work.
 export default config({
-  storage: { kind: 'local' },
+  storage: import.meta.env.DEV
+    ? { kind: 'local' }
+    : { kind: 'github', repo: 'aromatool/alexandramaja' },
   ui: {
     brand: { name: 'Alexandra Maja' },
     navigation: {
