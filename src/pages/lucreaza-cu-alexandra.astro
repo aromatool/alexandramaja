@@ -663,6 +663,11 @@ const faqs = [
     margin-inline: auto;
   }
 
+  /* `hidden` trebuie să învingă `display: flex` de mai sus. */
+  .booking-form[hidden] {
+    display: none;
+  }
+
   .field {
     display: flex;
     flex-direction: column;
