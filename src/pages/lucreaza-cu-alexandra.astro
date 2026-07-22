@@ -2,484 +2,611 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import BotanicalDivider from '../components/BotanicalDivider.astro';
 
-// The offerings, in the order Alexandra wants people to meet them: the free,
-// low-pressure door first; the paid/personal things next; the "someday"
-// things clearly marked; and the Young Living mention kept deliberately quiet.
-const offers = [
+// O SINGURĂ ofertă la MVP. Pagina nu e un meniu de servicii — e o invitație
+// la o singură întâlnire, gândită în jurul transformării (de la „copleșit și
+// pe bucăți” → la „limpede, așezat și însoțit”). Fără coș, fără urgență,
+// fără limbaj de coach, fără promisiuni medicale.
+
+// Numele ofertei — PROVIZORIU. De validat în vocea Alexandrei.
+const offerName = 'Un răgaz cu Alexandra';
+
+// Cum decurge întâlnirea — pași, nu „features”.
+const flow = [
   {
-    emoji: '🤍',
-    kicker: 'Când ai o întrebare concretă',
-    title: 'Consultații',
-    text: 'Dacă ai o situație anume și vrei o privire de ansamblu, putem vorbi — calm, fără grabă. Îți spun sincer ce cred și ce aș încerca eu.',
-    fineprint:
-      'Ca să fim clari: nu pun diagnostice, nu înlocuiesc medicul sau farmacistul și nu promit vindecări. Lucrez lângă medicină, nu în locul ei.',
-    status: 'available',
-    action: { href: '#contact', label: 'Hai să vorbim' },
+    step: '01',
+    title: 'Începem cu o discuție',
+    text: 'Nu cu o listă de simptome. Îmi povestești cum îți e — cum dormi, cum mănânci, ce te apasă, ce te bucură. Eu ascult și pun întrebări. De aici încep să se lege lucrurile.',
   },
   {
-    emoji: '🌿',
-    kicker: 'Făcute cu mâna mea',
-    title: 'Produsele mele',
-    text: 'Ceaiuri, blenduri, creme și lucruri handmade — pregătite în cantități mici, cu ingrediente în care am încredere. Apar aici pe măsură ce sunt gata.',
-    tags: ['Ceaiuri', 'Blenduri', 'Creme', 'Handmade'],
-    status: 'soon',
+    step: '02',
+    title: 'Facem o scanare ZYTO',
+    text: 'O citire bioenergetică, blândă și neinvazivă — pui mâna pe un senzor, atât. Nu e un test medical și nu pune diagnostice. E o hartă în plus, care ne ajută să vedem unde să ne uităm mai atent.',
   },
   {
-    emoji: '🌾',
-    kicker: 'Împreună, față în față',
-    title: 'Workshop-uri',
-    text: 'Întâlniri mici, pe teme care revin des — plante, aromaterapie, ritualuri simple de zi cu zi. Cine e pe scrisoare află primul când deschid înscrierile.',
-    status: 'soon',
+    step: '03',
+    title: 'Așezăm totul la un loc',
+    text: 'Îți explic ce văd, pe înțelesul tău, fără termeni care sperie. Legăm ce mi-ai povestit cu ce arată scanarea — ca să vezi întregul, nu bucăți.',
   },
   {
-    emoji: '💧',
-    kicker: 'Discret, doar dacă te interesează',
-    title: 'Uleiuri esențiale (Young Living)',
-    text: 'Dacă te interesează felul în care folosesc eu uleiurile și vrei să înveți mai mult, putem discuta. Fără liste, fără presiune, fără „echipe”. Doar informație, dacă o cauți.',
-    status: 'quiet',
-    action: { href: '#contact', label: 'Putem discuta' },
+    step: '04',
+    title: 'Pleci cu o direcție',
+    text: 'Câțiva pași concreți, potriviți pentru tine: plante, uleiuri esențiale, obiceiuri mici, lucruri de schimbat încet. Nimic copleșitor. De unde să începi, și încotro.',
   },
 ];
 
-const notFor = [
-  'Nu promit vindecări și nu înlocuiesc medicul sau farmacistul.',
-  'Nu folosesc frica ca să te fac să cumperi ceva.',
-  'Nu ofer soluții universale, „bune pentru toată lumea”.',
-  'Nu recomand produse înainte să înțeleg omul din fața mea.',
+// Ce iei cu tine — rezultatul emoțional, nu „ce primești”.
+const takeaways = [
+  'Sentimentul că, în sfârșit, cineva s-a uitat la tine întreg.',
+  'Claritate: de unde să începi și ce contează cu adevărat acum.',
+  'Un plan simplu, al tău — nu o listă de reguli generale.',
+  'Liniștea de a nu mai bâjbâi singură prin informații.',
 ];
+
+// Pentru cine e / pentru cine nu — auto-selecție onestă.
+const forYou = [
+  'Simți că faci multe „cum trebuie”, dar tot nu se așază nimic.',
+  'Vrei să înțelegi întregul, nu doar să stingi un simptom.',
+  'Cauți pe cineva care ascultă, nu care îți vinde.',
+  'Ești dispusă să mergi încet și cu răbdare.',
+];
+
+const notForYou = [
+  'Cauți un diagnostic sau un tratament medical.',
+  'Vrei o soluție rapidă, „o pastilă” care rezolvă tot.',
+  'Aștepți promisiuni de vindecare — eu nu le fac.',
+];
+
+// FAQ — răspunde la fricile reale, cu sinceritate.
+const faqs = [
+  {
+    q: 'Înlocuiește asta medicul?',
+    a: 'Nu, în niciun caz. Nu sunt medic, nu pun diagnostice și nu recomand să întrerupi un tratament. Lucrez lângă medicină, nu în locul ei — pe partea de stil de viață, plante și obiceiuri.',
+  },
+  {
+    q: 'Ce este, de fapt, scanarea ZYTO?',
+    a: 'O citire bioenergetică. Pui mâna pe un senzor și softul măsoară niște răspunsuri ale corpului. E o unealtă de orientare, educativă — nu un test medical și nu un diagnostic. O folosesc ca să văd unde merită să ne uităm mai atent.',
+  },
+  {
+    q: 'Îmi promiți că mă fac bine?',
+    a: 'Nu promit rezultate. Ar fi necinstit. Ce pot să-ți promit e că mă uit la tine cu atenție, îți spun sincer ce cred și îți dau o direcție clară de la care să pornești.',
+  },
+  {
+    q: 'Cât durează și cum ne întâlnim?',
+    a: 'Ne rezervăm timp fără grabă — de obicei în jur de 90 de minute. Ne vedem față în față. După ce trimiți cererea, îți scriu personal ca să stabilim ziua.',
+  },
+];
+
+// Întrebările de reflecție din formularul de cerere (fluxul C).
+// Nu întreb „ce serviciu vrei” — întreb ca să înțeleg omul.
 ---
 
 <BaseLayout
-  title="Lucrează cu Alexandra"
-  description="Fără presiune, fără promisiuni. Doar claritate. De la scrisorile săptămânale la o discuție om cu om — hai să ne cunoaștem încet."
+  title={offerName}
+  description="O întâlnire față în față, fără grabă — o discuție holistică, o scanare ZYTO și o direcție clară, potrivită pentru tine. Fără diagnostice, fără promisiuni. Doar o privire întreagă asupra ta."
 >
-  <!-- ===================== HERO ===================== -->
-  <section class="work-hero">
-    <div class="container work-hero-inner">
-      <div class="work-hero-text">
-        <span class="eyebrow">Lucrează cu Alexandra</span>
-        <h1 class="work-hero-title">Fără presiune.<br />Doar claritate.</h1>
-        <p class="lead work-hero-sub">
-          Nu alerg după clienți și nu încerc să-ți vând nimic. Prefer să ne
-          cunoaștem încet. Tu citești, eu scriu. Dacă simți că gândim la fel,
-          următorul pas vine natural.
+  <!-- ===================== 1. RECUNOAȘTEREA (HERO) ===================== -->
+  <section class="ragaz-hero">
+    <div class="container-narrow mx-auto ragaz-hero-inner">
+      <span class="eyebrow">Lucrează cu Alexandra</span>
+      <h1 class="ragaz-hero-title">{offerName}</h1>
+      <div class="ragaz-hero-body">
+        <p class="lead">
+          Sunt momente în care simți că le faci pe toate „cum trebuie" —
+          mănânci mai atent, iei ce ți se recomandă, citești, încerci — și
+          totuși ceva nu se așază.
         </p>
+        <p>
+          Ești obosită într-un fel pe care somnul nu-l repară. Ai o grămadă de
+          informații, dar nicio direcție. Și, undeva, o întrebare pe care n-ai
+          apucat s-o pui cu voce tare: <em>„oare fac ce trebuie pentru mine?"</em>
+        </p>
+        <p>
+          Nu ai nevoie de încă un sfat aruncat în trecere. Ai nevoie de cineva
+          care să se așeze cu tine, să asculte întregul — nu doar simptomul — și
+          să te ajute să vezi limpede de unde să începi.
+        </p>
+        <p class="ragaz-hero-close">Asta facem, în răgazul ăsta.</p>
       </div>
-      <div class="work-hero-photo" role="img" aria-label="Un ceai cald, un caiet și câteva plante pe masă"></div>
-    </div>
-  </section>
-
-  <!-- ===================== START HERE (newsletter) ===================== -->
-  <section class="section start-here-section">
-    <div class="container">
-      <div class="start-here">
-        <div class="start-here-body">
-          <span class="start-here-kicker">Începe de aici</span>
-          <h2 class="start-here-title">
-            <span class="start-here-emoji" aria-hidden="true">📨</span>
-            Scrisorile săptămânale
-          </h2>
-          <p class="start-here-text">
-            Cel mai bun mod de a mă cunoaște. Îți scriu o dată pe săptămână —
-            gânduri, plante și lucruri pe care le învăț. E gratuit și poți
-            renunța oricând, dintr-un singur click.
-          </p>
-        </div>
-        <form class="start-here-form" data-newsletter>
-          <label class="visually-hidden" for="sh-email">Adresa ta de email</label>
-          <input
-            id="sh-email"
-            name="email"
-            type="email"
-            required
-            autocomplete="email"
-            placeholder="adresa ta de email"
-          />
-          <button type="submit" class="btn btn-primary">Mă abonez — gratuit</button>
-          <p class="start-here-note" data-newsletter-note hidden>
-            Gata — te-ai abonat. Ne auzim săptămâna asta. 🌿
-          </p>
-        </form>
-      </div>
-    </div>
-  </section>
-
-  <!-- ===================== OTHER WAYS ===================== -->
-  <section class="section surface-cream offers-section">
-    <div class="container">
-      <div class="offers-head text-center">
-        <span class="eyebrow">Și, în timp</span>
-        <h2>Alte feluri în care ne putem întâlni</h2>
-      </div>
-      <div class="offers-list">
-        {
-          offers.map((o) => (
-            <article class:list={['offer', `is-${o.status}`]}>
-              <span class="offer-emoji" aria-hidden="true">{o.emoji}</span>
-              <div class="offer-body">
-                <div class="offer-heading">
-                  <span class="offer-kicker">{o.kicker}</span>
-                  <h3 class="offer-title">
-                    {o.title}
-                    {o.status === 'soon' && <span class="offer-badge">În curând</span>}
-                  </h3>
-                </div>
-                <p class="offer-text">{o.text}</p>
-                {o.tags && (
-                  <ul class="offer-tags">
-                    {o.tags.map((t) => (
-                      <li>{t}</li>
-                    ))}
-                  </ul>
-                )}
-                {o.fineprint && <p class="offer-fineprint">{o.fineprint}</p>}
-                {o.action && (
-                  <a href={o.action.href} class="offer-link">
-                    {o.action.label} →
-                  </a>
-                )}
-              </div>
-            </article>
-          ))
-        }
-      </div>
-    </div>
-  </section>
-
-  <!-- ===================== WHAT THIS IS NOT ===================== -->
-  <section class="section">
-    <div class="container-narrow mx-auto not-for">
-      <span class="eyebrow">Ca să fim de la început sinceri</span>
-      <h2>Ce nu găsești la mine</h2>
-      <ul class="not-for-list">
-        {
-          notFor.map((item) => (
-            <li>
-              <span class="not-for-mark" aria-hidden="true">—</span>
-              {item}
-            </li>
-          ))
-        }
-      </ul>
-      <p class="not-for-note">
-        Dacă lucrurile astea îți sună a ușurare, nu a lipsă — atunci suntem pe
-        aceeași lungime de undă.
-      </p>
+      <a href="#programare" class="btn btn-primary ragaz-hero-cta">Hai să ne întâlnim</a>
     </div>
   </section>
 
   <BotanicalDivider />
 
-  <!-- ===================== CONTACT ===================== -->
-  <section id="contact" class="section contact-section">
-    <div class="container-narrow mx-auto contact">
-      <div class="text-center contact-head">
-        <span class="eyebrow">Scrie-mi</span>
-        <h2>Ai o întrebare?</h2>
+  <!-- ===================== 2. FELUL ÎN CARE GÂNDESC ===================== -->
+  <section class="section surface-cream">
+    <div class="container-narrow mx-auto philosophy">
+      <span class="eyebrow">Felul în care gândesc</span>
+      <div class="philosophy-block">
+        <h2 class="philosophy-h">Cred că trupul nu se citește pe bucăți.</h2>
+        <p>
+          De prea multe ori suntem tratați ca o listă de probleme separate:
+          aici digestia, dincolo somnul, mai încolo energia. Eu nu lucrez așa.
+          Când stăm de vorbă, mă uit la om întreg — la felul în care trăiești,
+          dormi, respiri, la ce te apasă și la ce te hrănește. De acolo încep să
+          se lege lucrurile.
+        </p>
+      </div>
+      <div class="philosophy-block">
+        <h2 class="philosophy-h">Nu-ți promit rezultate și nu-ți dau diagnostice.</h2>
+        <p>
+          Nu sunt medic și nu înlocuiesc medicul. Ce fac eu e altceva: te ajut
+          să te înțelegi mai bine și să-ți construiești un ritm de viață care
+          are sens <em>pentru tine</em> — cu plante, cu uleiuri esențiale, cu
+          obiceiuri mici, cu răbdare. Restul vine în timp, firesc.
+        </p>
+      </div>
+      <div class="philosophy-block">
+        <h2 class="philosophy-h">Merg pe încredere, nu pe presiune.</h2>
+        <p>
+          N-o să te grăbesc, n-o să-ți vând nimic de care n-ai nevoie și n-o să
+          te fac să simți că „mai e un pas, și încă unul". Dacă lucrăm împreună,
+          e pentru că amândouă simțim că are sens. Atât.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== 3. CUM DECURGE ===================== -->
+  <section class="section">
+    <div class="container-narrow mx-auto">
+      <div class="flow-head text-center">
+        <span class="eyebrow">Cum decurge întâlnirea</span>
+        <h2>Fără grabă, pas cu pas</h2>
+      </div>
+      <ol class="flow-list">
+        {
+          flow.map((f) => (
+            <li class="flow-item">
+              <span class="flow-step" aria-hidden="true">{f.step}</span>
+              <div class="flow-body">
+                <h3 class="flow-title">{f.title}</h3>
+                <p class="flow-text">{f.text}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <!-- ===================== 4. CE IEI CU TINE ===================== -->
+  <section class="section surface-lavender">
+    <div class="container-narrow mx-auto">
+      <div class="takeaways-head text-center">
+        <span class="eyebrow">Ce iei cu tine</span>
+        <h2>Nu pleci cu o listă. Pleci cu o direcție.</h2>
+      </div>
+      <ul class="takeaways-list">
+        {
+          takeaways.map((t) => (
+            <li class="takeaway">
+              <span class="takeaway-mark" aria-hidden="true">🌿</span>
+              <span>{t}</span>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- ===================== 5. PENTRU CINE E / NU E ===================== -->
+  <section class="section">
+    <div class="container-narrow mx-auto">
+      <div class="fit-grid">
+        <div class="fit-col">
+          <span class="eyebrow">Ți se potrivește dacă</span>
+          <ul class="fit-list is-yes">
+            {forYou.map((item) => (
+              <li><span class="fit-mark" aria-hidden="true">✓</span>{item}</li>
+            ))}
+          </ul>
+        </div>
+        <div class="fit-col">
+          <span class="eyebrow">Poate nu e pentru tine dacă</span>
+          <ul class="fit-list is-no">
+            {notForYou.map((item) => (
+              <li><span class="fit-mark" aria-hidden="true">—</span>{item}</li>
+            ))}
+          </ul>
+        </div>
+      </div>
+      <p class="fit-note text-center">
+        Prefer să fim sincere de la început. Dacă ceva din stânga îți sună a
+        ușurare, probabil suntem pe aceeași lungime de undă.
+      </p>
+    </div>
+  </section>
+
+  <!-- ===================== 6. ÎNTREBĂRI FRECVENTE ===================== -->
+  <section class="section surface-cream">
+    <div class="container-narrow mx-auto">
+      <div class="faq-head text-center">
+        <span class="eyebrow">Întrebări frecvente</span>
+        <h2>Lucrurile pe care e firesc să le întrebi</h2>
+      </div>
+      <div class="faq-list">
+        {
+          faqs.map((f) => (
+            <details class="faq-item">
+              <summary class="faq-q">{f.q}</summary>
+              <p class="faq-a">{f.a}</p>
+            </details>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== 7. PREȚUL ===================== -->
+  <section class="section">
+    <div class="container-narrow mx-auto price">
+      <span class="eyebrow">Cât costă</span>
+      <div class="price-card">
+        <p class="price-amount">
+          {/* TODO: preț real, de confirmat cu Alexandra. Placeholder. */}
+          350&nbsp;lei
+        </p>
+        <p class="price-what">
+          O întâlnire față în față, fără grabă (~90 de minute): discuția
+          holistică, scanarea ZYTO, interpretarea ei și direcția personală cu
+          care pleci.
+        </p>
+        <p class="price-note">
+          Prefer să fie clar de la început. Fără costuri ascunse, fără „pachete"
+          și fără să te împing spre alte servicii după.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <BotanicalDivider />
+
+  <!-- ===================== 8. INVITAȚIA / PROGRAMARE (flux C) ===================== -->
+  <section id="programare" class="section surface-sage">
+    <div class="container-narrow mx-auto booking">
+      <div class="booking-head text-center">
+        <span class="eyebrow">Programare</span>
+        <h2>Dacă simți că are sens, hai să ne întâlnim</h2>
         <p class="lead mx-auto">
-          Spune-mi în câteva rânduri despre ce e vorba. Citesc fiecare mesaj și
-          răspund cât de repede pot — de obicei în câteva zile.
+          Nu e un buton de „cumpără acum". Îmi lași câteva rânduri despre tine,
+          eu îți răspund personal și, dacă simțim amândouă că e potrivit,
+          stabilim ziua. Fără presiune — poți să te răzgândești oricând.
         </p>
       </div>
 
       {/*
         TODO (integrare reală): conectează formularul la un serviciu de email
-        (ex. Formspree, sau endpoint propriu). Deocamdată afișează un mesaj de
-        mulțumire, ca demonstrație.
+        (Formspree / endpoint propriu). Fluxul C: cererea ajunge la Alexandra,
+        ea confirmă personal, apoi omul plătește ca să rezerve. Plata NU e
+        automată pe site — deliberat. Deocamdată afișează un mesaj de mulțumire.
       */}
-      <form class="contact-form" data-contact>
+      <form class="booking-form" data-booking>
         <div class="field">
-          <label for="c-name">Numele tău</label>
-          <input id="c-name" name="name" type="text" required autocomplete="name" />
+          <label for="b-name">Numele tău</label>
+          <input id="b-name" name="name" type="text" required autocomplete="name" />
         </div>
         <div class="field">
-          <label for="c-email">Adresa de email</label>
-          <input id="c-email" name="email" type="email" required autocomplete="email" />
+          <label for="b-email">Adresa de email</label>
+          <input id="b-email" name="email" type="email" required autocomplete="email" />
         </div>
         <div class="field">
-          <label for="c-message">Mesajul tău</label>
-          <textarea id="c-message" name="message" rows="5" required></textarea>
+          <label for="b-why">Ce te-a făcut să te gândești la întâlnirea asta acum?</label>
+          <textarea id="b-why" name="why" rows="3"></textarea>
         </div>
-        <button type="submit" class="btn btn-warm">Trimite</button>
+        <div class="field">
+          <label for="b-hope">Ce ai vrea să înțelegi mai bine despre tine?</label>
+          <textarea id="b-hope" name="hope" rows="3"></textarea>
+        </div>
+        <button type="submit" class="btn btn-warm">Trimite cererea</button>
+        <p class="booking-fineprint">
+          Îți răspund personal, de obicei în câteva zile. Nu ajungi pe nicio
+          listă și nu primești mesaje automate.
+        </p>
       </form>
-      <p class="contact-note" data-contact-note hidden>
-        Mulțumesc — am primit mesajul tău. Îți răspund cât de curând. 🌿
+      <p class="booking-note" data-booking-note hidden>
+        Mulțumesc — am primit rândurile tale. Îți scriu personal în câteva zile,
+        ca să vedem împreună dacă e potrivit. 🌿
       </p>
+    </div>
+  </section>
+
+  <!-- ===================== 9. NOTA PERSONALĂ ===================== -->
+  <section class="section personal">
+    <div class="container-reading mx-auto personal-inner">
+      <p class="personal-text">
+        Nu fac asta ca să adun clienți. O fac pentru că îmi place să văd omul
+        din fața mea cum începe să respire mai ușor când, în sfârșit, cineva
+        se așază lângă el și ascultă. Dacă simți că e momentul, te aștept.
+      </p>
+      <p class="personal-sign script">Alexandra</p>
+    </div>
+  </section>
+
+  <!-- ===================== 10. OFF-RAMP NEWSLETTER ===================== -->
+  <section class="section surface-cream offramp">
+    <div class="container-narrow mx-auto text-center">
+      <span class="eyebrow">Dacă nu e încă momentul</span>
+      <h2 class="offramp-h">Nu-i nicio grabă</h2>
+      <p class="lead mx-auto offramp-text">
+        Poate vrei doar să mă cunoști mai întâi. Îți scriu o dată pe săptămână —
+        gânduri, plante și lucruri pe care le învăț. E gratuit și poți renunța
+        oricând.
+      </p>
+      <form class="offramp-form" data-newsletter>
+        <label class="visually-hidden" for="or-email">Adresa ta de email</label>
+        <input
+          id="or-email"
+          name="email"
+          type="email"
+          required
+          autocomplete="email"
+          placeholder="adresa ta de email"
+        />
+        <button type="submit" class="btn btn-outline">Mă abonez — gratuit</button>
+        <p class="offramp-note" data-newsletter-note hidden>
+          Gata — te-ai abonat. Ne auzim săptămâna asta. 🌿
+        </p>
+      </form>
     </div>
   </section>
 </BaseLayout>
 
 <style>
-  /* ===================== HERO ===================== */
-  .work-hero {
-    padding-block: clamp(2.5rem, 6vw, 4.5rem);
-  }
-
-  .work-hero-inner {
-    display: grid;
-    grid-template-columns: 1.1fr 0.9fr;
-    align-items: center;
-    gap: clamp(2rem, 5vw, 4rem);
-  }
-
-  .work-hero-title {
-    margin-block: 0.5rem 1.25rem;
-    font-size: clamp(2.4rem, 5.5vw, 3.8rem);
-    line-height: 1.05;
-  }
-
-  .work-hero-sub {
-    max-width: 46ch;
-    margin-inline: 0;
-  }
-
-  .work-hero-photo {
-    --photo: url('/images/lucreaza-hero.jpg');
-    aspect-ratio: 4 / 5;
-    border-radius: var(--radius);
-    border: 1px solid var(--border-soft);
-    box-shadow: var(--shadow-soft);
-    background-image:
-      var(--photo),
-      radial-gradient(120% 120% at 30% 20%, var(--tint-lavender) 0%, transparent 60%),
-      linear-gradient(150deg, #efe7dd, #e8e1d2);
-    background-size: cover, auto, auto;
-    background-position: center;
-    background-repeat: no-repeat;
-  }
-
-  /* ===================== START HERE ===================== */
-  .start-here {
-    display: grid;
-    grid-template-columns: 1.2fr 0.8fr;
-    align-items: center;
-    gap: clamp(1.5rem, 4vw, 3rem);
-    background-color: var(--tint-lavender);
-    border: 1px solid var(--accent-pink);
-    border-radius: var(--radius-lg, 20px);
-    padding: clamp(1.75rem, 4vw, 2.75rem);
-  }
-
-  .start-here-kicker {
-    font-size: 0.75rem;
-    font-weight: 700;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: var(--accent-lavender-deep);
-  }
-
-  .start-here-title {
-    margin-block: 0.5rem 0.75rem;
-    font-size: clamp(1.6rem, 3.5vw, 2.3rem);
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-  }
-
-  .start-here-emoji {
-    font-size: 1.5rem;
-  }
-
-  .start-here-text {
-    color: var(--text-secondary);
-    max-width: 52ch;
-  }
-
-  .start-here-form {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-  }
-
-  .start-here-form input {
-    font-family: var(--font-body);
-    font-size: 1rem;
-    padding: 0.85rem 1.1rem;
-    border-radius: var(--radius);
-    border: 1.5px solid var(--border-soft);
-    background-color: var(--bg-page);
-    color: var(--text-main);
-    width: 100%;
-  }
-
-  .start-here-form input:focus {
-    outline: none;
-    border-color: var(--accent-lavender);
-  }
-
-  .start-here-form .btn {
-    width: 100%;
-  }
-
-  .start-here-note {
-    margin-top: 0.25rem;
-    font-weight: 600;
-    color: var(--accent-sage-dark);
+  /* ===================== 1. HERO / RECUNOAȘTERE ===================== */
+  .ragaz-hero {
+    padding-block: clamp(3rem, 7vw, 5.5rem) clamp(1.5rem, 4vw, 2.5rem);
     text-align: center;
   }
 
-  /* ===================== OFFERS ===================== */
-  .offers-head {
-    max-width: 620px;
-    margin-inline: auto;
-    margin-bottom: clamp(2rem, 4vw, 3rem);
+  .ragaz-hero-title {
+    margin-block: 0.25rem 1.75rem;
   }
 
-  .offers-head h2 {
+  .ragaz-hero-body {
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+  }
+
+  .ragaz-hero-body p {
+    margin-inline: auto;
+  }
+
+  .ragaz-hero-close {
+    font-family: var(--font-display);
+    font-size: clamp(1.25rem, 2.5vw, 1.6rem);
+    color: var(--accent-lavender-deep);
     margin-top: 0.5rem;
   }
 
-  .offers-list {
+  .ragaz-hero-cta {
+    margin-top: 2rem;
+  }
+
+  /* ===================== 2. FILOZOFIE ===================== */
+  .philosophy-block + .philosophy-block {
+    margin-top: clamp(1.75rem, 4vw, 2.5rem);
+  }
+
+  .philosophy-h {
+    font-size: clamp(1.4rem, 2.8vw, 1.75rem);
+    margin-bottom: 0.75rem;
+  }
+
+  .philosophy p {
+    color: var(--text-secondary);
+  }
+
+  /* ===================== 3. CUM DECURGE ===================== */
+  .flow-head {
+    margin-bottom: clamp(2rem, 4vw, 3rem);
+  }
+  .flow-head h2 {
+    margin-top: 0.5rem;
+  }
+
+  .flow-list {
+    list-style: none;
     display: flex;
     flex-direction: column;
-    max-width: 780px;
-    margin-inline: auto;
   }
 
-  .offer {
+  .flow-item {
     display: grid;
     grid-template-columns: auto 1fr;
-    gap: 1.25rem;
-    padding-block: clamp(1.5rem, 3vw, 2.25rem);
+    gap: 1.5rem;
+    padding-block: clamp(1.5rem, 3vw, 2rem);
     border-top: 1px solid var(--border-soft);
   }
-
-  .offer:first-child {
+  .flow-item:first-child {
     border-top: none;
   }
 
-  .offer-emoji {
-    font-size: 1.75rem;
+  .flow-step {
+    font-family: var(--font-display);
+    font-size: 1.6rem;
+    color: var(--accent-terracotta);
     line-height: 1;
-    width: 3rem;
-    height: 3rem;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    background-color: var(--bg-soft);
-    border: 1px solid var(--border-soft);
   }
 
-  .offer-kicker {
-    font-size: 0.72rem;
+  .flow-title {
+    font-size: 1.3rem;
+    margin-bottom: 0.4rem;
+  }
+
+  .flow-text {
+    color: var(--text-secondary);
+  }
+
+  /* ===================== 4. CE IEI CU TINE ===================== */
+  .takeaways-head {
+    margin-bottom: clamp(1.75rem, 4vw, 2.5rem);
+  }
+  .takeaways-head h2 {
+    margin-top: 0.5rem;
+  }
+
+  .takeaways-list {
+    list-style: none;
+    display: grid;
+    gap: 1.1rem;
+    max-width: 620px;
+    margin-inline: auto;
+  }
+
+  .takeaway {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.85rem;
+    font-size: 1.1rem;
+    color: var(--text-main);
+  }
+
+  .takeaway-mark {
+    flex: none;
+    line-height: 1.6;
+  }
+
+  /* ===================== 5. PENTRU CINE ===================== */
+  .fit-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(2rem, 5vw, 3.5rem);
+  }
+
+  .fit-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+    margin-top: 0.5rem;
+  }
+
+  .fit-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.7rem;
+    color: var(--text-secondary);
+  }
+
+  .fit-mark {
+    flex: none;
     font-weight: 700;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
+  }
+  .is-yes .fit-mark {
+    color: var(--accent-sage-dark);
+  }
+  .is-no .fit-mark {
     color: var(--accent-terracotta);
   }
 
-  .offer-title {
-    margin-top: 0.3rem;
-    font-size: 1.35rem;
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 0.6rem;
-  }
-
-  .offer-badge {
-    font-family: var(--font-body);
-    font-size: 0.68rem;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--text-muted);
-    background-color: var(--bg-soft);
-    border: 1px solid var(--border-soft);
-    border-radius: 999px;
-    padding: 0.2rem 0.7rem;
-  }
-
-  .offer-text {
-    margin-top: 0.6rem;
-    color: var(--text-secondary);
-    max-width: none;
-  }
-
-  .offer-tags {
-    list-style: none;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    margin-top: 0.9rem;
-  }
-
-  .offer-tags li {
-    font-size: 0.8rem;
-    color: var(--text-secondary);
-    background-color: var(--bg-page);
-    border: 1px solid var(--border-soft);
-    border-radius: 999px;
-    padding: 0.3rem 0.85rem;
-  }
-
-  .offer-fineprint {
-    margin-top: 0.9rem;
-    font-size: 0.85rem;
+  .fit-note {
+    margin-top: 2.5rem;
     font-style: italic;
     color: var(--text-muted);
-    line-height: 1.6;
-    max-width: none;
+    max-width: 52ch;
+    margin-inline: auto;
   }
 
-  .offer-link {
-    display: inline-block;
-    margin-top: 1rem;
-    font-weight: 600;
-    color: var(--accent-sage-dark);
-    text-decoration: none;
+  /* ===================== 6. FAQ ===================== */
+  .faq-head {
+    margin-bottom: clamp(1.75rem, 4vw, 2.5rem);
+  }
+  .faq-head h2 {
+    margin-top: 0.5rem;
   }
 
-  .offer-link:hover {
-    color: var(--accent-lavender-deep);
+  .faq-list {
+    max-width: 680px;
+    margin-inline: auto;
   }
 
-  /* ===================== NOT FOR ===================== */
-  .not-for h2 {
-    margin-block: 0.5rem 1.5rem;
+  .faq-item {
+    border-top: 1px solid var(--border-soft);
+    padding-block: 1.1rem;
+  }
+  .faq-item:last-child {
+    border-bottom: 1px solid var(--border-soft);
   }
 
-  .not-for-list {
+  .faq-q {
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: var(--text-main);
+    cursor: pointer;
     list-style: none;
     display: flex;
-    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
     gap: 1rem;
   }
-
-  .not-for-list li {
-    display: flex;
-    align-items: flex-start;
-    gap: 0.8rem;
-    font-size: 1.08rem;
-    color: var(--ink);
+  .faq-q::-webkit-details-marker {
+    display: none;
   }
-
-  .not-for-mark {
-    color: var(--terracotta);
-    font-weight: 700;
+  .faq-q::after {
+    content: '+';
+    font-size: 1.4rem;
+    color: var(--accent-terracotta);
     flex: none;
   }
-
-  .not-for-note {
-    margin-top: 1.75rem;
-    font-style: italic;
-    color: var(--ink-soft);
+  .faq-item[open] .faq-q::after {
+    content: '–';
   }
 
-  /* ===================== CONTACT ===================== */
-  .contact-head {
+  .faq-a {
+    margin-top: 0.75rem;
+    color: var(--text-secondary);
+  }
+
+  /* ===================== 7. PREȚ ===================== */
+  .price {
+    text-align: center;
+  }
+  .price-card {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-card);
+    padding: clamp(2rem, 5vw, 3rem);
+    max-width: 560px;
+    margin-inline: auto;
+  }
+
+  .price-amount {
+    font-family: var(--font-display);
+    font-size: clamp(2.5rem, 6vw, 3.5rem);
+    color: var(--accent-lavender-deep);
+    margin-inline: auto;
+  }
+
+  .price-what {
+    margin: 1rem auto 0;
+    color: var(--text-main);
+  }
+
+  .price-note {
+    margin: 1.25rem auto 0;
+    font-size: 0.95rem;
+    font-style: italic;
+    color: var(--text-muted);
+  }
+
+  /* ===================== 8. PROGRAMARE ===================== */
+  .booking-head {
     margin-bottom: 2.5rem;
   }
-
-  .contact-head h2 {
+  .booking-head h2 {
     margin-block: 0.5rem 1rem;
   }
 
-  .contact-form {
+  .booking-form {
     display: flex;
     flex-direction: column;
     gap: 1.25rem;
+    max-width: 560px;
+    margin-inline: auto;
   }
 
   .field {
@@ -487,63 +614,121 @@ const notFor = [
     flex-direction: column;
     gap: 0.4rem;
   }
-
   .field label {
-    font-size: 0.9rem;
-    font-weight: 700;
-    color: var(--ink-soft);
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-secondary);
   }
-
   .field input,
   .field textarea {
     font-family: var(--font-body);
     font-size: 1rem;
     padding: 0.85rem 1.1rem;
     border-radius: var(--radius);
-    border: 1.5px solid var(--line);
-    background-color: var(--paper);
-    color: var(--ink);
+    border: 1.5px solid var(--border-soft);
+    background-color: var(--bg-soft);
+    color: var(--text-main);
     width: 100%;
     resize: vertical;
   }
-
   .field input:focus,
   .field textarea:focus {
     outline: none;
-    border-color: var(--lavender);
+    border-color: var(--accent-lavender);
   }
 
-  .contact-form .btn {
-    align-self: flex-start;
+  .booking-form .btn {
+    align-self: center;
+    margin-top: 0.5rem;
   }
 
-  .contact-note {
+  .booking-fineprint {
+    font-size: 0.9rem;
+    font-style: italic;
+    color: var(--text-muted);
+    text-align: center;
+    margin-inline: auto;
+  }
+
+  .booking-note {
+    margin-top: 1.5rem;
+    text-align: center;
+    font-weight: 600;
+    color: var(--accent-sage-dark);
+    max-width: 46ch;
+    margin-inline: auto;
+  }
+
+  /* ===================== 9. NOTA PERSONALĂ ===================== */
+  .personal-inner {
+    text-align: center;
+  }
+  .personal-text {
+    font-family: var(--font-display);
+    font-size: clamp(1.35rem, 3vw, 1.75rem);
+    line-height: 1.5;
+    color: var(--text-main);
+    margin-inline: auto;
+  }
+  .personal-sign {
+    font-size: clamp(2rem, 4vw, 2.75rem);
     margin-top: 1.25rem;
-    font-weight: 700;
-    color: var(--sage-deep);
+  }
+
+  /* ===================== 10. OFF-RAMP ===================== */
+  .offramp-h {
+    margin-top: 0.5rem;
+  }
+  .offramp-text {
+    margin-top: 1rem;
+    max-width: 52ch;
+  }
+  .offramp-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    justify-content: center;
+    max-width: 480px;
+    margin: 1.75rem auto 0;
+  }
+  .offramp-form input {
+    font-family: var(--font-body);
+    font-size: 1rem;
+    padding: 0.85rem 1.1rem;
+    border-radius: var(--radius);
+    border: 1.5px solid var(--border-soft);
+    background-color: var(--bg-page);
+    color: var(--text-main);
+    flex: 1 1 220px;
+  }
+  .offramp-form input:focus {
+    outline: none;
+    border-color: var(--accent-lavender);
+  }
+  .offramp-note {
+    flex-basis: 100%;
+    margin-top: 0.25rem;
+    font-weight: 600;
+    color: var(--accent-sage-dark);
   }
 
   /* ===================== RESPONSIVE ===================== */
-  @media (max-width: 860px) {
-    .work-hero-inner {
+  @media (max-width: 720px) {
+    .fit-grid {
       grid-template-columns: 1fr;
     }
-    .work-hero-photo {
-      order: -1;
-      aspect-ratio: 16 / 10;
-    }
-    .start-here {
-      grid-template-columns: 1fr;
+    .flow-item {
+      gap: 1rem;
     }
   }
 </style>
 
 <script>
-  // Demo behaviour until real backends are connected.
-  document.querySelectorAll<HTMLFormElement>('form[data-contact]').forEach((form) => {
+  // Comportament demo până conectăm backend-urile reale.
+  document.querySelectorAll<HTMLFormElement>('form[data-booking]').forEach((form) => {
     form.addEventListener('submit', (event) => {
       event.preventDefault();
-      const note = form.parentElement?.querySelector<HTMLElement>('[data-contact-note]');
+      const note = form.parentElement?.querySelector<HTMLElement>('[data-booking-note]');
       form.hidden = true;
       if (note) note.hidden = false;
     });
