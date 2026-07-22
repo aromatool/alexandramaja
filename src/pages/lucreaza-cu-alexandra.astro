@@ -11,6 +11,11 @@ import BotanicalDivider from '../components/BotanicalDivider.astro';
 // De validat final în vocea Alexandrei.
 const offerName = 'Punem lucrurile în ordine';
 
+// Endpoint-ul unde ajung cererile de programare (Formspree).
+// Îl iei de la formspree.io și îl pui aici, ex: 'https://formspree.io/f/xxxxxxx'.
+// Cât timp e gol, formularul rămâne în mod demo (afișează doar un mesaj).
+const BOOKING_ENDPOINT = 'https://formspree.io/f/maqrdylo';
+
 // Cum decurge întâlnirea — pași, nu „features”.
 const flow = [
   {
@@ -279,12 +284,17 @@ const faqs = [
       </ol>
 
       {/*
-        TODO (integrare reală): conectează formularul la un serviciu de email
-        (Formspree / endpoint propriu). Fluxul C: cererea ajunge la Alexandra,
+        Fluxul C: cererea ajunge la Alexandra pe email (prin Formspree),
         ea confirmă personal, apoi omul plătește ca să rezerve. Plata NU e
-        automată pe site — deliberat. Deocamdată afișează un mesaj de mulțumire.
+        automată pe site — deliberat. Endpoint-ul e în BOOKING_ENDPOINT (sus).
       */}
-      <form class="booking-form" data-booking>
+      <form
+        class="booking-form"
+        data-booking
+        action={BOOKING_ENDPOINT || undefined}
+        method="POST"
+      >
+        <input type="hidden" name="_subject" value="Cerere nouă de programare (site)" />
         <div class="field">
           <label for="b-name">Numele tău</label>
           <input id="b-name" name="name" type="text" required autocomplete="name" />
@@ -310,6 +320,10 @@ const faqs = [
       <p class="booking-note" data-booking-note hidden>
         Mulțumesc — am primit rândurile tale. Îți scriu personal în câteva zile,
         ca să vedem împreună dacă e potrivit. 🌿
+      </p>
+      <p class="booking-error" data-booking-error hidden>
+        Ceva n-a mers la trimitere. Mai încearcă o dată sau scrie-mi direct pe
+        email. Îmi pare rău pentru bătaia de cap.
       </p>
     </div>
   </section>
@@ -699,6 +713,14 @@ const faqs = [
     margin-inline: auto;
   }
 
+  .booking-error {
+    margin-top: 1.5rem;
+    text-align: center;
+    color: var(--accent-terracotta-deep);
+    max-width: 46ch;
+    margin-inline: auto;
+  }
+
   /* ===================== 9. NOTA PERSONALĂ ===================== */
   .personal-inner {
     text-align: center;
@@ -764,13 +786,49 @@ const faqs = [
 </style>
 
 <script>
-  // Comportament demo până conectăm backend-urile reale.
+  // Formularul de programare — trimite real prin endpoint-ul din `action`
+  // (Formspree). Dacă nu e setat niciun `action`, rămâne în mod demo.
   document.querySelectorAll<HTMLFormElement>('form[data-booking]').forEach((form) => {
-    form.addEventListener('submit', (event) => {
+    const note = form.parentElement?.querySelector<HTMLElement>('[data-booking-note]');
+    const errorNote = form.parentElement?.querySelector<HTMLElement>('[data-booking-error]');
+    const button = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+
+    form.addEventListener('submit', async (event) => {
       event.preventDefault();
-      const note = form.parentElement?.querySelector<HTMLElement>('[data-booking-note]');
-      form.hidden = true;
-      if (note) note.hidden = false;
+
+      // Mod demo: fără endpoint, doar arătăm mesajul de mulțumire.
+      if (!form.action || !/^https?:\/\//.test(form.getAttribute('action') || '')) {
+        form.hidden = true;
+        if (note) note.hidden = false;
+        return;
+      }
+
+      if (errorNote) errorNote.hidden = true;
+      const originalLabel = button?.textContent;
+      if (button) {
+        button.disabled = true;
+        button.textContent = 'Se trimite…';
+      }
+
+      try {
+        const response = await fetch(form.action, {
+          method: 'POST',
+          body: new FormData(form),
+          headers: { Accept: 'application/json' },
+        });
+        if (response.ok) {
+          form.hidden = true;
+          if (note) note.hidden = false;
+        } else {
+          throw new Error('Bad response');
+        }
+      } catch {
+        if (button) {
+          button.disabled = false;
+          button.textContent = originalLabel ?? 'Trimite cererea';
+        }
+        if (errorNote) errorNote.hidden = false;
+      }
     });
   });
 
