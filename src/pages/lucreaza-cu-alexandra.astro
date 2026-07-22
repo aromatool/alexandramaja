@@ -380,6 +380,9 @@ const faqs = [
         <p class="offramp-note" data-newsletter-note hidden>
           Gata — te-ai abonat. Ne auzim curând. 🌿
         </p>
+        <p class="offramp-error" data-newsletter-error hidden>
+          Ceva n-a mers. Mai încearcă o dată în câteva momente.
+        </p>
       </form>
     </div>
   </section>
@@ -896,14 +899,43 @@ const faqs = [
   });
 
   document.querySelectorAll<HTMLFormElement>('form[data-newsletter]').forEach((form) => {
-    form.addEventListener('submit', (event) => {
+    form.addEventListener('submit', async (event) => {
       event.preventDefault();
       const note = form.querySelector<HTMLElement>('[data-newsletter-note]');
+      const errorEl = form.querySelector<HTMLElement>('[data-newsletter-error]');
       const input = form.querySelector<HTMLInputElement>('input');
       const button = form.querySelector<HTMLButtonElement>('button');
-      if (input) input.hidden = true;
-      if (button) button.hidden = true;
-      if (note) note.hidden = false;
+      const email = input?.value.trim() ?? '';
+      if (!email) return;
+
+      if (errorEl) errorEl.hidden = true;
+      const originalLabel = button?.textContent;
+      if (button) {
+        button.disabled = true;
+        button.textContent = 'Se trimite…';
+      }
+
+      try {
+        const res = await fetch('/api/subscribe', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: JSON.stringify({ email }),
+        });
+        const data = (await res.json().catch(() => ({}))) as { ok?: boolean };
+        if (res.ok && data.ok) {
+          if (input) input.hidden = true;
+          if (button) button.hidden = true;
+          if (note) note.hidden = false;
+        } else {
+          throw new Error('subscribe_failed');
+        }
+      } catch {
+        if (button) {
+          button.disabled = false;
+          button.textContent = originalLabel ?? 'Mă abonez — gratuit';
+        }
+        if (errorEl) errorEl.hidden = false;
+      }
     });
   });
 </script>

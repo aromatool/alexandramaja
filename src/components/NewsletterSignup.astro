@@ -69,6 +69,9 @@ const {
     <p class="newsletter-note" data-newsletter-note hidden>
       Mulțumesc — te-ai abonat. Ne vedem în inbox. 🌿
     </p>
+    <p class="newsletter-error" data-newsletter-error hidden>
+      Ceva n-a mers. Mai încearcă o dată în câteva momente.
+    </p>
     <p class="newsletter-fineprint">Fără spam. Doar conținut valoros.</p>
   </div>
 </section>
@@ -174,6 +177,12 @@ const {
     color: var(--accent-sage-dark);
   }
 
+  .newsletter-error {
+    margin-top: 1rem;
+    font-weight: 600;
+    color: var(--accent-terracotta, #b5654a);
+  }
+
   .newsletter-fineprint {
     margin-top: 0.9rem;
     font-size: 0.82rem;
@@ -192,13 +201,46 @@ const {
 </style>
 
 <script>
-  // Demo behaviour until the real email provider is connected.
+  // Trimite emailul la ruta proprie /api/subscribe, care vorbește cu MailerLite
+  // server-side (cheia API stă doar în Cloudflare, nu în browser).
   document.querySelectorAll<HTMLFormElement>('form[data-newsletter]').forEach((form) => {
-    form.addEventListener('submit', (event) => {
+    form.addEventListener('submit', async (event) => {
       event.preventDefault();
-      const note = form.parentElement?.querySelector<HTMLElement>('[data-newsletter-note]');
-      form.hidden = true;
-      if (note) note.hidden = false;
+      const scope = form.parentElement ?? document;
+      const note = scope.querySelector<HTMLElement>('[data-newsletter-note]');
+      const errorEl = scope.querySelector<HTMLElement>('[data-newsletter-error]');
+      const button = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+      const input = form.querySelector<HTMLInputElement>('input[type="email"]');
+      const email = input?.value.trim() ?? '';
+      if (!email) return;
+
+      if (errorEl) errorEl.hidden = true;
+      const originalLabel = button?.textContent;
+      if (button) {
+        button.disabled = true;
+        button.textContent = 'Se trimite…';
+      }
+
+      try {
+        const res = await fetch('/api/subscribe', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: JSON.stringify({ email }),
+        });
+        const data = (await res.json().catch(() => ({}))) as { ok?: boolean };
+        if (res.ok && data.ok) {
+          form.hidden = true;
+          if (note) note.hidden = false;
+        } else {
+          throw new Error('subscribe_failed');
+        }
+      } catch {
+        if (button) {
+          button.disabled = false;
+          button.textContent = originalLabel ?? 'Mă abonez';
+        }
+        if (errorEl) errorEl.hidden = false;
+      }
     });
   });
 </script>
