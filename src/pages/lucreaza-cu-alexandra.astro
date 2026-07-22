@@ -7,8 +7,9 @@ import BotanicalDivider from '../components/BotanicalDivider.astro';
 // pe bucăți” → la „limpede, așezat și însoțit”). Fără coș, fără urgență,
 // fără limbaj de coach, fără promisiuni medicale.
 
-// Numele ofertei — PROVIZORIU. De validat în vocea Alexandrei.
-const offerName = 'Un răgaz cu Alexandra';
+// Numele ofertei. Ales ca să numească valoarea (claritatea), nu „relaxarea”.
+// De validat final în vocea Alexandrei.
+const offerName = 'Punem lucrurile în ordine';
 
 // Cum decurge întâlnirea — pași, nu „features”.
 const flow = [
@@ -72,7 +73,7 @@ const faqs = [
   },
   {
     q: 'Cât durează și cum ne întâlnim?',
-    a: 'Ne rezervăm timp fără grabă — de obicei în jur de 90 de minute. Ne vedem față în față. După ce trimiți cererea, îți scriu personal ca să stabilim ziua.',
+    a: 'Ne rezervăm timp fără grabă — în jur de 90 de minute. De obicei ne vedem față în față, ca să putem face și scanarea ZYTO. Dacă îți e mai la îndemână, putem discuta și online — doar că atunci scanarea nu e posibilă; rămâne discuția holistică și recomandările. După ce trimiți cererea, îți scriu personal ca să stabilim ziua.',
   },
 ];
 
@@ -89,23 +90,22 @@ const faqs = [
     <div class="container-narrow mx-auto ragaz-hero-inner">
       <span class="eyebrow">Lucrează cu Alexandra</span>
       <h1 class="ragaz-hero-title">{offerName}</h1>
+      <p class="ragaz-hero-hook">
+        Dacă ai adunat prea multe informații despre sănătate și nu mai știi de
+        unde să începi — hai să le așezăm, împreună.
+      </p>
       <div class="ragaz-hero-body">
-        <p class="lead">
-          Sunt momente în care simți că le faci pe toate „cum trebuie" —
-          mănânci mai atent, iei ce ți se recomandă, citești, încerci — și
-          totuși ceva nu se așază.
-        </p>
         <p>
-          Ești obosită într-un fel pe care somnul nu-l repară. Ai o grămadă de
-          informații, dar nicio direcție. Și, undeva, o întrebare pe care n-ai
-          apucat s-o pui cu voce tare: <em>„oare fac ce trebuie pentru mine?"</em>
+          Faci multe „cum trebuie" — mănânci mai atent, iei ce ți se recomandă,
+          citești, încerci — și totuși ceva nu se așază. Ești obosită într-un fel
+          pe care somnul nu-l repară. Ai informație multă, dar nicio direcție.
         </p>
         <p>
           Nu ai nevoie de încă un sfat aruncat în trecere. Ai nevoie de cineva
           care să se așeze cu tine, să asculte întregul — nu doar simptomul — și
           să te ajute să vezi limpede de unde să începi.
         </p>
-        <p class="ragaz-hero-close">Asta facem, în răgazul ăsta.</p>
+        <p class="ragaz-hero-close">Pleci cu o direcție, nu cu o listă.</p>
       </div>
       <a href="#programare" class="btn btn-primary ragaz-hero-cta">Hai să ne întâlnim</a>
     </div>
@@ -135,13 +135,10 @@ const faqs = [
           are sens <em>pentru tine</em> — cu plante, cu uleiuri esențiale, cu
           obiceiuri mici, cu răbdare. Restul vine în timp, firesc.
         </p>
-      </div>
-      <div class="philosophy-block">
-        <h2 class="philosophy-h">Merg pe încredere, nu pe presiune.</h2>
         <p>
-          N-o să te grăbesc, n-o să-ți vând nimic de care n-ai nevoie și n-o să
-          te fac să simți că „mai e un pas, și încă unul". Dacă lucrăm împreună,
-          e pentru că amândouă simțim că are sens. Atât.
+          Iar dacă, după ce stăm de vorbă, simt că nu sunt eu persoana potrivită
+          pentru situația ta, îți spun sincer și te îndrum mai departe. Prefer
+          asta, decât să-ți vând ceva de care n-ai nevoie.
         </p>
       </div>
     </div>
@@ -175,7 +172,7 @@ const faqs = [
     <div class="container-narrow mx-auto">
       <div class="takeaways-head text-center">
         <span class="eyebrow">Ce iei cu tine</span>
-        <h2>Nu pleci cu o listă. Pleci cu o direcție.</h2>
+        <h2>Limpezime — și un plan care e al tău</h2>
       </div>
       <ul class="takeaways-list">
         {
@@ -269,11 +266,17 @@ const faqs = [
         <span class="eyebrow">Programare</span>
         <h2>Dacă simți că are sens, hai să ne întâlnim</h2>
         <p class="lead mx-auto">
-          Nu e un buton de „cumpără acum". Îmi lași câteva rânduri despre tine,
-          eu îți răspund personal și, dacă simțim amândouă că e potrivit,
-          stabilim ziua. Fără presiune — poți să te răzgândești oricând.
+          Nu e un buton de „cumpără acum". E începutul unei discuții — fără
+          presiune, și te poți răzgândi oricând.
         </p>
       </div>
+
+      <ol class="booking-steps">
+        <li><span class="booking-step-n" aria-hidden="true">1</span>Îmi lași câteva rânduri despre tine, în formularul de mai jos.</li>
+        <li><span class="booking-step-n" aria-hidden="true">2</span>Îți răspund personal, de obicei în câteva zile.</li>
+        <li><span class="booking-step-n" aria-hidden="true">3</span>Dacă simțim amândouă că e potrivit, stabilim ziua.</li>
+        <li><span class="booking-step-n" aria-hidden="true">4</span>Rezervi locul și ne vedem, fără grabă.</li>
+      </ol>
 
       {/*
         TODO (integrare reală): conectează formularul la un serviciu de email
@@ -360,7 +363,16 @@ const faqs = [
   }
 
   .ragaz-hero-title {
-    margin-block: 0.25rem 1.75rem;
+    margin-block: 0.25rem 1.25rem;
+  }
+
+  .ragaz-hero-hook {
+    font-family: var(--font-display);
+    font-size: clamp(1.3rem, 2.8vw, 1.7rem);
+    line-height: 1.35;
+    color: var(--accent-lavender-deep);
+    max-width: 40ch;
+    margin: 0 auto 1.75rem;
   }
 
   .ragaz-hero-body {
@@ -599,6 +611,34 @@ const faqs = [
   }
   .booking-head h2 {
     margin-block: 0.5rem 1rem;
+  }
+
+  .booking-steps {
+    list-style: none;
+    max-width: 560px;
+    margin: 0 auto 2.5rem;
+    display: grid;
+    gap: 0.9rem;
+  }
+  .booking-steps li {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    color: var(--text-secondary);
+  }
+  .booking-step-n {
+    flex: none;
+    width: 1.9rem;
+    height: 1.9rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background-color: var(--bg-soft);
+    border: 1px solid var(--border-soft);
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    color: var(--accent-terracotta-deep);
   }
 
   .booking-form {
