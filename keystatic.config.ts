@@ -44,6 +44,11 @@ export default config({
           label: 'Hero — text buton',
           defaultValue: 'Intră în bibliotecă',
         }),
+        heroPhoto: fields.image({
+          label: 'Hero — poză de fundal (partea dreaptă)',
+          directory: 'public/images/home',
+          publicPath: '/images/home/',
+        }),
         heroQuote: fields.text({
           label: 'Citat (caseta din colțul hero-ului)',
           multiline: true,
@@ -66,6 +71,11 @@ export default config({
           label: 'Bloc „Despre mine” — paragraf',
           multiline: true,
         }),
+        aboutPhoto: fields.image({
+          label: 'Bloc „Despre mine” — poză',
+          directory: 'public/images/home',
+          publicPath: '/images/home/',
+        }),
       },
     }),
     despre: singleton({
@@ -87,6 +97,11 @@ export default config({
         heroBody: fields.text({
           label: 'Hero — al doilea paragraf',
           multiline: true,
+        }),
+        heroPhoto: fields.image({
+          label: 'Hero — poză portret (arcul din dreapta)',
+          directory: 'public/images/despre',
+          publicPath: '/images/despre/',
         }),
         story: fields.array(
           fields.object({

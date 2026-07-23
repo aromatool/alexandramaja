@@ -27,7 +27,7 @@ const benefits = home.benefits.map((b, i) => ({
 
 <BaseLayout>
   <!-- ================= HERO ================= -->
-  <section class="hero">
+  <section class="hero" style={home.heroPhoto ? `--hero-img:url('${home.heroPhoto}')` : undefined}>
     <div class="container hero-inner">
       <div class="hero-text">
         <span class="hero-rule" aria-hidden="true"></span>
@@ -112,7 +112,7 @@ const benefits = home.benefits.map((b, i) => ({
         <h2>{home.aboutTitle}</h2>
         <p>{home.aboutText}</p>
         <a href="/despre" class="text-link">Cine e Alexandra →</a>
-        <div class="about-photo" role="img" aria-label="Lavandă și pălărie de pai"></div>
+        <div class="about-photo" role="img" aria-label="Lavandă și pălărie de pai" style={home.aboutPhoto ? `--photo:url('${home.aboutPhoto}')` : undefined}></div>
       </div>
 
       <!-- Latest articles -->
