@@ -1,73 +1,30 @@
 ---
+import { createReader } from '@keystatic/core/reader';
+import keystaticConfig from '../../keystatic.config';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import NewsletterSignup from '../components/NewsletterSignup.astro';
 import BotanicalDivider from '../components/BotanicalDivider.astro';
 
-// Her story, told in scenes rather than as a résumé. Each chapter pairs a few
-// warm paragraphs with a real photo slot (graceful fallback until the image
-// lands under /public/images/despre/).
-const story = [
-  {
-    kicker: 'Începutul',
-    title: 'Nu am pornit dintr-un plan',
-    photo: '/images/despre/inceput.jpg',
-    alt: 'Alexandra printre plante, la început de drum',
-    tint: 'var(--tint-sage)',
-    paragraphs: [
-      'Am pornit dintr-o curiozitate care nu m-a mai lăsat. La început au fost întrebări mărunte — de ce mă liniștește un ceai, de ce miroase altfel lavanda uscată la soare, de ce unele lucruri simple ajută mai mult decât cele complicate.',
-      'Nu căutam o afacere. Căutam să înțeleg. Iar cu cât înțelegeam mai mult, cu atât îmi doream să împărtășesc — calm, fără să vând nimic.',
-    ],
-  },
-  {
-    kicker: 'De ce iubesc plantele',
-    title: 'Plantele nu se grăbesc',
-    photo: '/images/despre/plante.jpg',
-    alt: 'Plante medicinale și mâinile Alexandrei',
-    tint: 'var(--tint-lavender)',
-    paragraphs: [
-      'Îmi plac plantele pentru că ne învață răbdare. Nu promit rezultate peste noapte și nu funcționează prin forță. Cresc în ritmul lor și ne cheamă să încetinim și noi.',
-      'Le studiez, le cultiv, le usuc, le încerc. Vreau să știu ce recomand — nu din prima pagină de Google, ci din experiență trăită.',
-    ],
-  },
-  {
-    kicker: 'Aromaterapia',
-    title: 'Am descoperit uleiurile aproape din întâmplare',
-    photo: '/images/despre/aromaterapie.jpg',
-    alt: 'Sticluțe de uleiuri esențiale și flori de lavandă',
-    tint: 'var(--tint-terracotta)',
-    paragraphs: [
-      'Aromaterapia a intrat în viața mea discret și a rămas. M-a fascinat cât de mult poate schimba o zi un miros potrivit, la momentul potrivit — un pic de calm seara, un pic de limpezime dimineața.',
-      'De atunci citesc, testez și învăț continuu. Le privesc ca pe un sprijin blând, niciodată ca pe o soluție-minune.',
-    ],
-  },
-  {
-    kicker: 'Învăț continuu',
-    title: 'De ce merg la conferințe',
-    photo: '/images/despre/conferinte.jpg',
-    alt: 'Alexandra la o conferință, luând notițe',
-    tint: 'var(--tint-sage)',
-    paragraphs: [
-      'Merg la conferințe și la producători pentru că vreau să înțeleg, nu doar să repet. Vreau să văd cu ochii mei, să întreb, să verific. Vizitez ferme și distilerii, ascult oameni care fac asta de-o viață.',
-      'Tot ce ajunge aici trece întâi prin filtrul acesta: are sens? l-am înțeles cu adevărat? l-aș folosi eu?',
-    ],
-  },
-];
+// Text-ul paginii vine din Keystatic (editabil în browser). Designul rămâne aici.
+const reader = createReader(process.cwd(), keystaticConfig);
+const despre = await reader.singletons.despre.read();
+if (!despre) {
+  throw new Error('Conținutul paginii Despre lipsește (src/content/pages/despre.yaml)');
+}
 
-// Positive principles — what stays constant, told as a promise, not a CV.
-const beliefs = [
-  {
-    title: 'Omul întreg, nu simptomul',
-    text: 'Nu mă grăbesc să dau o soluție. Întâi întreb: cum dormi, cât ești sub stres, ce mănânci, cum arată o zi obișnuită? De acolo pornim.',
-  },
-  {
-    title: 'Fără promisiuni, fără frică',
-    text: 'Nu vând vindecări și nu sperii pe nimeni. Împărtășesc ce am învățat, cu nuanțe și cu onestitate — inclusiv ce nu funcționează.',
-  },
-  {
-    title: 'Experiență, nu copy-paste',
-    text: 'Ce scriu vine din cărți, conferințe, vizite la producători și din propriile experimente — trăit, nu copiat.',
-  },
-];
+// Nuanțele de fundal rămân în cod (design), rotite pe capitole.
+const tints = ['var(--tint-sage)', 'var(--tint-lavender)', 'var(--tint-terracotta)'];
+const story = despre.story.map((chapter, i) => ({
+  ...chapter,
+  tint: tints[i % tints.length],
+  // Textul e un singur câmp; paragrafele se despart prin rânduri goale.
+  paragraphs: chapter.body
+    .split(/\n{2,}/)
+    .map((p) => p.trim())
+    .filter(Boolean),
+}));
+
+const beliefs = despre.beliefs;
 ---
 
 <BaseLayout
@@ -78,20 +35,10 @@ const beliefs = [
   <section class="section about-hero">
     <div class="container about-hero-grid">
       <div class="about-hero-text">
-        <span class="eyebrow">Despre Alexandra</span>
-        <h1>Bună, sunt Alexandra.</h1>
-        <p class="lead">
-          De ani buni citesc, studiez și experimentez tot ce ține de plante,
-          aromaterapie și o viață mai naturală. Nu ca să vând ceva — ci pentru
-          că mă fascinează și pentru că îmi place să împărtășesc.
-        </p>
-        <p>
-          Oamenii îmi scriu des și îmi spun că le place <em>felul în care
-          gândesc</em>. Cred că se întâmplă pentru că nu ofer răspunsuri de-a
-          gata. Încerc să înțeleg întâi omul din fața mea, cu tot ce ține de el,
-          și abia apoi vorbim despre plante și uleiuri — ca parte dintr-un
-          întreg, niciodată ca soluție-minune.
-        </p>
+        <span class="eyebrow">{despre.heroEyebrow}</span>
+        <h1>{despre.heroTitle}</h1>
+        <p class="lead">{despre.heroLead}</p>
+        <p>{despre.heroBody}</p>
       </div>
 
       <div
@@ -112,7 +59,7 @@ const beliefs = [
               class="chapter-photo"
               role="img"
               aria-label={chapter.alt}
-              style={`--photo:url('${chapter.photo}'); --tint:${chapter.tint}`}
+              style={`--photo:url('${chapter.photo ?? ''}'); --tint:${chapter.tint}`}
             />
             <div class="chapter-text">
               <span class="chapter-kicker">{chapter.kicker}</span>
@@ -131,8 +78,8 @@ const beliefs = [
   <section class="section surface-cream beliefs">
     <div class="container">
       <div class="beliefs-head text-center">
-        <span class="eyebrow">În ce cred</span>
-        <h2>Trei lucruri care nu se schimbă</h2>
+        <span class="eyebrow">{despre.beliefsEyebrow}</span>
+        <h2>{despre.beliefsTitle}</h2>
       </div>
       <div class="beliefs-grid">
         {

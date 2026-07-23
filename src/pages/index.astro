@@ -1,19 +1,28 @@
 ---
 import { getCollection } from 'astro:content';
+import { createReader } from '@keystatic/core/reader';
+import keystaticConfig from '../../keystatic.config';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ArticleCard from '../components/ArticleCard.astro';
 import NewsletterSignup from '../components/NewsletterSignup.astro';
+
+// Text-ul paginii vine din Keystatic (editabil în browser). Designul rămâne aici.
+const reader = createReader(process.cwd(), keystaticConfig);
+const home = await reader.singletons.home.read();
+if (!home) {
+  throw new Error('Conținutul paginii principale lipsește (src/content/pages/home.yaml)');
+}
 
 const articles = (await getCollection('biblioteca', ({ data }) => !data.draft))
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
   .slice(0, 2);
 
-const benefits = [
-  { icon: 'sprout', title: 'Experiență reală', text: 'Testez înainte să recomand' },
-  { icon: 'heart', title: 'Abordare holistică', text: 'Privesc omul în întregime' },
-  { icon: 'flower', title: 'Încredere și sinceritate', text: 'Fără promisiuni, doar adevăr' },
-  { icon: 'home', title: 'Inspirație pentru fiecare zi', text: 'Idei simple, aplicabile' },
-];
+// Iconițele rămân în cod (design) și se asociază fiecărui beneficiu după poziție.
+const benefitIcons = ['sprout', 'heart', 'flower', 'home'];
+const benefits = home.benefits.map((b, i) => ({
+  ...b,
+  icon: benefitIcons[i] ?? 'sprout',
+}));
 ---
 
 <BaseLayout>
@@ -23,15 +32,12 @@ const benefits = [
       <div class="hero-text">
         <span class="hero-rule" aria-hidden="true"></span>
         <h1 class="hero-title">
-          Natură. Echilibru.<br />
-          <span class="script hero-accent">Viață cu sens.</span>
+          {home.heroTitleLine1}<br />
+          <span class="script hero-accent">{home.heroTitleAccent}</span>
         </h1>
-        <p class="hero-sub">
-          Inspirație din plante, aromaterapie și alegeri conștiente pentru o
-          viață mai simplă, mai sănătoasă și mai frumoasă.
-        </p>
+        <p class="hero-sub">{home.heroSub}</p>
         <a href="/biblioteca" class="btn btn-primary hero-btn">
-          Intră în bibliotecă
+          {home.heroCta}
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="M11 20A7 7 0 0 1 4 13c0-6 8-9 15-9 0 7-3 16-9 16Z" />
             <path d="M7 17c4-1 7-4 8-8" />
@@ -40,9 +46,7 @@ const benefits = [
       </div>
 
       <figure class="hero-quote">
-        <blockquote>
-          Când ne întoarcem la simplitate, ne întoarcem la noi înșine.
-        </blockquote>
+        <blockquote>{home.heroQuote}</blockquote>
         <span class="hero-quote-heart" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
             <path d="M12 20s-7-4.5-9.5-9C1 8 2.5 4.5 6 4.5c2 0 3.3 1.2 4 2.3.7-1.1 2-2.3 4-2.3 3.5 0 5 3.5 3.5 6.5C19 15.5 12 20 12 20Z" />
@@ -105,12 +109,8 @@ const benefits = [
       <!-- About -->
       <div class="home-about">
         <span class="script home-script">Bun venit!</span>
-        <h2>Despre mine</h2>
-        <p>
-          Sunt pasionată de plante, de aromaterapie și de modul în care natura
-          ne poate susține fiecare pas. Călătoresc, învăț, experimentez și
-          împărtășesc aici tot ce descopăr și trăiesc.
-        </p>
+        <h2>{home.aboutTitle}</h2>
+        <p>{home.aboutText}</p>
         <a href="/despre" class="text-link">Cine e Alexandra →</a>
         <div class="about-photo" role="img" aria-label="Lavandă și pălărie de pai"></div>
       </div>

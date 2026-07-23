@@ -1,4 +1,4 @@
-import { config, fields, collection } from '@keystatic/core';
+import { config, fields, collection, singleton } from '@keystatic/core';
 
 // Keystatic = the friendly editor on top of the content library.
 // It writes plain Markdoc + images straight back into the repo, so the
@@ -17,7 +17,117 @@ export default config({
     brand: { name: 'Alexandra Maja' },
     navigation: {
       Conținut: ['biblioteca', 'resurse'],
+      Pagini: ['home', 'despre'],
     },
+  },
+  // --- Pagini editabile (text din paginile „construite") ---
+  // Doar TEXTUL e expus aici; designul, grilele și iconițele rămân în cod,
+  // ca Alexandra să nu poată strica layout-ul din greșeală.
+  singletons: {
+    home: singleton({
+      label: 'Pagina principală',
+      path: 'src/content/pages/home',
+      schema: {
+        heroTitleLine1: fields.text({
+          label: 'Hero — titlu (rândul 1)',
+          defaultValue: 'Natură. Echilibru.',
+        }),
+        heroTitleAccent: fields.text({
+          label: 'Hero — titlu accentuat (rândul 2, scris de mână)',
+          defaultValue: 'Viață cu sens.',
+        }),
+        heroSub: fields.text({
+          label: 'Hero — subtitlu',
+          multiline: true,
+        }),
+        heroCta: fields.text({
+          label: 'Hero — text buton',
+          defaultValue: 'Intră în bibliotecă',
+        }),
+        heroQuote: fields.text({
+          label: 'Citat (caseta din colțul hero-ului)',
+          multiline: true,
+        }),
+        benefits: fields.array(
+          fields.object({
+            title: fields.text({ label: 'Titlu' }),
+            text: fields.text({ label: 'Text scurt' }),
+          }),
+          {
+            label: 'Beneficii (banda cu iconițe)',
+            itemLabel: (p) => p.fields.title.value || 'Beneficiu',
+          }
+        ),
+        aboutTitle: fields.text({
+          label: 'Bloc „Despre mine” — titlu',
+          defaultValue: 'Despre mine',
+        }),
+        aboutText: fields.text({
+          label: 'Bloc „Despre mine” — paragraf',
+          multiline: true,
+        }),
+      },
+    }),
+    despre: singleton({
+      label: 'Despre mine (pagina)',
+      path: 'src/content/pages/despre',
+      schema: {
+        heroEyebrow: fields.text({
+          label: 'Hero — etichetă',
+          defaultValue: 'Despre Alexandra',
+        }),
+        heroTitle: fields.text({
+          label: 'Hero — titlu',
+          defaultValue: 'Bună, sunt Alexandra.',
+        }),
+        heroLead: fields.text({
+          label: 'Hero — introducere (textul mare)',
+          multiline: true,
+        }),
+        heroBody: fields.text({
+          label: 'Hero — al doilea paragraf',
+          multiline: true,
+        }),
+        story: fields.array(
+          fields.object({
+            kicker: fields.text({ label: 'Etichetă (deasupra titlului)' }),
+            title: fields.text({ label: 'Titlu capitol' }),
+            body: fields.text({
+              label: 'Text (desparte paragrafele cu un rând gol)',
+              multiline: true,
+            }),
+            photo: fields.image({
+              label: 'Poză (opțional)',
+              directory: 'public/images/despre',
+              publicPath: '/images/despre/',
+            }),
+            alt: fields.text({ label: 'Descrierea pozei (accesibilitate)' }),
+          }),
+          {
+            label: 'Capitole din poveste',
+            itemLabel: (p) => p.fields.title.value || 'Capitol',
+          }
+        ),
+        beliefsEyebrow: fields.text({
+          label: 'Principii — etichetă',
+          defaultValue: 'În ce cred',
+        }),
+        beliefsTitle: fields.text({
+          label: 'Principii — titlu',
+          defaultValue: 'Trei lucruri care nu se schimbă',
+        }),
+        beliefs: fields.array(
+          fields.object({
+            title: fields.text({ label: 'Titlu' }),
+            text: fields.text({ label: 'Text', multiline: true }),
+          }),
+          {
+            label: 'Principii',
+            itemLabel: (p) => p.fields.title.value || 'Principiu',
+          }
+        ),
+      },
+    }),
   },
   collections: {
     // --- Articolele din Bibliotecă ---
