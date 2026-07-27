@@ -19,7 +19,7 @@ interface Props {
 }
 
 const { article } = Astro.props;
-const { title, description, pubDate, updatedDate, category, readingTime } = article.data;
+const { title, description, pubDate, updatedDate, category, readingTime, image } = article.data;
 const { Content } = await render(article);
 
 const dateLabel = pubDate.toLocaleDateString('ro-RO', {
@@ -47,7 +47,14 @@ const related = all
   .slice(0, 2);
 ---
 
-<BaseLayout title={title} description={description} article>
+<BaseLayout
+  title={title}
+  description={description}
+  image={image ?? undefined}
+  article
+  publishedTime={pubDate.toISOString()}
+  modifiedTime={updatedDate?.toISOString()}
+>
   <article class="post">
     <!-- Article header -->
     <header class="post-header">

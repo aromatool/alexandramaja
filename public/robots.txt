@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+
+# Zona de administrare (editorul Keystatic) nu trebuie indexată
+Disallow: /keystatic
+Disallow: /api/
+
+Sitemap: https://alexandramaja.ro/sitemap-index.xml

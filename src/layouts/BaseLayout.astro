@@ -8,6 +8,8 @@ interface Props {
   description?: string;
   image?: string;
   article?: boolean;
+  publishedTime?: string;
+  modifiedTime?: string;
 }
 
 const {
@@ -15,11 +17,55 @@ const {
   description = 'Alexandra Maja — despre plante, aromaterapie și o viață trăită natural. O privire holistică asupra somnului, stresului, alimentației și stării de bine.',
   image = '/og-default.jpg',
   article = false,
+  publishedTime,
+  modifiedTime,
 } = Astro.props;
 
 const siteName = 'Alexandra Maja';
 const pageTitle = title ? `${title} — ${siteName}` : `${siteName} — viață naturală, cu discernământ`;
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const imageURL = new URL(image, Astro.site).toString();
+
+// --- Structured data (JSON-LD) ---
+// Un singur graf pe care Google îl citește ca să înțeleagă „cine e Alexandra"
+// și, pe articole, „ce este acest text, cine l-a scris, când". Deblochează
+// rezultatele bogate (autor, dată) și asociază conținutul cu autorul.
+const siteURL = Astro.site!.toString();
+const personId = `${siteURL}#person`;
+const graph: Record<string, unknown>[] = [
+  {
+    '@type': 'Person',
+    '@id': personId,
+    name: 'Alexandra Maja',
+    url: siteURL,
+    description:
+      'Autoare și pasionată de plante medicinale, aromaterapie și un stil de viață natural, cu o abordare holistică.',
+    knowsAbout: ['aromaterapie', 'plante medicinale', 'uleiuri esențiale', 'stil de viață natural'],
+  },
+  {
+    '@type': 'WebSite',
+    '@id': `${siteURL}#website`,
+    url: siteURL,
+    name: siteName,
+    inLanguage: 'ro-RO',
+    publisher: { '@id': personId },
+  },
+];
+if (article) {
+  graph.push({
+    '@type': 'BlogPosting',
+    headline: title,
+    description,
+    image: imageURL,
+    datePublished: publishedTime,
+    dateModified: modifiedTime ?? publishedTime,
+    author: { '@id': personId },
+    publisher: { '@id': personId },
+    mainEntityOfPage: canonicalURL.toString(),
+    inLanguage: 'ro-RO',
+  });
+}
+const jsonLd = { '@context': 'https://schema.org', '@graph': graph };
 ---
 
 <!doctype html>
@@ -40,14 +86,20 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonicalURL} />
-    <meta property="og:image" content={new URL(image, Astro.site)} />
+    <meta property="og:image" content={imageURL} />
     <meta property="og:locale" content="ro_RO" />
+    {article && publishedTime && <meta property="article:published_time" content={publishedTime} />}
+    {article && modifiedTime && <meta property="article:modified_time" content={modifiedTime} />}
+    {article && <meta property="article:author" content={siteName} />}
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={pageTitle} />
     <meta name="twitter:description" content={description} />
-    <meta name="twitter:image" content={new URL(image, Astro.site)} />
+    <meta name="twitter:image" content={imageURL} />
+
+    <!-- Structured data -->
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} is:inline />
 
     <!-- Fonts: Cormorant Garamond (display) + Lora (body) + The Girl Next Door (script) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
