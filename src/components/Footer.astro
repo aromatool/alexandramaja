@@ -2,28 +2,45 @@
 const year = new Date().getFullYear();
 
 const social = [
-  { href: 'https://facebook.com', label: 'Facebook', icon: 'facebook' },
   { href: 'https://instagram.com', label: 'Instagram', icon: 'instagram' },
-  { href: '/#newsletter', label: 'Newsletter', icon: 'mail' },
+  { href: 'https://facebook.com', label: 'Facebook', icon: 'facebook' },
 ];
 
-const quickLinks = [
-  { href: '/biblioteca', label: 'Biblioteca' },
-  { href: '/despre', label: 'Despre Alexandra' },
-  { href: '/lucreaza-cu-alexandra', label: 'Lucrează cu Alexandra' },
+const legalLinks = [
+  { href: '/politica-de-confidentialitate', label: 'Politica de confidențialitate' },
+  { href: '/termeni-si-conditii', label: 'Termeni și condiții' },
 ];
+
+const contactEmail = 'contact@alexandramaja.ro';
 ---
 
 <footer class="site-footer" aria-label="Subsol">
-  <!-- Main band: quote on the left, "let's connect" + social on the right -->
+  <!-- Warm lavender photo, fading into cream on the left -->
+  <div class="footer-photo" aria-hidden="true"></div>
+
+  <!-- Main band: quote (left) · brand + about + social (center) -->
   <div class="container footer-main">
     <figure class="footer-quote">
       <blockquote>„Natura nu se grăbește, dar totul se împlinește.”</blockquote>
       <figcaption>— Lao Tzu</figcaption>
     </figure>
 
-    <div class="footer-connect">
-      <p class="footer-connect-label">Hai să fim conectați și aici:</p>
+    <div class="footer-brand">
+      <span class="script footer-brand-name">Alexandra</span>
+
+      <svg class="footer-sprig" viewBox="0 0 24 40" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M12 39V11" />
+        <path d="M12 20c0-3.4 2.2-6.2 5.3-7.1-.3 3.5-2.2 6.3-5.3 7.1Z" />
+        <path d="M12 24c0-2.9-1.9-5.4-4.8-6.3.3 2.9 1.9 5.4 4.8 6.3Z" />
+        <path d="M12 15c0-2.6 1.7-4.7 4-5.4-.2 2.6-1.7 4.7-4 5.4Z" />
+      </svg>
+
+      <p class="footer-tagline">Plante · Aromaterapie · Viață</p>
+      <p class="footer-about">
+        Scriu despre plante, aromaterapie și un stil de viață mai conștient.
+        Tot ce găsești aici are scop educațional și pornește din experiențele mele.
+      </p>
+
       <div class="footer-social">
         {
           social.map((s) => (
@@ -32,13 +49,8 @@ const quickLinks = [
               class="social-link"
               aria-label={s.label}
               rel="me noopener"
-              target={s.href.startsWith('http') ? '_blank' : undefined}
+              target="_blank"
             >
-              {s.icon === 'facebook' && (
-                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                  <path d="M14 9h3V6h-3c-1.9 0-3 1.4-3 3.3V11H8v3h3v7h3v-7h2.5l.5-3H14V9.6c0-.4.3-.6.7-.6Z" />
-                </svg>
-              )}
               {s.icon === 'instagram' && (
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
                   <rect x="3.5" y="3.5" width="17" height="17" rx="5" />
@@ -46,61 +58,72 @@ const quickLinks = [
                   <circle cx="17" cy="7" r="1" fill="currentColor" stroke="none" />
                 </svg>
               )}
-              {s.icon === 'mail' && (
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                  <rect x="3" y="5" width="18" height="14" rx="2" />
-                  <path d="M3 7l9 6 9-6" />
+              {s.icon === 'facebook' && (
+                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <path d="M14 9h3V6h-3c-1.9 0-3 1.4-3 3.3V11H8v3h3v7h3v-7h2.5l.5-3H14V9.6c0-.4.3-.6.7-.6Z" />
                 </svg>
               )}
             </a>
           ))
         }
       </div>
+
+      <p class="footer-thanks">
+        <span class="script">Mulțumesc că ești aici.</span>
+        <span class="script footer-signoff">Alexandra
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12 20s-7-4.5-9.5-9C1 8 2.5 4.5 6 4.5c2 0 3.3 1.2 4 2.3.7-1.1 2-2.3 4-2.3 3.5 0 5 3.5 3.5 6.5C19 15.5 12 20 12 20Z" />
+          </svg>
+        </span>
+      </p>
     </div>
   </div>
 
-  <!-- Fine print: quick links, medical disclaimer, copyright — one unified footer -->
+  <!-- Fine print: copyright · disclaimer · legal · contact -->
   <div class="container footer-fine">
-    <div class="footer-fine-top">
-      <span class="brand-name script">Alexandra</span>
-      <nav class="footer-links" aria-label="Legături rapide">
-        {quickLinks.map((l) => <a href={l.href}>{l.label}</a>)}
-      </nav>
-    </div>
-    <p class="footer-disclaimer">
-      Conținutul de pe acest site are scop <strong>educativ și informativ</strong>.
-      Nu reprezintă sfat medical și nu înlocuiește consultul unui medic sau
-      farmacist. Pentru probleme de sănătate, adresează-te unui specialist.
-    </p>
-    <p class="footer-legal">
-      © {year} Alexandra Maja · Toate drepturile rezervate
-    </p>
+    <span class="footer-legal">© {year} Alexandra Maja</span>
+    <span class="footer-disclaimer">
+      Conținut educațional. Nu înlocuiește consultul unui medic sau farmacist.
+    </span>
+    <nav class="footer-links" aria-label="Legături legale">
+      {legalLinks.map((l) => <a href={l.href}>{l.label}</a>)}
+      <span class="footer-contact">
+        Contact: <a href={`mailto:${contactEmail}`}>{contactEmail}</a>
+      </span>
+    </nav>
   </div>
 </footer>
 
 <style>
   .site-footer {
-    /* Point --photo at the real image; the cream veil on top keeps text
-       readable, and the fallback color shows if the photo is missing. */
-    --photo: url('/images/footer-lavanda.jpg');
     position: relative;
     overflow: hidden;
-    background-color: #e7ddcf;
+    background-color: var(--bg-card);
+  }
+
+  /* Lavender photo pinned to the right, fading into the cream on its left */
+  .footer-photo {
+    position: absolute;
+    inset: 0 0 0 auto;
+    width: 42%;
+    z-index: 0;
     background-image:
-      linear-gradient(160deg, rgba(239, 231, 221, 0.82), rgba(231, 221, 207, 0.86)),
-      var(--photo);
+      linear-gradient(90deg, var(--bg-card) 0%, rgba(246, 239, 233, 0.6) 22%, rgba(246, 239, 233, 0) 55%),
+      url('/images/footer-lavanda.jpg');
     background-size: cover, cover;
-    background-position: center, center;
+    background-position: center, center right;
     background-repeat: no-repeat, no-repeat;
   }
 
-  /* ---- Main band: quote + connect ---- */
+  /* ---- Main band: quote + brand ---- */
   .footer-main {
+    position: relative;
+    z-index: 1;
     display: grid;
-    grid-template-columns: 1.5fr 1fr;
+    grid-template-columns: 1fr 1fr 0.7fr;
     align-items: center;
-    gap: 2.5rem;
-    padding-block: clamp(3rem, 6vw, 4.5rem);
+    gap: clamp(2rem, 5vw, 4rem);
+    padding-block: clamp(3rem, 6vw, 5rem);
   }
 
   .footer-quote blockquote {
@@ -119,24 +142,51 @@ const quickLinks = [
     letter-spacing: 0.04em;
   }
 
-  .footer-connect {
+  /* Center brand column */
+  .footer-brand {
     display: flex;
     flex-direction: column;
-    align-items: flex-end;
-    text-align: right;
+    align-items: center;
+    text-align: center;
+    padding-inline: clamp(0.5rem, 2vw, 1.5rem);
+    border-left: 1px solid var(--border-soft);
   }
 
-  .footer-connect-label {
-    font-size: 0.8rem;
-    letter-spacing: 0.08em;
+  .footer-brand-name {
+    font-size: clamp(2.2rem, 4vw, 3rem);
+    color: var(--text-main);
+    line-height: 1;
+  }
+
+  .footer-sprig {
+    width: 20px;
+    height: 34px;
+    color: var(--accent-sage);
+    margin-block: 0.5rem 0.9rem;
+  }
+
+  .footer-tagline {
+    font-family: var(--font-body);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.22em;
     text-transform: uppercase;
     color: var(--text-muted);
+    max-width: none;
+  }
+
+  .footer-about {
+    margin-top: 1rem;
+    max-width: 42ch;
+    font-size: 0.95rem;
+    line-height: 1.65;
+    color: var(--text-secondary);
   }
 
   .footer-social {
     display: flex;
     gap: 0.75rem;
-    margin-top: 1rem;
+    margin-top: 1.5rem;
   }
 
   .social-link {
@@ -163,71 +213,105 @@ const quickLinks = [
     height: 18px;
   }
 
+  .footer-thanks {
+    margin-top: 1.75rem;
+    line-height: 1.5;
+    max-width: none;
+  }
+
+  .footer-thanks .script {
+    display: block;
+    font-size: 1.35rem;
+    color: var(--text-secondary);
+  }
+
+  .footer-signoff {
+    color: var(--accent-lavender-deep) !important;
+    display: inline-flex !important;
+    align-items: center;
+    gap: 0.35rem;
+    margin-top: 0.15rem;
+  }
+
+  .footer-signoff svg {
+    width: 18px;
+    height: 18px;
+    color: var(--accent-lavender);
+  }
+
   /* ---- Fine print bar ---- */
   .footer-fine {
+    position: relative;
+    z-index: 1;
     border-top: 1px solid var(--border-soft);
-    padding-block: 1.75rem 2rem;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-  }
-
-  .footer-fine-top {
+    padding-block: 1.5rem 1.75rem;
     display: flex;
     align-items: center;
-    justify-content: space-between;
     flex-wrap: wrap;
-    gap: 1rem;
+    justify-content: space-between;
+    gap: 0.75rem 1.5rem;
+    font-size: 0.85rem;
+    color: var(--text-muted);
   }
 
-  .footer-fine-top .brand-name {
-    font-size: 1.65rem;
-    color: var(--text-main);
+  .footer-disclaimer {
+    flex: 1 1 auto;
+    text-align: center;
+    min-width: 16rem;
   }
 
   .footer-links {
     display: flex;
     flex-wrap: wrap;
-    gap: 1.25rem;
+    align-items: center;
+    gap: 0.5rem 1.25rem;
   }
 
   .footer-links a {
     color: var(--text-secondary);
     text-decoration: none;
-    font-size: 0.95rem;
   }
 
   .footer-links a:hover {
     color: var(--accent-lavender-deep);
   }
 
-  .footer-disclaimer {
-    font-size: 0.85rem;
-    color: var(--text-muted);
-    max-width: 75ch;
-    line-height: 1.6;
+  .footer-contact a {
+    color: var(--accent-lavender-deep);
   }
 
-  .footer-legal {
-    font-size: 0.85rem;
-    color: var(--text-muted);
-  }
-
-  @media (max-width: 760px) {
+  @media (max-width: 900px) {
     .footer-main {
       grid-template-columns: 1fr;
-      gap: 1.75rem;
+      justify-items: center;
       text-align: center;
+      gap: 2.5rem;
+    }
+    .footer-quote {
+      order: 2;
     }
     .footer-quote blockquote {
       margin-inline: auto;
     }
-    .footer-connect {
-      align-items: center;
+    .footer-brand {
+      order: 1;
+      border-left: none;
+    }
+    /* Photo becomes a soft full-width strip behind the content veil */
+    .footer-photo {
+      width: 100%;
+      opacity: 0.4;
+      background-image:
+        linear-gradient(180deg, var(--bg-card) 0%, rgba(246, 239, 233, 0.75) 40%, rgba(246, 239, 233, 0.85) 100%),
+        url('/images/footer-lavanda.jpg');
+      background-position: center, center;
+    }
+    .footer-fine {
+      justify-content: center;
       text-align: center;
     }
-    .footer-fine-top {
-      justify-content: center;
+    .footer-disclaimer {
+      order: 3;
     }
   }
 </style>

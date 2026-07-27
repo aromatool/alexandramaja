@@ -1,0 +1,123 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+// Text de start — clar și onest, acoperă strictul necesar (GDPR) pentru un
+// site care adună emailuri prin newsletter și un formular de contact.
+// De revizuit de un specialist înainte de a fi considerat definitiv.
+const updated = '27 iulie 2026';
+const contactEmail = 'contact@alexandramaja.ro';
+---
+
+<BaseLayout
+  title="Politica de confidențialitate"
+  description="Cum sunt colectate, folosite și protejate datele tale pe alexandramaja.ro."
+>
+  <section class="section legal">
+    <div class="container-reading mx-auto">
+      <span class="eyebrow">Documente</span>
+      <h1>Politica de confidențialitate</h1>
+      <p class="legal-updated">Ultima actualizare: {updated}</p>
+
+      <p>
+        Confidențialitatea ta contează pentru mine. Această pagină explică, pe
+        scurt și fără termeni complicați, ce date colectez, de ce și cum le
+        protejez atunci când folosești site-ul <strong>alexandramaja.ro</strong>.
+      </p>
+
+      <h2>Cine este responsabil</h2>
+      <p>
+        Site-ul este administrat de Alexandra Maja. Pentru orice întrebare legată
+        de datele tale, îmi poți scrie la
+        <a href={`mailto:${contactEmail}`}>{contactEmail}</a>.
+      </p>
+
+      <h2>Ce date colectez</h2>
+      <ul>
+        <li>
+          <strong>Adresa de email</strong> — doar dacă te abonezi la scrisoare
+          (newsletter) sau îmi scrii prin formularul de contact.
+        </li>
+        <li>
+          <strong>Numele</strong> — dacă alegi să mi-l lași atunci când îmi scrii.
+        </li>
+        <li>
+          <strong>Date tehnice de bază</strong> — informații anonime despre vizită
+          (pagini vizitate, tip de dispozitiv), folosite doar ca să înțeleg ce
+          conținut e util. Nu te identifică personal.
+        </li>
+      </ul>
+
+      <h2>De ce le folosesc</h2>
+      <ul>
+        <li>Ca să-ți trimit scrisoarea, atunci când te-ai abonat.</li>
+        <li>Ca să-ți răspund, atunci când îmi scrii.</li>
+        <li>Ca să îmbunătățesc conținutul și experiența pe site.</li>
+      </ul>
+      <p>Nu vând și nu închiriez datele tale nimănui. Punct.</p>
+
+      <h2>Cine mă ajută să le păstrez (procesatori)</h2>
+      <p>
+        Pentru a face aceste lucruri, folosesc câteva servicii de încredere, care
+        stochează datele în siguranță: un serviciu de trimitere a scrisorilor
+        (newsletter) și un serviciu care preia mesajele din formularul de contact.
+        Acestea prelucrează datele doar în numele meu și conform propriilor
+        politici de confidențialitate.
+      </p>
+
+      <h2>Cât timp le păstrez</h2>
+      <p>
+        Păstrez adresa ta de email atât timp cât ești abonat(ă). Te poți dezabona
+        oricând, cu un singur clic din josul oricărei scrisori — iar atunci datele
+        tale sunt eliminate din lista de contacte.
+      </p>
+
+      <h2>Drepturile tale</h2>
+      <p>
+        Conform legislației (GDPR), ai dreptul să afli ce date am despre tine, să
+        le corectezi, să le ștergi sau să te opui folosirii lor. E suficient să-mi
+        scrii la <a href={`mailto:${contactEmail}`}>{contactEmail}</a> și rezolv cât
+        de repede pot.
+      </p>
+
+      <h2>Modificări</h2>
+      <p>
+        Dacă actualizez această politică, voi schimba data de mai sus. Te invit să
+        arunci un ochi din când în când.
+      </p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .legal h1 {
+    margin-block: 0.5rem 0.5rem;
+  }
+  .legal-updated {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin-bottom: 2rem;
+  }
+  .legal h2 {
+    font-size: clamp(1.3rem, 2.4vw, 1.6rem);
+    margin-top: 2.5rem;
+    margin-bottom: 0.75rem;
+  }
+  .legal p,
+  .legal li {
+    color: var(--text-secondary);
+    line-height: 1.75;
+  }
+  .legal ul {
+    padding-left: 1.4rem;
+    margin-bottom: 1rem;
+  }
+  .legal li {
+    margin-top: 0.5rem;
+  }
+  .legal li::marker {
+    color: var(--accent-sage);
+  }
+  .legal a {
+    color: var(--accent-lavender-deep);
+  }
+</style>

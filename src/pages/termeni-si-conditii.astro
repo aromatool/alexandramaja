@@ -1,0 +1,91 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const updated = '27 iulie 2026';
+const contactEmail = 'contact@alexandramaja.ro';
+---
+
+<BaseLayout
+  title="Termeni și condiții"
+  description="Regulile simple de folosire a site-ului alexandramaja.ro."
+>
+  <section class="section legal">
+    <div class="container-reading mx-auto">
+      <span class="eyebrow">Documente</span>
+      <h1>Termeni și condiții</h1>
+      <p class="legal-updated">Ultima actualizare: {updated}</p>
+
+      <p>
+        Îți mulțumesc că ești aici. Prin folosirea site-ului
+        <strong>alexandramaja.ro</strong> accepți, pe scurt, câteva reguli
+        firești, scrise mai jos pe înțelesul tuturor.
+      </p>
+
+      <h2>Scopul conținutului</h2>
+      <p>
+        Tot ce citești aici — articole, ghiduri, recomandări — are scop
+        <strong>educativ și informativ</strong>. Vine din studiu și din
+        experiența mea personală și <strong>nu reprezintă sfat medical</strong>.
+        Nu înlocuiește consultul unui medic, farmacist sau alt specialist. Pentru
+        orice problemă de sănătate, te rog să te adresezi unui specialist.
+      </p>
+
+      <h2>Responsabilitate</h2>
+      <p>
+        Împărtășesc totul cu cea mai bună intenție, dar deciziile pe care le iei
+        pe baza informațiilor de aici îți aparțin. Nu îmi pot asuma răspunderea
+        pentru felul în care folosești conținutul.
+      </p>
+
+      <h2>Proprietate intelectuală</h2>
+      <p>
+        Textele, fotografiile și materialele de pe site îmi aparțin. Te bucur dacă
+        te inspiră — poți cita, cu menționarea sursei și un link către site — dar
+        te rog să nu le copiezi integral sau să le folosești comercial fără acordul
+        meu.
+      </p>
+
+      <h2>Linkuri către alte site-uri</h2>
+      <p>
+        Uneori recomand cărți, produse sau site-uri externe. Nu răspund pentru
+        conținutul altor pagini — fiecare are propriile reguli.
+      </p>
+
+      <h2>Modificări</h2>
+      <p>
+        Pot actualiza acești termeni din când în când; data de sus arată ultima
+        modificare.
+      </p>
+
+      <h2>Contact</h2>
+      <p>
+        Ai o întrebare? Scrie-mi la
+        <a href={`mailto:${contactEmail}`}>{contactEmail}</a>.
+      </p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .legal h1 {
+    margin-block: 0.5rem 0.5rem;
+  }
+  .legal-updated {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin-bottom: 2rem;
+  }
+  .legal h2 {
+    font-size: clamp(1.3rem, 2.4vw, 1.6rem);
+    margin-top: 2.5rem;
+    margin-bottom: 0.75rem;
+  }
+  .legal p,
+  .legal li {
+    color: var(--text-secondary);
+    line-height: 1.75;
+  }
+  .legal a {
+    color: var(--accent-lavender-deep);
+  }
+</style>
