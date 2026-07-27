@@ -16,7 +16,7 @@ export default config({
   ui: {
     brand: { name: 'Alexandra Maja' },
     navigation: {
-      Conținut: ['biblioteca', 'resurse'],
+      Conținut: ['biblioteca'],
       Pagini: ['home', 'despre'],
     },
   },
@@ -213,44 +213,6 @@ export default config({
         }),
         content: fields.markdoc({
           label: 'Conținut',
-        }),
-      },
-    }),
-
-    // --- Resursele din „Recomandările mele” ---
-    resurse: collection({
-      label: 'Resurse (Recomandări)',
-      slugField: 'title',
-      path: 'src/content/resurse/*',
-      format: { contentField: 'content' },
-      columns: ['title', 'pubDate'],
-      schema: {
-        title: fields.slug({ name: { label: 'Titlu' } }),
-        description: fields.text({
-          label: 'Descriere scurtă',
-          multiline: true,
-          validation: { isRequired: true },
-        }),
-        emoji: fields.text({
-          label: 'Emoji (opțional)',
-          description: 'Un simbol mic afișat pe card, ex: 📄 ✅ 📚 🌿',
-        }),
-        file: fields.file({
-          label: 'Fișier (PDF, ghid etc.)',
-          directory: 'public/resurse',
-          publicPath: '/resurse/',
-        }),
-        pubDate: fields.date({
-          label: 'Data',
-          defaultValue: { kind: 'today' },
-          validation: { isRequired: true },
-        }),
-        draft: fields.checkbox({
-          label: 'Ciornă',
-          defaultValue: false,
-        }),
-        content: fields.markdoc({
-          label: 'Detalii (opțional)',
         }),
       },
     }),

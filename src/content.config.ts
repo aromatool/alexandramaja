@@ -36,24 +36,4 @@ const biblioteca = defineCollection({
   }),
 });
 
-// Downloadable resources shown on "Recomandările mele" — PDFs, guides,
-// checklists. Same owned-asset principle: files live under /public, metadata
-// lives as portable Markdoc next to them.
-const resurse = defineCollection({
-  loader: glob({ pattern: '**/*.{md,mdoc}', base: './src/content/resurse' }),
-  schema: z.object({
-    title: z.string(),
-    description: z.string(),
-    emoji: z.string().optional().nullable(),
-    // Downloadable file. Like the cover image, Keystatic writes the FULL public
-    // path and stores the file in a per-resource subfolder named after the slug:
-    //   file:  public/resurse/<slug>/file.pdf
-    //   value: /resurse/<slug>/file.pdf
-    // Use this value directly as an <a href>.
-    file: z.string().optional().nullable(),
-    pubDate: z.coerce.date(),
-    draft: z.boolean().optional().default(false),
-  }),
-});
-
-export const collections = { biblioteca, resurse };
+export const collections = { biblioteca };
