@@ -2,8 +2,9 @@
 const year = new Date().getFullYear();
 
 const social = [
-  { href: 'https://instagram.com', label: 'Instagram', icon: 'instagram' },
-  { href: 'https://facebook.com', label: 'Facebook', icon: 'facebook' },
+  { href: 'https://www.instagram.com/alexandra.maja89', label: 'Instagram', icon: 'instagram' },
+  { href: 'https://www.facebook.com/marian.alexandra.560', label: 'Facebook', icon: 'facebook' },
+  { href: 'https://wa.me/40754015566', label: 'WhatsApp', icon: 'whatsapp' },
 ];
 
 const legalLinks = [
@@ -61,6 +62,11 @@ const contactEmail = 'contact@alexandramaja.ro';
               {s.icon === 'facebook' && (
                 <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                   <path d="M14 9h3V6h-3c-1.9 0-3 1.4-3 3.3V11H8v3h3v7h3v-7h2.5l.5-3H14V9.6c0-.4.3-.6.7-.6Z" />
+                </svg>
+              )}
+              {s.icon === 'whatsapp' && (
+                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <path d="M12 3.5a8.5 8.5 0 0 0-7.3 12.8L3.5 20.5l4.3-1.1A8.5 8.5 0 1 0 12 3.5Zm0 1.6a6.9 6.9 0 0 1 5.9 10.5.7.7 0 0 0-.1.6l.6 2.1-2.2-.6a.7.7 0 0 0-.5.1A6.9 6.9 0 1 1 12 5.1Zm-2.6 3.2c-.15 0-.4.06-.6.3-.2.24-.8.79-.8 1.9s.82 2.2.93 2.35c.12.15 1.6 2.55 3.95 3.47 1.95.77 2.35.62 2.77.58.42-.04 1.37-.56 1.56-1.1.19-.54.19-1 .13-1.1-.06-.1-.21-.16-.44-.28-.23-.12-1.37-.68-1.58-.76-.21-.08-.37-.12-.53.12-.15.23-.6.76-.74.92-.14.15-.27.17-.5.06-.23-.12-.97-.36-1.85-1.14-.68-.61-1.14-1.36-1.28-1.59-.13-.23-.01-.36.1-.47.1-.1.23-.27.35-.4.11-.14.15-.24.23-.4.08-.15.04-.29-.02-.4-.06-.12-.53-1.28-.73-1.75-.19-.46-.39-.4-.53-.4Z" />
                 </svg>
               )}
             </a>
