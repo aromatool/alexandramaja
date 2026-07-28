@@ -242,6 +242,13 @@ strong {
     color 0.2s ease;
 }
 
+/* `display: inline-flex` above would otherwise beat the browser's `hidden`
+   attribute — so JS that does `button.hidden = true` (e.g. hiding a submit
+   button on form success) wouldn't actually hide it. This restores it. */
+.btn[hidden] {
+  display: none;
+}
+
 .btn-primary {
   background-color: var(--button-bg);
   color: var(--button-text);

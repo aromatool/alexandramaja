@@ -150,6 +150,13 @@ const {
     margin-top: 1.5rem;
   }
 
+  /* On success the JS sets `form.hidden = true`; this override must beat the
+     `display: flex` above, otherwise the form (and its stuck "Se trimite…"
+     button) stays visible next to the thank-you note. */
+  .newsletter-form[hidden] {
+    display: none;
+  }
+
   .newsletter-form input {
     flex: 1;
     font-family: var(--font-body);
