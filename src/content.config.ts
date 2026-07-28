@@ -17,10 +17,8 @@ const biblioteca = defineCollection({
     category: z.enum([
       'Plante',
       'Aromaterapie',
-      'Ceaiuri',
       'Stil de viață',
-      'Familie',
-      'Cărți & Conferințe',
+      'Experiențe & Conferințe',
       'Jurnal',
     ]),
     readingTime: z.string().optional(),

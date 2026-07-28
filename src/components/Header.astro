@@ -2,10 +2,12 @@
 // Primary navigation. The Biblioteca dropdown lists the library's shelves;
 // each links to /biblioteca#<slug>, which preselects that category on the
 // Biblioteca index (client-side filter + deep-link).
+import CategoryIcon from './CategoryIcon.astro';
+
 interface NavChild {
   href: string;
   label: string;
-  emoji?: string;
+  icon?: string;
 }
 interface NavItem {
   href: string;
@@ -23,13 +25,11 @@ const links: NavItem[] = [
     activeMatch: '/biblioteca',
     children: [
       { href: '/biblioteca', label: 'Toate articolele' },
-      { href: '/biblioteca#plante', label: 'Plante', emoji: '🌿' },
-      { href: '/biblioteca#aromaterapie', label: 'Aromaterapie', emoji: '🌸' },
-      { href: '/biblioteca#ceaiuri', label: 'Ceaiuri', emoji: '🍵' },
-      { href: '/biblioteca#stil-de-viata', label: 'Stil de viață', emoji: '🌞' },
-      { href: '/biblioteca#familie', label: 'Familie', emoji: '💛' },
-      { href: '/biblioteca#carti-conferinte', label: 'Cărți & Conferințe', emoji: '📚' },
-      { href: '/biblioteca#jurnal', label: 'Jurnal', emoji: '✍️' },
+      { href: '/biblioteca#plante', label: 'Plante', icon: 'plante' },
+      { href: '/biblioteca#aromaterapie', label: 'Aromaterapie', icon: 'aromaterapie' },
+      { href: '/biblioteca#stil-de-viata', label: 'Stil de viață', icon: 'stil-de-viata' },
+      { href: '/biblioteca#experiente-conferinte', label: 'Experiențe & Conferințe', icon: 'experiente-conferinte' },
+      { href: '/biblioteca#jurnal', label: 'Jurnal', icon: 'jurnal' },
     ],
   },
   { href: '/lucreaza-cu-alexandra', label: 'Lucrează cu Alexandra', activeMatch: '/lucreaza-cu-alexandra' },
@@ -92,7 +92,7 @@ const isActive = (item: NavItem) => {
                   {item.children.map((child) => (
                     <li>
                       <a href={child.href}>
-                        {child.emoji && <span class="submenu-emoji" aria-hidden="true">{child.emoji}</span>}
+                        {child.icon && <CategoryIcon name={child.icon} class="submenu-icon" />}
                         {child.label}
                       </a>
                     </li>
@@ -291,11 +291,11 @@ const isActive = (item: NavItem) => {
     white-space: nowrap;
   }
 
-  .submenu-emoji {
-    font-size: 1rem;
-    line-height: 1;
-    width: 1.25em;
-    text-align: center;
+  .submenu a :global(.submenu-icon) {
+    width: 18px;
+    height: 18px;
+    flex: none;
+    color: var(--accent-sage-dark);
   }
 
   .submenu a:hover {
@@ -367,6 +367,15 @@ const isActive = (item: NavItem) => {
   }
 
   @media (max-width: 1080px) {
+    /* The off-canvas drawer is position:fixed but contained by .site-header
+       (backdrop-filter makes the header its containing block), so its closed
+       off-screen position leaks horizontal scroll. Clip it at the header —
+       `clip` (not `hidden`) avoids creating a scroll container, so the sticky
+       header and the full-height drawer both keep working. */
+    .site-header {
+      overflow-x: clip;
+    }
+
     .header-inner {
       grid-template-columns: auto auto;
       justify-content: space-between;

@@ -170,15 +170,28 @@ strong {
 }
 
 /* --- Layout helpers --- */
-.container {
+/* All three share the same centering + side padding; only the max-width
+   differs. The padding is what keeps text off the screen edges on mobile —
+   `container-narrow`/`container-reading` are often used WITHOUT `container`,
+   so the padding has to live here, not only on `.container`. */
+.container,
+.container-narrow,
+.container-reading {
   width: 100%;
-  max-width: var(--container);
   margin-inline: auto;
   padding-inline: var(--pad-inline);
 }
 
+.container {
+  max-width: var(--container);
+}
+
 .container-narrow {
   max-width: var(--container-narrow);
+}
+
+.container-reading {
+  max-width: var(--container-reading);
 }
 
 .section {

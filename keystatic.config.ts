@@ -180,10 +180,8 @@ export default config({
           options: [
             { label: '🌿 Plante', value: 'Plante' },
             { label: '🌸 Aromaterapie', value: 'Aromaterapie' },
-            { label: '🍵 Ceaiuri', value: 'Ceaiuri' },
             { label: '🌞 Stil de viață', value: 'Stil de viață' },
-            { label: '💛 Familie', value: 'Familie' },
-            { label: '📚 Cărți & Conferințe', value: 'Cărți & Conferințe' },
+            { label: '📚 Experiențe & Conferințe', value: 'Experiențe & Conferințe' },
             { label: '✍️ Jurnal', value: 'Jurnal' },
           ],
           defaultValue: 'Plante',

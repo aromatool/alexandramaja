@@ -1,0 +1,70 @@
+---
+// Line-art icons for the Biblioteca "shelves" (categories). Single source of
+// truth, used by both the header dropdown and the /biblioteca filter chips, so
+// the two never drift apart.
+//
+// Style: duotone — a soft translucent fill + a rounded stroke, echoing the
+// brand mark (the sprig in the header logo). Both stroke and fill use
+// `currentColor`, so an icon adapts to its context (e.g. turns cream on an
+// active sage chip). The parent decides size via an anchored :global() rule.
+interface Props {
+  name: string; // slug: plante | aromaterapie | stil-de-viata | experiente-conferinte | jurnal
+  class?: string;
+}
+const { name, class: className } = Astro.props;
+---
+
+<style>
+  /* Sane default size; parents override via an anchored :global() rule. */
+  svg {
+    display: inline-block;
+    width: 1.15em;
+    height: 1.15em;
+    flex: none;
+  }
+</style>
+
+{
+  name === 'plante' && (
+    <svg class={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M12 21.5V8.5" />
+      <path d="M12 13.5c0-3.4 2.4-6.3 5.7-7.1-.2 3.6-2.4 6.4-5.7 7.1Z" fill="currentColor" fill-opacity="0.16" />
+      <path d="M12 16.5c0-2.9-2-5.4-5-6.2.2 3 2 5.5 5 6.2Z" fill="currentColor" fill-opacity="0.16" />
+    </svg>
+  )
+}
+{
+  name === 'aromaterapie' && (
+    <svg class={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M10 2.6h4" />
+      <path d="M10.7 2.6v3.1M13.3 2.6v3.1" />
+      <path d="M8.9 5.7h6.2v2a5.5 5.5 0 1 1-6.2 0v-2Z" fill="currentColor" fill-opacity="0.15" />
+      <path d="M12 11.6c1 1.2 1.6 2.1 1.6 2.8a1.6 1.6 0 1 1-3.2 0c0-.7.6-1.6 1.6-2.8Z" fill="currentColor" fill-opacity="0.3" />
+    </svg>
+  )
+}
+{
+  name === 'stil-de-viata' && (
+    <svg class={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <circle cx="12" cy="12" r="4.1" fill="currentColor" fill-opacity="0.16" />
+      <path d="M12 2.6v2.1M12 19.3v2.1M4.7 4.7l1.5 1.5M17.8 17.8l1.5 1.5M2.6 12h2.1M19.3 12h2.1M4.7 19.3l1.5-1.5M17.8 6.2l1.5-1.5" />
+    </svg>
+  )
+}
+{
+  name === 'experiente-conferinte' && (
+    <svg class={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M12 6.7C9.5 4.9 6.6 4.4 3.8 4.9v12.7c2.8-.5 5.7 0 8.2 1.8V6.7Z" fill="currentColor" fill-opacity="0.15" />
+      <path d="M12 6.7c2.5-1.8 5.4-2.3 8.2-1.8v12.7c-2.8-.5-5.7 0-8.2 1.8V6.7Z" fill="currentColor" fill-opacity="0.15" />
+      <path d="M12 6.7v12.7" />
+    </svg>
+  )
+}
+{
+  name === 'jurnal' && (
+    <svg class={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M6.5 3.5h10A1.5 1.5 0 0 1 18 5v14.4a.7.7 0 0 1-1 .64L13 18l-4 2.04a.7.7 0 0 1-1-.64V5A1.5 1.5 0 0 1 6.5 3.5Z" fill="currentColor" fill-opacity="0.14" />
+      <path d="M9.5 8.5h5M9.5 11.5h3.2" />
+    </svg>
+  )
+}
