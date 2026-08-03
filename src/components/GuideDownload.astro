@@ -1,0 +1,208 @@
+---
+// Reusable "lead magnet" box. Shown at the end of an article when a PDF is
+// attached (see the `guidePdf` field on the biblioteca collection). The reader
+// leaves an email → is subscribed to the newsletter via /api/subscribe → and
+// gets an instant download link on the page. One implementation, reused by
+// every article — Alexandra just attaches a PDF in Keystatic, no code.
+interface Props {
+  pdf: string;
+  title?: string;
+  text?: string;
+}
+const {
+  pdf,
+  title = 'Descarcă ghidul gratuit',
+  text = 'Lasă-mi adresa ta de email și îți deschid ghidul pe loc. Te abonezi și la „Scrisori de suflet" — din când în când îți scriu personal, și poți renunța oricând.',
+} = Astro.props;
+---
+
+<aside class="guide" data-guide data-pdf={pdf} aria-label={title}>
+  <span class="guide-icon" aria-hidden="true">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 3v11" />
+      <path d="M8 10.5l4 4 4-4" />
+      <path d="M5 20.5h14" fill="none" />
+      <path d="M6.5 4.5h4a3 3 0 0 1 0 6h-4Z" fill="currentColor" fill-opacity="0.12" stroke="none" />
+    </svg>
+  </span>
+
+  <h3 class="guide-title">{title}</h3>
+  <p class="guide-text">{text}</p>
+
+  <form class="guide-form" data-guide-form>
+    <input
+      type="email"
+      name="email"
+      required
+      autocomplete="email"
+      placeholder="adresa ta de email"
+      aria-label="Adresa ta de email"
+    />
+    <button type="submit" class="btn btn-primary">Trimite-mi ghidul</button>
+  </form>
+
+  <div class="guide-done" data-guide-done hidden>
+    <p class="guide-done-msg">Gata — ți-am pregătit ghidul. 🌿</p>
+    <a class="btn btn-primary guide-link" data-guide-link href={pdf} target="_blank" rel="noopener" download>
+      Descarcă ghidul (PDF)
+    </a>
+  </div>
+
+  <p class="guide-error" data-guide-error hidden>
+    Ceva n-a mers. Mai încearcă o dată în câteva momente.
+  </p>
+  <p class="guide-fineprint">Fără spam. Te poți dezabona oricând.</p>
+</aside>
+
+<style>
+  .guide {
+    max-width: var(--container-reading);
+    margin: clamp(2.5rem, 6vw, 3.5rem) auto 0;
+    padding: clamp(1.75rem, 4vw, 2.5rem);
+    text-align: center;
+    background-color: var(--tint-lavender);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius-lg);
+  }
+
+  .guide-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background-color: var(--bg-page);
+    color: var(--accent-lavender-deep);
+    margin-bottom: 1rem;
+  }
+
+  .guide-icon svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  .guide-title {
+    font-size: clamp(1.35rem, 3vw, 1.7rem);
+    margin-bottom: 0.6rem;
+  }
+
+  .guide-text {
+    color: var(--text-secondary);
+    max-width: 46ch;
+    margin: 0 auto 1.5rem;
+  }
+
+  .guide-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    justify-content: center;
+    max-width: 460px;
+    margin-inline: auto;
+  }
+
+  /* On success the JS sets `form.hidden = true`; this override must beat the
+     `display: flex` above so the form actually disappears. */
+  .guide-form[hidden] {
+    display: none;
+  }
+
+  .guide-form input {
+    flex: 1 1 220px;
+    font-family: var(--font-body);
+    font-size: 1rem;
+    padding: 0.85rem 1.1rem;
+    border-radius: var(--radius-sm);
+    border: 1.5px solid var(--border-soft);
+    background-color: var(--bg-page);
+    color: var(--text-main);
+  }
+
+  .guide-form input::placeholder {
+    color: var(--text-muted);
+  }
+
+  .guide-form input:focus {
+    outline: none;
+    border-color: var(--accent-lavender);
+  }
+
+  .guide-done {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.9rem;
+  }
+
+  .guide-done[hidden] {
+    display: none;
+  }
+
+  .guide-done-msg {
+    font-weight: 600;
+    color: var(--accent-sage-dark);
+  }
+
+  .guide-error {
+    margin-top: 1rem;
+    font-weight: 600;
+    color: var(--accent-terracotta, #b5654a);
+  }
+
+  .guide-fineprint {
+    margin-top: 0.9rem;
+    font-size: 0.82rem;
+    color: var(--text-muted);
+  }
+</style>
+
+<script>
+  // Each box works independently (in case an article ever has more than one).
+  document.querySelectorAll<HTMLElement>('[data-guide]').forEach((box) => {
+    const form = box.querySelector<HTMLFormElement>('[data-guide-form]');
+    const done = box.querySelector<HTMLElement>('[data-guide-done]');
+    const errorEl = box.querySelector<HTMLElement>('[data-guide-error]');
+    const link = box.querySelector<HTMLAnchorElement>('[data-guide-link]');
+    const input = box.querySelector<HTMLInputElement>('input[type="email"]');
+    const button = form?.querySelector<HTMLButtonElement>('button[type="submit"]');
+    const pdf = box.dataset.pdf || '';
+
+    if (link && pdf) link.href = pdf;
+    if (!form) return;
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const email = input?.value.trim() ?? '';
+      if (!email) return;
+
+      if (errorEl) errorEl.hidden = true;
+      const originalLabel = button?.textContent;
+      if (button) {
+        button.disabled = true;
+        button.textContent = 'Se trimite…';
+      }
+
+      try {
+        const res = await fetch('/api/subscribe', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: JSON.stringify({ email }),
+        });
+        const data = (await res.json().catch(() => ({}))) as { ok?: boolean };
+        if (res.ok && data.ok) {
+          form.hidden = true;
+          if (done) done.hidden = false;
+        } else {
+          throw new Error('subscribe_failed');
+        }
+      } catch {
+        if (button) {
+          button.disabled = false;
+          button.textContent = originalLabel ?? 'Trimite-mi ghidul';
+        }
+        if (errorEl) errorEl.hidden = false;
+      }
+    });
+  });
+</script>

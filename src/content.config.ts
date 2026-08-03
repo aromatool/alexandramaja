@@ -30,6 +30,13 @@ const biblioteca = defineCollection({
     // card/article falls back to the botanical placeholder.
     image: z.string().optional().nullable(),
     imageAlt: z.string().optional().nullable(),
+    // Optional free download ("lead magnet"). When a PDF is attached, the
+    // article automatically shows a branded box: the reader leaves an email,
+    // joins the newsletter, and gets an instant download link. Reusable on any
+    // article — no code needed, Alexandra just attaches a PDF in Keystatic.
+    guidePdf: z.string().optional().nullable(),
+    guideTitle: z.string().optional().nullable(),
+    guideText: z.string().optional().nullable(),
     draft: z.boolean().optional().default(false),
   }),
 });

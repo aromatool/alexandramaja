@@ -204,6 +204,26 @@ export default config({
         imageAlt: fields.text({
           label: 'Descrierea imaginii (pentru accesibilitate)',
         }),
+        // --- Ghid gratuit de descărcat (opțional) ---
+        // Atașezi un PDF și, la finalul articolului, apare automat o casetă:
+        // cititorul lasă emailul → intră în newsletter → primește pe loc un
+        // link de descărcare. Se refolosește pe orice articol, fără cod.
+        guidePdf: fields.file({
+          label: 'Ghid de descărcat (PDF) — opțional',
+          description:
+            'Dacă atașezi un PDF, la finalul articolului apare o casetă de descărcare. Cititorul lasă emailul, intră în „Scrisori de suflet" și primește pe loc linkul. Lasă gol dacă articolul n-are ghid.',
+          directory: 'public/ghiduri',
+          publicPath: '/ghiduri/',
+        }),
+        guideTitle: fields.text({
+          label: 'Ghid — titlul casetei (opțional)',
+          description: 'ex: „Descarcă gratuit ghidul de detoxifiere". Gol = titlu implicit.',
+        }),
+        guideText: fields.text({
+          label: 'Ghid — textul casetei (opțional)',
+          description: 'Un rând-două de invitație. Gol = text implicit.',
+          multiline: true,
+        }),
         draft: fields.checkbox({
           label: 'Ciornă',
           description: 'Bifat = nu apare pe site. Debifează când e gata de publicat.',
