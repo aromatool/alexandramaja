@@ -1,4 +1,5 @@
 import { config, fields, collection, singleton } from '@keystatic/core';
+import { block } from '@keystatic/core/content-components';
 
 // Keystatic = the friendly editor on top of the content library.
 // It writes plain Markdoc + images straight back into the repo, so the
@@ -204,26 +205,6 @@ export default config({
         imageAlt: fields.text({
           label: 'Descrierea imaginii (pentru accesibilitate)',
         }),
-        // --- Ghid gratuit de descărcat (opțional) ---
-        // Atașezi un PDF și, la finalul articolului, apare automat o casetă:
-        // cititorul lasă emailul → intră în newsletter → primește pe loc un
-        // link de descărcare. Se refolosește pe orice articol, fără cod.
-        guidePdf: fields.file({
-          label: 'Ghid de descărcat (PDF) — opțional',
-          description:
-            'Dacă atașezi un PDF, la finalul articolului apare o casetă de descărcare. Cititorul lasă emailul, intră în „Scrisori de suflet" și primește pe loc linkul. Lasă gol dacă articolul n-are ghid.',
-          directory: 'public/ghiduri',
-          publicPath: '/ghiduri/',
-        }),
-        guideTitle: fields.text({
-          label: 'Ghid — titlul casetei (opțional)',
-          description: 'ex: „Descarcă gratuit ghidul de detoxifiere". Gol = titlu implicit.',
-        }),
-        guideText: fields.text({
-          label: 'Ghid — textul casetei (opțional)',
-          description: 'Un rând-două de invitație. Gol = text implicit.',
-          multiline: true,
-        }),
         draft: fields.checkbox({
           label: 'Ciornă',
           description: 'Bifat = nu apare pe site. Debifează când e gata de publicat.',
@@ -231,6 +212,35 @@ export default config({
         }),
         content: fields.markdoc({
           label: 'Conținut',
+          // --- Blocuri de inserat oriunde în text ---
+          // Alexandra apasă „+” în editor și inserează „Ghid de descărcat"
+          // exact acolo unde vrea în articol (nu doar la final). Pe site,
+          // blocul devine caseta cu formular de email + link de descărcare.
+          components: {
+            ghid: block({
+              label: 'Ghid de descărcat (PDF)',
+              description:
+                'Casetă cu formular de email + link de descărcare. Cititorul lasă emailul, intră în „Scrisori de suflet" și primește pe loc PDF-ul. O poți pune oriunde în articol.',
+              schema: {
+                pdf: fields.file({
+                  label: 'Fișier PDF',
+                  description: 'Ghidul pe care îl primește cititorul.',
+                  directory: 'public/ghiduri',
+                  publicPath: '/ghiduri/',
+                  validation: { isRequired: true },
+                }),
+                title: fields.text({
+                  label: 'Titlul casetei (opțional)',
+                  description: 'Gol = „Descarcă ghidul gratuit".',
+                }),
+                text: fields.text({
+                  label: 'Textul casetei (opțional)',
+                  description: 'Un rând-două de invitație. Gol = text implicit.',
+                  multiline: true,
+                }),
+              },
+            }),
+          },
         }),
       },
     }),

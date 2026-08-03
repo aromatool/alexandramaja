@@ -5,7 +5,6 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import NewsletterSignup from '../../components/NewsletterSignup.astro';
 import BotanicalDivider from '../../components/BotanicalDivider.astro';
 import ArticleCard from '../../components/ArticleCard.astro';
-import GuideDownload from '../../components/GuideDownload.astro';
 
 export async function getStaticPaths() {
   const articles = await getCollection('biblioteca', ({ data }) => !data.draft);
@@ -20,8 +19,7 @@ interface Props {
 }
 
 const { article } = Astro.props;
-const { title, description, pubDate, updatedDate, category, readingTime, image, guidePdf, guideTitle, guideText } =
-  article.data;
+const { title, description, pubDate, updatedDate, category, readingTime, image } = article.data;
 const { Content } = await render(article);
 
 const dateLabel = pubDate.toLocaleDateString('ro-RO', {
@@ -79,20 +77,11 @@ const related = all
     </div>
 
     <!-- Body -->
+    <!-- Ghidul de descărcat (caseta „{% ghid %}") se inserează din editor,
+         oriunde în text, și se randează în interiorul <Content />. -->
     <div class="container-reading mx-auto prose">
       <Content />
     </div>
-
-    {/* Ghid gratuit de descărcat — apare doar dacă articolul are un PDF atașat. */}
-    {
-      guidePdf && (
-        <GuideDownload
-          pdf={guidePdf}
-          title={guideTitle ?? undefined}
-          text={guideText ?? undefined}
-        />
-      )
-    }
 
     <!-- Signature -->
     <div class="container-reading mx-auto post-signature">
