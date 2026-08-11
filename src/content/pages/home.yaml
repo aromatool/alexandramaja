@@ -1,11 +1,10 @@
 heroTitleLine1: Natură. Echilibru.
 heroTitleAccent: Viață cu sens.
-heroSub: |-
-  Inspirație din plante, aromaterapie și alegeri conștiente pentru o viață mai simplă, mai sănătoasă și mai frumoasă.
+heroSub: >-
+  Inspirație din plante, aromaterapie și alegeri conștiente pentru o viață mai
+  simplă, mai sănătoasă și mai frumoasă.
 heroCta: Intră în bibliotecă
-heroPhoto: null
-heroQuote: |-
-  Când ne întoarcem la simplitate, ne întoarcem la noi înșine.
+heroQuote: Când ne întoarcem la simplitate, ne întoarcem la noi înșine.
 benefits:
   - title: Experiență reală
     text: Testez înainte să recomand
@@ -16,6 +15,8 @@ benefits:
   - title: Inspirație pentru fiecare zi
     text: Idei simple, aplicabile
 aboutTitle: Despre mine
-aboutText: |-
-  Sunt pasionată de plante, de aromaterapie și de modul în care natura ne poate susține fiecare pas. Călătoresc, învăț, experimentez și împărtășesc aici tot ce descopăr și trăiesc.
-aboutPhoto: null
+aboutText: >-
+  Sunt pasionată de plante, de aromaterapie și de modul în care natura ne poate
+  susține fiecare pas. Călătoresc, învăț, experimentez și împărtășesc aici tot
+  ce descopăr și trăiesc.
+aboutPhoto: /images/home/aboutPhoto.jpeg
