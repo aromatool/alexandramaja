@@ -116,5 +116,13 @@ const jsonLd = { '@context': 'https://schema.org', '@graph': graph };
       <slot />
     </main>
     <Footer />
+
+    <!-- Cloudflare Web Analytics — statistici de trafic, gratuit și fără cookies
+         (prietenos GDPR, nu necesită banner de consimțământ). Token public. -->
+    <script
+      defer
+      src="https://static.cloudflareinsights.com/beacon.min.js"
+      data-cf-beacon='{"token": "8845e454e1f045c7966f63909ffbd315"}'
+      is:inline></script>
   </body>
 </html>
