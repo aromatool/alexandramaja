@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 56 64" width="56" height="64">
+  <g fill="none" stroke-linecap="round">
+    <!-- main stem -->
+    <path d="M28 60 V 20" stroke="#9a7a84" stroke-width="1.6" />
+    <!-- leaf pairs down the stem, largest at bottom -->
+    <g stroke="#9a7a84" stroke-width="1.2">
+      <path d="M28 50 c 0 -5 3 -9 8 -11 -0.4 5 -3 9 -8 11 Z" fill="#9a7a84" fill-opacity="0.24" />
+      <path d="M28 50 c 0 -5 -3 -9 -8 -11 0.4 5 3 9 8 11 Z" fill="#9a7a84" fill-opacity="0.24" />
+      <path d="M28 40 c 0 -4.4 2.6 -8 7 -9.6 -0.4 4.4 -2.6 7.8 -7 9.6 Z" fill="#9a7a84" fill-opacity="0.28" />
+      <path d="M28 40 c 0 -4.4 -2.6 -8 -7 -9.6 0.4 4.4 2.6 7.8 7 9.6 Z" fill="#9a7a84" fill-opacity="0.28" />
+      <path d="M28 30 c 0 -3.6 2.2 -6.6 6 -8 -0.4 3.6 -2.2 6.4 -6 8 Z" fill="#9a7a84" fill-opacity="0.32" />
+      <path d="M28 30 c 0 -3.6 -2.2 -6.6 -6 -8 0.4 3.6 2.2 6.4 6 8 Z" fill="#9a7a84" fill-opacity="0.32" />
+    </g>
+    <!-- crown leaf -->
+    <path d="M28 22 c 0 -4 1.6 -7.4 5 -9.4 -0.2 4 -1.8 7.2 -5 9.4 Z" fill="#aba286" fill-opacity="0.35" stroke="#aba286" stroke-width="1.2" />
+    <path d="M28 22 c 0 -4 -1.6 -7.4 -5 -9.4 0.2 4 1.8 7.2 5 9.4 Z" fill="#aba286" fill-opacity="0.35" stroke="#aba286" stroke-width="1.2" />
+    <!-- terracotta bud at the top -->
+    <circle cx="28" cy="10" r="2.6" fill="#c79b77" stroke="none" />
+  </g>
+</svg>
