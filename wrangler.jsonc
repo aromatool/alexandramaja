@@ -12,5 +12,15 @@
   "assets": {
     "directory": "./dist",
     "binding": "ASSETS"
+  },
+  // Plaintext env vars, versioned here so they SURVIVE every Git deploy.
+  // (Variables added only via the Cloudflare dashboard get wiped on the next
+  // `wrangler deploy`, since this file is the source of truth.)
+  //
+  // MAILERLITE_GROUP_ID = "Scrisori de suflet" — newsletter sign-ups from the
+  // site are added to this group. NOT a secret, just an identifier.
+  // The API key (MAILERLITE_API_KEY) stays a SECRET in the dashboard — never here.
+  "vars": {
+    "MAILERLITE_GROUP_ID": "193702956451759960"
   }
 }
