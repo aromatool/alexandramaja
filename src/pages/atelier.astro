@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import BotanicalDivider from '../components/BotanicalDivider.astro';
+import AtelierBag from '../components/AtelierBag.astro';
 import { getCollection } from 'astro:content';
 
 // ============================================================================
@@ -158,7 +159,17 @@ const process = [
                       <span class="tag tag-quiet">{d.availability}</span>
                     )}
                   </div>
-                  <span class="piece-more">Descoperă →</span>
+                  {d.price && (
+                    <div class="piece-price"><span class="price-tag">{d.price}</span></div>
+                  )}
+                  <div class="piece-actions">
+                    {d.availability === 'În atelier acum' && (
+                      <button type="button" class="bag-add" data-bag-add data-id={p.id} data-name={d.title} data-price={d.price ?? ''}>
+                        Pune în desagă
+                      </button>
+                    )}
+                    <a href={`/atelier/${p.id}`} class="piece-more">Descoperă →</a>
+                  </div>
                 </div>
               </article>
             );
@@ -201,7 +212,17 @@ const process = [
                   <h3 class="book-name">{d.title}</h3>
                   <p class="book-desc">{d.shortDescription}</p>
                   {d.audience && <p class="book-audience">{d.audience}</p>}
-                  <span class="piece-more">Descoperă cartea →</span>
+                  {d.price && (
+                    <div class="book-price"><span class="price-tag">{d.price}</span></div>
+                  )}
+                  <div class="book-actions">
+                    {d.availability === 'În atelier acum' && (
+                      <button type="button" class="bag-add" data-bag-add data-id={b.id} data-name={d.title} data-price={d.price ?? ''}>
+                        Pune în desagă
+                      </button>
+                    )}
+                    <a href={`/atelier/${b.id}`} class="piece-more">Descoperă cartea →</a>
+                  </div>
                 </div>
               </article>
             );
@@ -288,6 +309,8 @@ const process = [
       </form>
     </div>
   </section>
+
+  <AtelierBag />
 </BaseLayout>
 
 <style>
@@ -516,6 +539,30 @@ const process = [
   }
   .tag-quiet {
     color: var(--text-muted);
+  }
+  .piece-price {
+    margin-top: 1rem;
+  }
+  .book-price {
+    margin-top: 0.9rem;
+  }
+  .piece-actions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1.1rem;
+    margin-top: 1.1rem;
+  }
+  .book-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    margin-top: 0.9rem;
+  }
+  .piece-actions .piece-more,
+  .book-actions .piece-more {
+    margin-top: 0;
   }
   .piece-more {
     display: inline-block;

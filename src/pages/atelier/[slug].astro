@@ -1,0 +1,375 @@
+---
+import { getCollection, render } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import BotanicalDivider from '../../components/BotanicalDivider.astro';
+import AtelierBag from '../../components/AtelierBag.astro';
+
+// Pagina de detaliu a unui lucru din atelier. La fel de ascunsă ca listarea
+// (noindex + scoasă din sitemap/robots). Comanda e conversațională, prin
+// WhatsApp — fără coș, fără checkout.
+export async function getStaticPaths() {
+  const items = await getCollection('atelier', ({ data }) => !data.draft);
+  return items.map((item) => ({ params: { slug: item.id }, props: { item } }));
+}
+
+interface Props {
+  item: CollectionEntry<'atelier'>;
+}
+
+const { item } = Astro.props;
+const d = item.data;
+const { Content } = await render(item);
+
+const images = d.images ?? [];
+const ingredients = d.ingredients ?? [];
+const orderable = d.availability === 'În atelier acum';
+
+// Mesaj blând pentru lucrurile care nu-s „în atelier acum".
+const statusText: Record<string, string> = {
+  'Lot încheiat': 'Lotul acesta s-a încheiat. Revine când găsesc din nou plantele potrivite.',
+  'Revine în sezon': 'Revine în sezon — când e din nou vremea lui.',
+  'În pregătire': 'Încă în atelier. Revine curând.',
+};
+
+// Articole legate din Bibliotecă (dacă au fost alese pentru acest produs).
+let related: CollectionEntry<'biblioteca'>[] = [];
+if (d.relatedArticles?.length) {
+  const all = await getCollection('biblioteca', ({ data }) => !data.draft);
+  related = all.filter((a) => d.relatedArticles.includes(a.id));
+}
+---
+
+<BaseLayout title={d.title} description={d.shortDescription} noindex={true}>
+  <article class="prod">
+    <div class="container">
+      <a href="/atelier" class="prod-back">← Atelier</a>
+
+      <div class="prod-grid">
+        <!-- Fotografii (sau placeholder) -->
+        <div class="prod-media">
+          {
+            images.length > 0 ? (
+              <>
+                <figure class="prod-photo prod-photo-main">
+                  <img src={images[0].image} alt={images[0].alt ?? d.title} loading="eager" onerror="this.remove()" />
+                </figure>
+                {images.length > 1 && (
+                  <div class="prod-thumbs">
+                    {images.slice(1).map((im) => (
+                      <figure class="prod-photo">
+                        <img src={im.image} alt={im.alt ?? d.title} loading="lazy" onerror="this.remove()" />
+                      </figure>
+                    ))}
+                  </div>
+                )}
+              </>
+            ) : (
+              <figure class="prod-photo prod-photo-main photo-ph" data-note="Fotografie a produsului, în context — lemn, plante, lumină caldă">
+                <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                  <path d="M20 33 V16" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" />
+                  <path d="M20 18 c0-3.6 2-6.4 5-7.4 -0.3 3.6-2 6.4-5 7.4Z" fill="currentColor" fill-opacity="0.2" />
+                  <path d="M20 18 c0-3.6 -2-6.4 -5-7.4 0.3 3.6 2 6.4 5 7.4Z" fill="currentColor" fill-opacity="0.2" />
+                </svg>
+              </figure>
+            )
+          }
+        </div>
+
+        <!-- Informații + comandă -->
+        <div class="prod-info">
+          <span class="prod-cat">{d.category}</span>
+          <h1 class="prod-name">{d.title}</h1>
+          <p class="prod-lead">{d.shortDescription}</p>
+
+          <div class="prod-meta">
+            {d.batch && <span class="tag">{d.batch}</span>}
+            {d.season && <span class="tag">{d.season}</span>}
+            {d.audience && <p class="prod-audience">{d.audience}</p>}
+          </div>
+
+          <div class="prod-buy">
+            {d.price && <span class="price-tag">{d.price}</span>}
+            {
+              orderable ? (
+                <div class="prod-order-wrap">
+                  <button type="button" class="bag-add" data-bag-add data-id={item.id} data-name={d.title} data-price={d.price ?? ''}>
+                    Pune în desagă
+                  </button>
+                  <p class="prod-order-note">
+                    Aduni ce-ți place în desagă, apoi îmi trimiți toată lista pe
+                    WhatsApp. Îți răspund personal — nimic automat.
+                  </p>
+                </div>
+              ) : (
+                <p class="prod-status">{statusText[d.availability] ?? d.availability}</p>
+              )
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <BotanicalDivider />
+
+    <!-- Poveste lungă + ingrediente + mod de folosire -->
+    <div class="container-reading mx-auto prod-body">
+      <div class="prose">
+        <Content />
+      </div>
+
+      {
+        ingredients.length > 0 && (
+          <div class="prod-block">
+            <h2 class="prod-block-h">Ce conține</h2>
+            <ul class="prod-ingredients">
+              {ingredients.map((ing) => (
+                <li>{ing}</li>
+              ))}
+            </ul>
+          </div>
+        )
+      }
+
+      {
+        d.usage && (
+          <div class="prod-block">
+            <h2 class="prod-block-h">Cum se folosește</h2>
+            <p class="prod-usage">{d.usage}</p>
+          </div>
+        )
+      }
+    </div>
+  </article>
+
+  {
+    related.length > 0 && (
+      <section class="section prod-related">
+        <div class="container-reading mx-auto">
+          <span class="eyebrow">Din caietul meu</span>
+          <ul class="prod-related-list">
+            {related.map((a) => (
+              <li>
+                <a href={`/biblioteca/${a.id}`}>{a.data.title}</a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+    )
+  }
+
+  <AtelierBag />
+</BaseLayout>
+
+<style>
+  .prod {
+    padding-top: clamp(1.5rem, 4vw, 2.5rem);
+    padding-bottom: clamp(3.5rem, 7vw, 5.5rem);
+  }
+  .prod-back {
+    display: inline-block;
+    font-size: 0.9rem;
+    text-decoration: none;
+    color: var(--text-secondary);
+    margin-bottom: clamp(1.5rem, 4vw, 2.5rem);
+  }
+  .prod-back:hover {
+    color: var(--accent-lavender-deep);
+  }
+
+  .prod-grid {
+    display: grid;
+    grid-template-columns: 1.05fr 0.95fr;
+    gap: clamp(2rem, 5vw, 4rem);
+    align-items: start;
+  }
+
+  /* Media */
+  .prod-photo {
+    margin: 0;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    aspect-ratio: 4 / 5;
+  }
+  .prod-photo-main.photo-ph svg {
+    width: 56px;
+    height: 56px;
+    opacity: 0.5;
+  }
+  .prod-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .prod-thumbs {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.75rem;
+    margin-top: 0.75rem;
+  }
+  .prod-thumbs .prod-photo {
+    aspect-ratio: 1;
+  }
+
+  /* Info */
+  .prod-info {
+    position: sticky;
+    top: 2rem;
+  }
+  .prod-cat {
+    font-size: 0.6875rem;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--accent-sage-dark);
+    font-weight: 600;
+  }
+  .prod-name {
+    font-size: clamp(2rem, 4.5vw, 3rem);
+    line-height: 1.1;
+    margin: 0.5rem 0 1rem;
+  }
+  .prod-lead {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: clamp(1.2rem, 2.4vw, 1.5rem);
+    line-height: 1.5;
+    color: var(--text-secondary);
+    max-width: 36ch;
+  }
+  .prod-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 1.25rem;
+  }
+  .tag {
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--accent-terracotta-deep);
+    border: 1px solid var(--border-soft);
+    background-color: var(--bg-soft);
+    padding: 0.3rem 0.7rem;
+    border-radius: 999px;
+  }
+  .prod-audience {
+    flex-basis: 100%;
+    margin-top: 0.5rem;
+    font-style: italic;
+    color: var(--text-muted);
+  }
+
+  /* Comandă */
+  .prod-buy {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1.25rem;
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border-soft);
+  }
+  .prod-order-wrap {
+    flex: 1 1 240px;
+  }
+  .prod-order {
+    display: inline-block;
+    font-family: var(--font-body);
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--accent-sage-dark);
+    text-decoration: none;
+    border-bottom: 1.5px solid var(--accent-sage);
+    padding-bottom: 3px;
+    transition: color 0.2s ease, border-color 0.2s ease;
+  }
+  .prod-order:hover {
+    color: var(--accent-lavender-deep);
+    border-color: var(--accent-lavender);
+  }
+  .prod-order-note {
+    margin-top: 0.75rem;
+    font-size: 0.85rem;
+    font-style: italic;
+    color: var(--text-muted);
+    max-width: 40ch;
+  }
+  .prod-status {
+    font-style: italic;
+    color: var(--text-muted);
+  }
+
+  @media (max-width: 760px) {
+    .prod-grid {
+      grid-template-columns: 1fr;
+    }
+    .prod-info {
+      position: static;
+    }
+  }
+
+  /* Corp */
+  .prod-body {
+    margin-top: clamp(1rem, 3vw, 2rem);
+  }
+  .prose {
+    font-size: 1.12rem;
+    line-height: 1.85;
+    color: var(--text-main);
+  }
+  .prose :global(> * + *) {
+    margin-top: 1.4rem;
+  }
+  .prose :global(p) {
+    max-width: none;
+  }
+  .prod-block {
+    margin-top: clamp(2rem, 5vw, 3rem);
+  }
+  .prod-block-h {
+    font-size: clamp(1.3rem, 2.4vw, 1.6rem);
+    margin-bottom: 0.75rem;
+  }
+  .prod-ingredients {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 0.6rem;
+    padding: 0;
+  }
+  .prod-ingredients li {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-soft);
+    padding: 0.4rem 0.9rem;
+    border-radius: 999px;
+  }
+  .prod-usage {
+    color: var(--text-secondary);
+  }
+
+  /* Related */
+  .prod-related {
+    padding-top: clamp(2rem, 5vw, 3rem);
+  }
+  .prod-related-list {
+    list-style: none;
+    margin-top: 1rem;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  .prod-related-list a {
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    color: var(--text-main);
+    text-decoration: none;
+  }
+  .prod-related-list a:hover {
+    color: var(--accent-lavender-deep);
+  }
+</style>

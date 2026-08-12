@@ -1,0 +1,400 @@
+---
+// Săculețul de bumbac — „coșul" Atelierului, dar fără senzație de magazin.
+// Aduni lucruri (localStorage), apoi trimiți TOATĂ lista odată pe WhatsApp,
+// unde Alexandra confirmă personal. Fără checkout, fără plată pe site.
+import { WHATSAPP_NUMBER } from '../lib/atelier';
+---
+
+<div class="bag-root" data-bag-root data-wa={WHATSAPP_NUMBER}>
+  <!-- Butonul plutitor: desaga (sacoșă textilă) cu plăntuță -->
+  <button type="button" class="bag-trigger" data-bag-open aria-label="Desaga ta" hidden>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <!-- toarta -->
+      <path d="M9 9 L9 6 C9 4.2 15 4.2 15 6 L15 9" />
+      <!-- corpul sacoșei, cu colțurile de jos tăiate -->
+      <path d="M5 9 L19 9 L19 17.4 L16.4 20.6 L7.6 20.6 L5 17.4 Z" />
+      <!-- banda de sus (cusătura) -->
+      <path d="M5 11 L19 11" />
+      <!-- plăntuța: tulpină + două frunze (verde-salvie) -->
+      <g stroke="var(--accent-sage)">
+        <path d="M12 18.4 V14" />
+        <path d="M12 15.2 c0-2.2 1.35-4 3.5-4.8 -0.15 2.45 -1.35 4.3 -3.5 4.8 Z" fill="var(--accent-sage)" fill-opacity="0.22" />
+        <path d="M12 16.3 c0-2.2 -1.35-4 -3.5-4.8 0.15 2.45 1.35 4.3 3.5 4.8 Z" fill="var(--accent-sage)" fill-opacity="0.22" />
+      </g>
+    </svg>
+    <span class="bag-count" data-bag-count>0</span>
+  </button>
+
+  <!-- Fundal + panou -->
+  <div class="bag-overlay" data-bag-overlay hidden></div>
+  <aside class="bag-panel" data-bag-panel hidden aria-label="Desaga ta" role="dialog" aria-modal="true">
+    <div class="bag-head">
+      <span class="bag-title">Desaga ta</span>
+      <button type="button" class="bag-close" data-bag-close aria-label="Închide">×</button>
+    </div>
+
+    <p class="bag-empty" data-bag-empty>Desaga e goală deocamdată.</p>
+    <ul class="bag-list" data-bag-list></ul>
+
+    <div class="bag-foot" data-bag-foot hidden>
+      <p class="bag-total"><span>Cam atât</span><span data-bag-total></span></p>
+      <a class="bag-send" data-bag-send target="_blank" rel="noopener">Trimite lista Alexandrei</a>
+      <p class="bag-note">
+        Se deschide WhatsApp cu lista deja scrisă. Îți răspund personal — confirm
+        ce e disponibil și cum se plătește. Nimic automat.
+      </p>
+    </div>
+  </aside>
+</div>
+
+<style>
+  .bag-trigger {
+    position: fixed;
+    right: clamp(1rem, 3vw, 2rem);
+    bottom: clamp(1rem, 3vw, 2rem);
+    z-index: 60;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.7rem 0.95rem;
+    background-color: var(--bg-soft);
+    border: 1.5px solid var(--border-soft);
+    border-radius: 999px;
+    box-shadow: var(--shadow-soft);
+    color: var(--accent-sage-dark);
+    cursor: pointer;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+  }
+  .bag-trigger[hidden] {
+    display: none;
+  }
+  .bag-trigger:hover {
+    transform: translateY(-2px);
+    border-color: var(--accent-sage);
+  }
+  .bag-trigger svg {
+    width: 26px;
+    height: 26px;
+  }
+  .bag-count {
+    min-width: 1.35rem;
+    height: 1.35rem;
+    padding: 0 0.35rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--button-text);
+    background-color: var(--accent-terracotta-deep);
+    border-radius: 999px;
+  }
+
+  .bag-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 70;
+    background-color: rgba(49, 45, 29, 0.28);
+    backdrop-filter: blur(1px);
+  }
+  .bag-overlay[hidden] {
+    display: none;
+  }
+
+  .bag-panel {
+    position: fixed;
+    top: 0;
+    right: 0;
+    z-index: 80;
+    width: min(400px, 92vw);
+    height: 100%;
+    background-color: var(--bg-page);
+    border-left: 1px solid var(--border-soft);
+    box-shadow: -16px 0 44px rgba(49, 45, 29, 0.16);
+    padding: clamp(1.5rem, 4vw, 2.25rem);
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+  }
+  .bag-panel[hidden] {
+    display: none;
+  }
+
+  .bag-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+  }
+  .bag-title {
+    font-family: var(--font-display);
+    font-size: 1.6rem;
+    color: var(--text-main);
+  }
+  .bag-close {
+    background: none;
+    border: none;
+    font-size: 1.75rem;
+    line-height: 1;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 0.25rem;
+  }
+  .bag-close:hover {
+    color: var(--text-main);
+  }
+
+  .bag-empty {
+    color: var(--text-muted);
+    font-style: italic;
+  }
+
+  .bag-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+  }
+  /* Rândurile din listă sunt create dinamic din JS, deci NU primesc atributul
+     scoped al Astro — stilurile lor trebuie să fie globale ca să se aplice. */
+  .bag-list :global(.bag-item) {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 0.35rem 1rem;
+    padding-block: 1rem;
+    border-top: 1px solid var(--border-soft);
+  }
+  .bag-list :global(.bag-item:first-child) {
+    border-top: none;
+  }
+  .bag-list :global(.bag-item-name) {
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+    line-height: 1.25;
+    color: var(--text-main);
+  }
+  .bag-list :global(.bag-item-price) {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    white-space: nowrap;
+  }
+  .bag-list :global(.bag-qty) {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    grid-column: 1;
+    margin-top: 0.25rem;
+  }
+  .bag-list :global(.bag-qty button) {
+    width: 1.6rem;
+    height: 1.6rem;
+    border: 1px solid var(--border-soft);
+    background-color: var(--bg-soft);
+    border-radius: 50%;
+    color: var(--accent-sage-dark);
+    cursor: pointer;
+    line-height: 1;
+    font-size: 1rem;
+  }
+  .bag-list :global(.bag-qty button:hover) {
+    border-color: var(--accent-sage);
+  }
+  .bag-list :global(.bag-qty span) {
+    min-width: 1.2rem;
+    text-align: center;
+    font-size: 0.95rem;
+  }
+  .bag-list :global(.bag-remove) {
+    grid-column: 2;
+    align-self: center;
+    justify-self: end;
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: 0.82rem;
+    cursor: pointer;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .bag-list :global(.bag-remove:hover) {
+    color: var(--accent-terracotta-deep);
+  }
+
+  .bag-foot {
+    margin-top: auto;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border-soft);
+  }
+  .bag-foot[hidden] {
+    display: none;
+  }
+  .bag-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    color: var(--text-main);
+    margin-bottom: 1rem;
+  }
+  .bag-send {
+    display: block;
+    text-align: center;
+    font-family: var(--font-body);
+    font-weight: 500;
+    color: var(--button-text);
+    background-color: var(--accent-sage);
+    padding: 0.9rem 1.5rem;
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+  }
+  .bag-send:hover {
+    background-color: var(--button-bg-hover);
+    color: var(--button-text);
+  }
+  .bag-note {
+    margin-top: 0.9rem;
+    font-size: 0.82rem;
+    font-style: italic;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+</style>
+
+<script>
+  // Săculețul trăiește doar în browserul vizitatorului. Fără server, fără cont.
+  type BagItem = { id: string; name: string; price: string; qty: number };
+  const KEY = 'atelier-saculet-v1';
+
+  const root = document.querySelector<HTMLElement>('[data-bag-root]');
+  if (root) {
+    const wa = root.dataset.wa ?? '';
+    const trigger = root.querySelector<HTMLElement>('[data-bag-open]');
+    const overlay = root.querySelector<HTMLElement>('[data-bag-overlay]');
+    const panel = root.querySelector<HTMLElement>('[data-bag-panel]');
+    const listEl = root.querySelector<HTMLElement>('[data-bag-list]');
+    const emptyEl = root.querySelector<HTMLElement>('[data-bag-empty]');
+    const footEl = root.querySelector<HTMLElement>('[data-bag-foot]');
+    const totalEl = root.querySelector<HTMLElement>('[data-bag-total]');
+    const countEl = root.querySelector<HTMLElement>('[data-bag-count]');
+    const sendEl = root.querySelector<HTMLAnchorElement>('[data-bag-send]');
+
+    const read = (): BagItem[] => {
+      try {
+        const raw = localStorage.getItem(KEY);
+        return raw ? (JSON.parse(raw) as BagItem[]) : [];
+      } catch {
+        return [];
+      }
+    };
+    let items = read();
+
+    const save = () => localStorage.setItem(KEY, JSON.stringify(items));
+    const priceNum = (p: string) => {
+      const m = (p || '').replace(/[.,]/g, '').match(/\d+/);
+      return m ? parseInt(m[0], 10) : 0;
+    };
+
+    const buildMessage = () => {
+      const lines = items.map(
+        (i) => `• ${i.name}${i.price ? ' — ' + i.price : ''}${i.qty > 1 ? ' ×' + i.qty : ''}`
+      );
+      const total = items.reduce((s, i) => s + priceNum(i.price) * i.qty, 0);
+      const totalLine = total > 0 ? `\n(cam ${total} lei)` : '';
+      return `Bună, Alexandra! Aș vrea din atelier:\n${lines.join('\n')}${totalLine}\nMai sunt disponibile?`;
+    };
+
+    const render = () => {
+      const count = items.reduce((s, i) => s + i.qty, 0);
+      if (countEl) countEl.textContent = String(count);
+      if (trigger) trigger.hidden = count === 0;
+
+      if (listEl) listEl.innerHTML = '';
+      if (items.length === 0) {
+        if (emptyEl) emptyEl.hidden = false;
+        if (footEl) footEl.hidden = true;
+      } else {
+        if (emptyEl) emptyEl.hidden = true;
+        if (footEl) footEl.hidden = false;
+        items.forEach((it) => {
+          const li = document.createElement('li');
+          li.className = 'bag-item';
+          li.innerHTML =
+            `<span class="bag-item-name">${it.name}</span>` +
+            `<span class="bag-item-price">${it.price || ''}</span>` +
+            `<span class="bag-qty">` +
+            `<button type="button" data-dec aria-label="Mai puțin">−</button>` +
+            `<span>${it.qty}</span>` +
+            `<button type="button" data-inc aria-label="Mai mult">+</button>` +
+            `</span>` +
+            `<button type="button" class="bag-remove" data-rm>scoate</button>`;
+          li.querySelector('[data-inc]')?.addEventListener('click', () => {
+            it.qty += 1;
+            save();
+            render();
+          });
+          li.querySelector('[data-dec]')?.addEventListener('click', () => {
+            it.qty -= 1;
+            if (it.qty <= 0) items = items.filter((x) => x.id !== it.id);
+            save();
+            render();
+          });
+          li.querySelector('[data-rm]')?.addEventListener('click', () => {
+            items = items.filter((x) => x.id !== it.id);
+            save();
+            render();
+          });
+          listEl?.appendChild(li);
+        });
+
+        const total = items.reduce((s, i) => s + priceNum(i.price) * i.qty, 0);
+        if (totalEl) totalEl.textContent = total > 0 ? `${total} lei` : '—';
+        if (sendEl) sendEl.href = `https://wa.me/${wa}?text=${encodeURIComponent(buildMessage())}`;
+      }
+    };
+
+    const open = () => {
+      if (overlay) overlay.hidden = false;
+      if (panel) panel.hidden = false;
+    };
+    const close = () => {
+      if (overlay) overlay.hidden = true;
+      if (panel) panel.hidden = true;
+    };
+
+    // Adăugare — delegare pe tot documentul (butoanele „Pune în săculeț").
+    document.addEventListener('click', (e) => {
+      const btn = (e.target as HTMLElement)?.closest<HTMLElement>('[data-bag-add]');
+      if (!btn) return;
+      const id = btn.dataset.id ?? '';
+      if (!id) return;
+      const existing = items.find((x) => x.id === id);
+      if (existing) {
+        existing.qty += 1;
+      } else {
+        items.push({
+          id,
+          name: btn.dataset.name ?? 'Produs',
+          price: btn.dataset.price ?? '',
+          qty: 1,
+        });
+      }
+      save();
+      render();
+      open();
+    });
+
+    trigger?.addEventListener('click', open);
+    root.querySelector('[data-bag-close]')?.addEventListener('click', close);
+    overlay?.addEventListener('click', close);
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') close();
+    });
+
+    render();
+  }
+</script>
