@@ -10,6 +10,8 @@ interface Props {
   article?: boolean;
   publishedTime?: string;
   modifiedTime?: string;
+  /** Pagini interne/nepublice — le scoate din Google (noindex, nofollow). */
+  noindex?: boolean;
 }
 
 const {
@@ -19,6 +21,7 @@ const {
   article = false,
   publishedTime,
   modifiedTime,
+  noindex = false,
 } = Astro.props;
 
 const siteName = 'Alexandra Maja';
@@ -78,6 +81,7 @@ const jsonLd = { '@context': 'https://schema.org', '@graph': graph };
 
     <title>{pageTitle}</title>
     <meta name="description" content={description} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
     <link rel="canonical" href={canonicalURL} />
 
     <!-- Open Graph -->

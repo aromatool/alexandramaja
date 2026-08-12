@@ -34,4 +34,46 @@ const biblioteca = defineCollection({
   }),
 });
 
-export const collections = { biblioteca };
+// Atelierul Alexandrei — colecția de „lucruri făcute cu mâna" (creme, ceaiuri,
+// cărți). Momentan e o FUNDAȚIE: pagina /atelier e ascunsă (noindex, nu în
+// meniu/sitemap) și nu vinde nimic. Modelul de date e complet, ca ulterior
+// fiecare produs să poată avea poveste, ingrediente, lot, sezon etc. — dar
+// aproape totul e opțional, ca prototipul să arate frumos și cu date parțiale.
+const atelier = defineCollection({
+  loader: glob({ pattern: '**/*.{md,mdoc}', base: './src/content/atelier' }),
+  schema: z.object({
+    title: z.string(),
+    // Maxim 3 categorii — deliberat. „Cărți" e afișată într-o secțiune separată.
+    category: z.enum(['Îngrijire & ritualuri', 'Plante & ceaiuri', 'Cărți']),
+    // Propoziția scurtă de poveste care apare sub nume în listă.
+    shortDescription: z.string(),
+    // Galerie foto. Keystatic salvează în public/images/atelier/<slug>/…
+    images: z
+      .array(
+        z.object({
+          image: z.string(),
+          alt: z.string().optional().nullable(),
+        })
+      )
+      .optional()
+      .default([]),
+    ingredients: z.array(z.string()).optional().default([]),
+    usage: z.string().optional().nullable(),
+    // Elemente de brand „loturi mici" — NU scarcity agresiv.
+    batch: z.string().optional().nullable(),       // ex: „Lot mic de vară"
+    season: z.string().optional().nullable(),       // ex: „Ediție de toamnă"
+    price: z.string().optional().nullable(),        // text liber (fără checkout)
+    availability: z
+      .enum(['În atelier acum', 'Lot încheiat', 'Revine în sezon', 'În pregătire'])
+      .optional()
+      .default('În atelier acum'),
+    // Pentru cine e (util mai ales la cărți).
+    audience: z.string().optional().nullable(),
+    featured: z.boolean().optional().default(false),
+    // Slug-uri de articole din Bibliotecă, ca produsul să aibă „o lume în jur".
+    relatedArticles: z.array(z.string()).optional().default([]),
+    draft: z.boolean().optional().default(false),
+  }),
+});
+
+export const collections = { biblioteca, atelier };

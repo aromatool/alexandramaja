@@ -22,7 +22,14 @@ import cloudflare from '@astrojs/cloudflare';
 // throws "MessageChannel is not defined" at deploy time.
 export default defineConfig({
   site: 'https://alexandramaja.ro',
-  integrations: [react(), markdoc(), keystatic(), sitemap()],
+  integrations: [
+    react(),
+    markdoc(),
+    keystatic(),
+    // /atelier e un prototip ascuns — îl ținem în afara sitemap-ului
+    // (pe lângă noindex din pagină), ca să nu ajungă în Google.
+    sitemap({ filter: (page) => !page.includes('/atelier') }),
+  ],
   adapter: cloudflare(),
   vite: import.meta.env.PROD
     ? { resolve: { alias: { 'react-dom/server': 'react-dom/server.edge' } } }

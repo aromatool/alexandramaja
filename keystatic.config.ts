@@ -17,7 +17,7 @@ export default config({
   ui: {
     brand: { name: 'Alexandra Maja' },
     navigation: {
-      Conținut: ['biblioteca'],
+      Conținut: ['biblioteca', 'atelier'],
       Pagini: ['home', 'despre'],
     },
   },
@@ -146,6 +146,114 @@ export default config({
     }),
   },
   collections: {
+    // --- Atelierul Alexandrei (lucruri făcute cu mâna) ---
+    // FUNDAȚIE pentru viitor. Pagina /atelier e ascunsă deocamdată. Aici e
+    // modelul complet de produs; aproape totul e opțional, ca să poți publica
+    // și cu date parțiale. Nu e magazin: „price" e text liber, nu există coș.
+    atelier: collection({
+      label: 'Atelier (produse & cărți)',
+      slugField: 'title',
+      path: 'src/content/atelier/*',
+      format: { contentField: 'story' },
+      entryLayout: 'content',
+      columns: ['title', 'category'],
+      schema: {
+        title: fields.slug({
+          name: { label: 'Nume' },
+          slug: {
+            label: 'Adresă (slug)',
+            description: 'Se generează din nume. Folosit ulterior în link.',
+          },
+        }),
+        category: fields.select({
+          label: 'Categorie',
+          options: [
+            { label: 'Îngrijire & ritualuri', value: 'Îngrijire & ritualuri' },
+            { label: 'Plante & ceaiuri', value: 'Plante & ceaiuri' },
+            { label: 'Cărți', value: 'Cărți' },
+          ],
+          defaultValue: 'Îngrijire & ritualuri',
+        }),
+        shortDescription: fields.text({
+          label: 'Propoziția de poveste (scurtă)',
+          description: 'Un rând care apare sub nume în atelier. Cald, personal.',
+          multiline: true,
+          validation: { isRequired: true },
+        }),
+        images: fields.array(
+          fields.object({
+            image: fields.image({
+              label: 'Fotografie',
+              directory: 'public/images/atelier',
+              publicPath: '/images/atelier/',
+            }),
+            alt: fields.text({ label: 'Descrierea pozei (accesibilitate)' }),
+          }),
+          {
+            label: 'Fotografii',
+            itemLabel: (p) => p.fields.alt.value || 'Fotografie',
+          }
+        ),
+        ingredients: fields.array(fields.text({ label: 'Ingredient' }), {
+          label: 'Ingrediente (opțional)',
+          itemLabel: (p) => p.value || 'Ingredient',
+        }),
+        usage: fields.text({
+          label: 'Cum se folosește (opțional)',
+          multiline: true,
+        }),
+        batch: fields.text({
+          label: 'Lot (opțional)',
+          description: 'ex: „Lot mic de vară". Fără urgență agresivă.',
+        }),
+        season: fields.text({
+          label: 'Sezon / ediție (opțional)',
+          description: 'ex: „Ediție de toamnă".',
+        }),
+        price: fields.text({
+          label: 'Preț (text, opțional)',
+          description: 'Momentan doar informativ — nu există cumpărare pe site.',
+        }),
+        availability: fields.select({
+          label: 'Disponibilitate',
+          options: [
+            { label: 'În atelier acum', value: 'În atelier acum' },
+            { label: 'Lot încheiat', value: 'Lot încheiat' },
+            { label: 'Revine în sezon', value: 'Revine în sezon' },
+            { label: 'În pregătire', value: 'În pregătire' },
+          ],
+          defaultValue: 'În atelier acum',
+        }),
+        audience: fields.text({
+          label: 'Pentru cine e (opțional)',
+          description: 'Util mai ales la cărți. ex: „Pentru cei mici".',
+        }),
+        featured: fields.checkbox({
+          label: 'În prim-plan',
+          description: 'Bifat = apare mai mare în layout-ul editorial.',
+          defaultValue: false,
+        }),
+        relatedArticles: fields.array(
+          fields.relationship({
+            label: 'Articol din Bibliotecă',
+            collection: 'biblioteca',
+          }),
+          {
+            label: 'Din caietul meu (articole legate)',
+            itemLabel: (p) => p.value || 'Articol',
+          }
+        ),
+        draft: fields.checkbox({
+          label: 'Ciornă',
+          description: 'Bifat = nu apare în atelier.',
+          defaultValue: false,
+        }),
+        story: fields.markdoc({
+          label: 'Poveste lungă (opțional)',
+          description: 'Textul de pe viitoarea pagină a produsului. Nu e obligatoriu acum.',
+        }),
+      },
+    }),
     // --- Articolele din Bibliotecă ---
     biblioteca: collection({
       label: 'Biblioteca (articole)',
