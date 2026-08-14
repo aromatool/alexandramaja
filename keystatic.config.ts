@@ -18,7 +18,7 @@ export default config({
     brand: { name: 'Alexandra Maja' },
     navigation: {
       Conținut: ['biblioteca', 'atelier'],
-      Pagini: ['home', 'despre'],
+      Pagini: ['home', 'despre', 'atelierPage'],
     },
   },
   // --- Pagini editabile (text din paginile „construite") ---
@@ -142,6 +142,26 @@ export default config({
             itemLabel: (p) => p.fields.title.value || 'Principiu',
           }
         ),
+      },
+    }),
+    // --- Atelier (pagina): pozele editabile din pagina /atelier ---
+    // Momentan doar poza mare din cap (hero). Restul plasticelor (procesul,
+    // caietul) rămân placeholder în cod; le pot expune aici la cerere.
+    atelierPage: singleton({
+      label: 'Atelier — pagina',
+      path: 'src/content/pages/atelier-pagina',
+      schema: {
+        heroImage: fields.image({
+          label: 'Poza mare din capul paginii (hero)',
+          description:
+            'Fotografie lifestyle: masă de lemn, plante proaspete și uscate, borcane cu macerate, ceramică, lumină caldă. Dacă e goală, se arată caseta-placeholder.',
+          directory: 'public/images/atelier-pagina',
+          publicPath: '/images/atelier-pagina/',
+        }),
+        heroImageAlt: fields.text({
+          label: 'Descrierea pozei (accesibilitate)',
+          description: 'Ce se vede în poză, într-o propoziție.',
+        }),
       },
     }),
   },
