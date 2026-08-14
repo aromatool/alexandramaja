@@ -30,12 +30,10 @@ const journalImageAlt = atelierPage?.journalImageAlt ?? '';
 // --- Produsele din atelier (fundație în Keystatic) ---
 const all = (await getCollection('atelier')).filter((p) => !p.data.draft);
 
-// Ordinea în atelier: întâi cele „în prim-plan", apoi după câmpul „Ordine"
-// (numere mici primele), apoi alfabetic. Așa Alexandra controlează aranjarea.
+// Ordinea în atelier e dată STRICT de câmpul „Ordine" (numere mici primele);
+// cele fără număr merg la urmă, alfabetic. „În prim-plan" nu mai schimbă
+// poziția (doar mărimea) — așa aranjarea e predictibilă și în mâna Alexandrei.
 const sortAtelier = (a: typeof all[number], b: typeof all[number]) => {
-  const af = a.data.featured ? 0 : 1;
-  const bf = b.data.featured ? 0 : 1;
-  if (af !== bf) return af - bf;
   const ao = a.data.order ?? 9999;
   const bo = b.data.order ?? 9999;
   if (ao !== bo) return ao - bo;
