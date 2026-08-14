@@ -3,6 +3,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import BotanicalDivider from '../components/BotanicalDivider.astro';
 import AtelierBag from '../components/AtelierBag.astro';
 import ToteIcon from '../components/ToteIcon.astro';
+import { availabilityInfo } from '../lib/atelier';
 import { getCollection } from 'astro:content';
 import { createReader } from '@keystatic/core/reader';
 import keystaticConfig from '../../keystatic.config';
@@ -178,6 +179,7 @@ const steps = [
           products.map((p) => {
             const d = p.data;
             const photo = d.images?.[0];
+            const av = availabilityInfo(d);
             return (
               <article class:list={['piece', { 'is-featured': d.featured }]}>
                 <figure class:list={['piece-media', { 'photo-ph': !photo?.image }]} data-note={!photo?.image ? 'Fotografie de produs, în context — nu izolată pe alb' : undefined}>
@@ -190,6 +192,16 @@ const steps = [
                       <path d="M20 18 c0-3.6 -2-6.4 -5-7.4 0.3 3.6 2 6.4 5 7.4Z" fill="currentColor" fill-opacity="0.2" />
                     </svg>
                   )}
+                  {!av.isAvailable && (
+                    <span class="piece-return">
+                      <svg class="piece-return-leaf" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                        <path d="M8 14 V7" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" />
+                        <path d="M8 8.4 c0-2 1.1-3.6 3-4.3 -0.1 2 -1.1 3.6 -3 4.3 Z" fill="currentColor" fill-opacity="0.3" stroke="currentColor" stroke-width="0.9" />
+                        <path d="M8 9.4 c0-2 -1.1-3.6 -3-4.3 0.1 2 1.1 3.6 3 4.3 Z" fill="currentColor" fill-opacity="0.3" stroke="currentColor" stroke-width="0.9" />
+                      </svg>
+                      {av.label}
+                    </span>
+                  )}
                 </figure>
                 <div class="piece-text">
                   <span class="piece-cat">{d.category}</span>
@@ -198,9 +210,6 @@ const steps = [
                   <div class="piece-tags">
                     {d.batch && <span class="tag">{d.batch}</span>}
                     {d.season && <span class="tag">{d.season}</span>}
-                    {d.availability && d.availability !== 'În atelier acum' && (
-                      <span class="tag tag-quiet">{d.availability}</span>
-                    )}
                   </div>
                   {(d.price || d.volume) && (
                     <div class="piece-price">
@@ -209,7 +218,7 @@ const steps = [
                     </div>
                   )}
                   <div class="piece-actions">
-                    {d.availability === 'În atelier acum' && (
+                    {av.isAvailable && (
                       <button type="button" class="bag-add" data-bag-add data-id={p.id} data-name={d.title} data-price={d.price ?? ''}>
                         <ToteIcon />Pune în desagă
                       </button>
@@ -247,6 +256,7 @@ const steps = [
           books.map((b) => {
             const d = b.data;
             const cover = d.images?.[0];
+            const av = availabilityInfo(d);
             return (
               <article class="book">
                 <figure class="book-cover" data-note="Mockup: cartea pe o masă, lângă plante / cană / creion">
@@ -254,6 +264,16 @@ const steps = [
                     <img src={cover.image} alt={cover.alt ?? d.title} loading="lazy" decoding="async" onerror="this.remove()" />
                   ) : (
                     <span class="book-cover-title">{d.title}</span>
+                  )}
+                  {!av.isAvailable && (
+                    <span class="piece-return">
+                      <svg class="piece-return-leaf" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                        <path d="M8 14 V7" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" />
+                        <path d="M8 8.4 c0-2 1.1-3.6 3-4.3 -0.1 2 -1.1 3.6 -3 4.3 Z" fill="currentColor" fill-opacity="0.3" stroke="currentColor" stroke-width="0.9" />
+                        <path d="M8 9.4 c0-2 -1.1-3.6 -3-4.3 0.1 2 1.1 3.6 3 4.3 Z" fill="currentColor" fill-opacity="0.3" stroke="currentColor" stroke-width="0.9" />
+                      </svg>
+                      {av.label}
+                    </span>
                   )}
                 </figure>
                 <div class="book-text">
@@ -264,7 +284,7 @@ const steps = [
                     <div class="book-price"><span class="price-tag">{d.price}</span></div>
                   )}
                   <div class="book-actions">
-                    {d.availability === 'În atelier acum' && (
+                    {av.isAvailable && (
                       <button type="button" class="bag-add" data-bag-add data-id={b.id} data-name={d.title} data-price={d.price ?? ''}>
                         <ToteIcon />Pune în desagă
                       </button>
@@ -339,7 +359,7 @@ const steps = [
   <BotanicalDivider />
 
   <!-- ==================== FINAL / NEWSLETTER ==================== -->
-  <section class="section atl-final">
+  <section id="atelier-newsletter" class="section atl-final">
     <div class="container-reading mx-auto text-center">
       <p class="atl-final-line">Atelierul se schimbă odată cu anotimpurile.</p>
       <p class="atl-final-invite">
@@ -544,6 +564,38 @@ const steps = [
     aspect-ratio: 4 / 3;
     border-radius: var(--radius-lg);
     overflow: hidden;
+    position: relative;
+  }
+  /* Indicator „revine" — discret, editorial, așezat pe fotografie. Fără roșu,
+     fără badge comercial: o etichetă mică pe crem, cu o frunzuliță salvie.
+     Fotografia rămâne colorată, produsul nu pare dezactivat. */
+  .piece-return {
+    position: absolute;
+    left: 0.85rem;
+    bottom: 0.85rem;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    max-width: calc(100% - 1.7rem);
+    padding: 0.38rem 0.8rem;
+    background-color: rgba(251, 247, 242, 0.9);
+    border: 1px solid var(--border-soft);
+    border-radius: 999px;
+    font-family: var(--font-body);
+    font-size: 0.72rem;
+    letter-spacing: 0.01em;
+    line-height: 1.2;
+    color: var(--accent-lavender-deep);
+    box-shadow: 0 2px 10px rgba(49, 45, 29, 0.08);
+    -webkit-backdrop-filter: blur(2px);
+    backdrop-filter: blur(2px);
+  }
+  .piece-return-leaf {
+    width: 13px;
+    height: 13px;
+    flex: none;
+    color: var(--accent-sage);
   }
   .piece.is-featured .piece-media {
     aspect-ratio: 5 / 4;

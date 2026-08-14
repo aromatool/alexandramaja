@@ -299,13 +299,25 @@ export default config({
         }),
         availability: fields.select({
           label: 'Disponibilitate',
+          description:
+            'Nu „stoc". „Revine în sezon" / „În pregătire" păstrează produsul vizibil, cu un indicator blând.',
           options: [
-            { label: 'În atelier acum', value: 'În atelier acum' },
-            { label: 'Lot încheiat', value: 'Lot încheiat' },
-            { label: 'Revine în sezon', value: 'Revine în sezon' },
-            { label: 'În pregătire', value: 'În pregătire' },
+            { label: 'Disponibil acum', value: 'available' },
+            { label: 'Lot terminat — revine în sezon', value: 'seasonal' },
+            { label: 'Următorul lot în pregătire', value: 'preparing' },
           ],
-          defaultValue: 'În atelier acum',
+          defaultValue: 'available',
+        }),
+        returnLabel: fields.text({
+          label: 'Indicator „revine" (doar dacă nu e disponibil)',
+          description:
+            'Scurt, editorial. Ex: „Revine odată cu păpădiile", „Revine la primăvară", „Așteptăm următoarea recoltă". Gol = text implicit.',
+        }),
+        returnMessage: fields.text({
+          label: 'Mesaj „revine" (pe pagina produsului)',
+          description:
+            'Un paragraf cald care explică de ce lipsește acum. Ex: „Lotul din acest an s-a terminat. Următorul îl voi pregăti când pajiștile se vor umple din nou de galben." Gol = text implicit.',
+          multiline: true,
         }),
         audience: fields.text({
           label: 'Pentru cine e (opțional)',

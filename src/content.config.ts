@@ -64,10 +64,24 @@ const atelier = defineCollection({
     season: z.string().optional().nullable(),       // ex: „Ediție de toamnă"
     price: z.string().optional().nullable(),        // text liber (fără checkout)
     volume: z.string().optional().nullable(),        // ex: „50 ml" — apare lângă preț
+    // Disponibilitate — nu „stoc". Atelierul lucrează cu anotimpuri și loturi
+    // mici. `available` = disponibil acum; `seasonal` = lot terminat, revine în
+    // sezon; `preparing` = următorul lot în pregătire. Normalizăm și valorile
+    // vechi (în română), ca build-ul să nu pice la o salvare rămasă în urmă.
     availability: z
-      .enum(['În atelier acum', 'Lot încheiat', 'Revine în sezon', 'În pregătire'])
+      .string()
       .optional()
-      .default('În atelier acum'),
+      .default('available')
+      .transform((v) => {
+        if (v === 'seasonal' || v === 'preparing' || v === 'available') return v;
+        if (v === 'Revine în sezon' || v === 'Lot încheiat') return 'seasonal';
+        if (v === 'În pregătire') return 'preparing';
+        return 'available'; // „În atelier acum" + orice altceva
+      }),
+    // Pentru produsele care revin (seasonal / preparing): un indicator scurt și
+    // un mesaj cald. Dacă lipsesc, folosim un text implicit blând.
+    returnLabel: z.string().optional().nullable(),   // ex: „Revine odată cu păpădiile"
+    returnMessage: z.string().optional().nullable(), // paragraful calm de pe pagina produsului
     // Pentru cine e (util mai ales la cărți).
     audience: z.string().optional().nullable(),
     featured: z.boolean().optional().default(false),
