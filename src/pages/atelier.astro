@@ -170,7 +170,7 @@ const steps = [
             const photo = d.images?.[0];
             return (
               <article class:list={['piece', { 'is-featured': d.featured }]}>
-                <figure class="piece-media photo-ph" data-note="Fotografie de produs, în context — nu izolată pe alb">
+                <figure class:list={['piece-media', { 'photo-ph': !photo?.image }]} data-note={!photo?.image ? 'Fotografie de produs, în context — nu izolată pe alb' : undefined}>
                   {photo?.image ? (
                     <img src={photo.image} alt={photo.alt ?? d.title} loading="lazy" decoding="async" onerror="this.remove()" />
                   ) : (
