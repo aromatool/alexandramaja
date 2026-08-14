@@ -230,8 +230,10 @@ const steps = [
 
   <BotanicalDivider />
 
-  <!-- ==================== CĂRȚILE MELE ==================== -->
-  <section class="section">
+  <!-- ============== CĂRȚILE MELE (doar dacă există cărți) ============== -->
+  {
+    books.length > 0 && (
+    <section class="section">
     <div class="container-narrow mx-auto">
       <header class="atl-head">
         <span class="eyebrow">Din cuvinte</span>
@@ -279,7 +281,9 @@ const steps = [
         }
       </div>
     </div>
-  </section>
+    </section>
+    )
+  }
 
   <!-- ==================== LOTURI MICI ==================== -->
   <section class="section surface-lavender tactile-linen atl-batches">
