@@ -3,3 +3,12 @@ heroImageAlt: >-
   Masă de lemn cu borcane de plante uscate și macerate, un mortar de ceramică,
   cărți și buchete de lavandă, lângă o fereastră cu priveliște spre grădină și
   dealuri.
+process:
+  culeg: {}
+  pregatesc: {}
+  incerc: {}
+  creez:
+    image: /images/atelier-pagina/process/creez/image.webp
+    alt: >-
+      Alexandra strecurând un macerat din plante în timpul preparării artizanale
+      a unei creme naturale.
