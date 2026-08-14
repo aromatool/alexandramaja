@@ -5,7 +5,4 @@ Allow: /
 Disallow: /keystatic
 Disallow: /api/
 
-# Atelierul — prototip ascuns, încă nepublic
-Disallow: /atelier
-
 Sitemap: https://alexandramaja.ro/sitemap-index.xml

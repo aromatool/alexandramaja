@@ -26,9 +26,7 @@ export default defineConfig({
     react(),
     markdoc(),
     keystatic(),
-    // /atelier e un prototip ascuns — îl ținem în afara sitemap-ului
-    // (pe lângă noindex din pagină), ca să nu ajungă în Google.
-    sitemap({ filter: (page) => !page.includes('/atelier') }),
+    sitemap(),
   ],
   adapter: cloudflare(),
   vite: import.meta.env.PROD
