@@ -248,7 +248,7 @@ export default config({
           label: 'Categorie',
           options: [
             { label: 'Îngrijire & ritualuri', value: 'Îngrijire & ritualuri' },
-            { label: 'Plante & ceaiuri', value: 'Plante & ceaiuri' },
+            { label: 'Plante & preparate', value: 'Plante & preparate' },
             { label: 'Cărți', value: 'Cărți' },
           ],
           defaultValue: 'Îngrijire & ritualuri',

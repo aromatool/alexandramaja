@@ -44,7 +44,7 @@ const atelier = defineCollection({
   schema: z.object({
     title: z.string(),
     // Maxim 3 categorii — deliberat. „Cărți" e afișată într-o secțiune separată.
-    category: z.enum(['Îngrijire & ritualuri', 'Plante & ceaiuri', 'Cărți']),
+    category: z.enum(['Îngrijire & ritualuri', 'Plante & preparate', 'Cărți']),
     // Propoziția scurtă de poveste care apare sub nume în listă.
     shortDescription: z.string(),
     // Galerie foto. Keystatic salvează în public/images/atelier/<slug>/…
