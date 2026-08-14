@@ -9,7 +9,11 @@ process:
     alt: >-
       Alexandra culegând plante aromatice pentru preparatele create în atelierul
       ei.
-  pregatesc: {}
+  pregatesc:
+    image: /images/atelier-pagina/process/pregatesc/image.webp
+    alt: >-
+      Alexandra pregătind macerate din plante și flori pentru preparatele create
+      în atelier.
   incerc: {}
   creez:
     image: /images/atelier-pagina/process/creez/image.webp
