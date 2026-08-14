@@ -192,8 +192,11 @@ const steps = [
                       <span class="tag tag-quiet">{d.availability}</span>
                     )}
                   </div>
-                  {d.price && (
-                    <div class="piece-price"><span class="price-tag">{d.price}</span></div>
+                  {(d.price || d.volume) && (
+                    <div class="piece-price">
+                      {d.price && <span class="price-tag">{d.price}</span>}
+                      {d.volume && <span class="piece-vol">{d.volume}</span>}
+                    </div>
                   )}
                   <div class="piece-actions">
                     {d.availability === 'În atelier acum' && (
@@ -519,18 +522,8 @@ const steps = [
   .piece:nth-child(even) .piece-text {
     order: 1;
   }
-  /* produsele „normale" — mai mici și decalate; cele featured — mari, centrate */
-  .piece:not(.is-featured) {
-    max-width: 86%;
-  }
-  .piece:not(.is-featured):nth-child(odd) {
-    margin-right: auto;
-  }
-  .piece:not(.is-featured):nth-child(even) {
-    margin-left: auto;
-  }
+  /* featured — aceleași coloane, dar cu mai mult aer și titlu mai mare */
   .piece.is-featured {
-    grid-template-columns: 1.2fr 0.8fr;
     gap: clamp(2rem, 5vw, 4rem);
   }
   .piece-media {
@@ -595,7 +588,14 @@ const steps = [
     color: var(--text-muted);
   }
   .piece-price {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.6rem;
     margin-top: 1rem;
+  }
+  .piece-vol {
+    font-size: 0.9rem;
+    color: var(--text-muted);
   }
   .book-price {
     margin-top: 0.9rem;

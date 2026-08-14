@@ -22,7 +22,12 @@ const d = item.data;
 const { Content } = await render(item);
 
 const images = d.images ?? [];
-const ingredients = d.ingredients ?? [];
+// Ingredientele pot fi puse fie ca listă (câte unul), fie într-un singur rând
+// cu virgule. Le desfacem în bucăți individuale ca să arate aranjat oricum.
+const ingredients = (d.ingredients ?? [])
+  .flatMap((i) => i.split(/[,;]/))
+  .map((s) => s.trim().replace(/\.+$/, ''))
+  .filter(Boolean);
 const orderable = d.availability === 'În atelier acum';
 
 // Mesaj blând pentru lucrurile care nu-s „în atelier acum".
@@ -89,7 +94,10 @@ if (d.relatedArticles?.length) {
           </div>
 
           <div class="prod-buy">
-            {d.price && <span class="price-tag">{d.price}</span>}
+            <span class="prod-price-wrap">
+              {d.price && <span class="price-tag">{d.price}</span>}
+              {d.volume && <span class="prod-vol">{d.volume}</span>}
+            </span>
             {
               orderable ? (
                 <div class="prod-order-wrap">
@@ -270,6 +278,16 @@ if (d.relatedArticles?.length) {
     margin-top: 2rem;
     padding-top: 2rem;
     border-top: 1px solid var(--border-soft);
+  }
+  .prod-price-wrap {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.6rem;
+  }
+  .prod-vol {
+    font-family: var(--font-body);
+    font-size: 0.92rem;
+    color: var(--text-muted);
   }
   .prod-order-wrap {
     flex: 1 1 240px;

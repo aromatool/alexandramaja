@@ -293,6 +293,10 @@ export default config({
           label: 'Preț (text, opțional)',
           description: 'Momentan doar informativ — nu există cumpărare pe site.',
         }),
+        volume: fields.text({
+          label: 'Cantitate (opțional)',
+          description: 'ex: „50 ml", „100 g". Apare discret lângă preț.',
+        }),
         availability: fields.select({
           label: 'Disponibilitate',
           options: [
