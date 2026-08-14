@@ -313,8 +313,13 @@ export default config({
         }),
         featured: fields.checkbox({
           label: 'În prim-plan',
-          description: 'Bifat = apare mai mare în layout-ul editorial.',
+          description: 'Bifat = apare primul și puțin mai mare.',
           defaultValue: false,
+        }),
+        order: fields.integer({
+          label: 'Ordine (opțional)',
+          description:
+            'Numerele mai mici apar primele (ex. 1, 2, 3). Cele „în prim-plan" urcă oricum înaintea celorlalte. Gol = la urmă, alfabetic.',
         }),
         relatedArticles: fields.array(
           fields.relationship({

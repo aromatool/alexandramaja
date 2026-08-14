@@ -400,6 +400,12 @@ strong {
   background-color: var(--accent-sage);
   color: var(--button-text);
 }
+.bag-add .tote-icon {
+  width: 1.15em;
+  height: 1.15em;
+  flex: none;
+  margin-right: 0.1rem;
+}
 
 /* --- Botanical divider --- */
 .botanical-divider {

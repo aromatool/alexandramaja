@@ -4,6 +4,7 @@ import type { CollectionEntry } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import BotanicalDivider from '../../components/BotanicalDivider.astro';
 import AtelierBag from '../../components/AtelierBag.astro';
+import ToteIcon from '../../components/ToteIcon.astro';
 
 // Pagina de detaliu a unui lucru din atelier. La fel de ascunsă ca listarea
 // (noindex + scoasă din sitemap/robots). Comanda e conversațională, prin
@@ -102,7 +103,7 @@ if (d.relatedArticles?.length) {
               orderable ? (
                 <div class="prod-order-wrap">
                   <button type="button" class="bag-add" data-bag-add data-id={item.id} data-name={d.title} data-price={d.price ?? ''}>
-                    Pune în desagă
+                    <ToteIcon />Pune în desagă
                   </button>
                   <p class="prod-order-note">
                     Aduni ce-ți place în desagă, apoi îmi trimiți toată lista pe

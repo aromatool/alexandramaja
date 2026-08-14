@@ -71,6 +71,9 @@ const atelier = defineCollection({
     // Pentru cine e (util mai ales la cărți).
     audience: z.string().optional().nullable(),
     featured: z.boolean().optional().default(false),
+    // Ordinea de afișare (numere mai mici apar primele). Produsele „în prim-plan"
+    // urcă oricum înaintea celorlalte.
+    order: z.number().optional().nullable(),
     // Slug-uri de articole din Bibliotecă, ca produsul să aibă „o lume în jur".
     relatedArticles: z.array(z.string()).optional().default([]),
     draft: z.boolean().optional().default(false),
