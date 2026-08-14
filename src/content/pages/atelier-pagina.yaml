@@ -4,7 +4,11 @@ heroImageAlt: >-
   cărți și buchete de lavandă, lângă o fereastră cu priveliște spre grădină și
   dealuri.
 process:
-  culeg: {}
+  culeg:
+    image: /images/atelier-pagina/process/culeg/image.webp
+    alt: >-
+      Alexandra culegând plante aromatice pentru preparatele create în atelierul
+      ei.
   pregatesc: {}
   incerc: {}
   creez:
