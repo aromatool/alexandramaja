@@ -64,11 +64,15 @@ const isActive = (item: NavItem) => {
       </span>
     </a>
 
-    <!-- Mobile toggle -->
-    <input type="checkbox" id="nav-toggle" class="nav-toggle" hidden />
+    <!-- Mobile toggle. NU folosim `hidden`/display:none — pe iOS Safari un
+         <label> nu comută mereu un checkbox ascuns cu display:none. Îl ascundem
+         vizual, dar rămâne în render (vezi .nav-toggle în CSS). -->
+    <input type="checkbox" id="nav-toggle" class="nav-toggle" aria-hidden="true" tabindex="-1" />
     <label for="nav-toggle" class="nav-burger" aria-label="Meniu">
       <span></span><span></span><span></span>
     </label>
+    <!-- Fundal întunecat: închide meniul la tap în afară -->
+    <label for="nav-toggle" class="nav-scrim" aria-hidden="true"></label>
 
     <!-- Primary nav -->
     <nav class="site-nav" aria-label="Navigație principală">
@@ -132,7 +136,24 @@ const isActive = (item: NavItem) => {
     z-index: 50;
     background-color: rgba(244, 237, 230, 0.9);
     backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     border-bottom: 1px solid var(--border-soft);
+  }
+
+  /* Checkbox de comutare — ascuns vizual, dar rămas în render (NU display:none),
+     ca <label> să-l poată comuta pe iOS Safari. */
+  .nav-toggle {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    margin: -1px;
+    pointer-events: none;
+  }
+
+  /* Fundalul (scrim) — vizibil doar când meniul e deschis, pe mobil. */
+  .nav-scrim {
+    display: none;
   }
 
   .header-inner {
@@ -368,13 +389,16 @@ const isActive = (item: NavItem) => {
   }
 
   @media (max-width: 1080px) {
-    /* The off-canvas drawer is position:fixed but contained by .site-header
-       (backdrop-filter makes the header its containing block), so its closed
-       off-screen position leaks horizontal scroll. Clip it at the header —
-       `clip` (not `hidden`) avoids creating a scroll container, so the sticky
-       header and the full-height drawer both keep working. */
+    /* Pe mobil renunțăm la blur pe header: backdrop-filter face din header
+       „containing block" pentru drawer-ul position:fixed, iar iOS Safari îl
+       decupează/poziționează greșit. Fundal solid în loc — drawer-ul se așază
+       corect față de viewport, iar body are deja overflow-x:hidden pentru
+       poziția lui închisă din afara ecranului. */
     .site-header {
-      overflow-x: clip;
+      overflow: visible;
+      background-color: var(--bg-page);
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
     }
 
     .header-inner {
@@ -385,6 +409,24 @@ const isActive = (item: NavItem) => {
     .nav-burger {
       display: flex;
       order: 3;
+      position: relative;
+      z-index: 70; /* peste drawer și scrim, ca să comute deschis/închis */
+    }
+
+    .nav-scrim {
+      display: block;
+      position: fixed;
+      inset: 0;
+      z-index: 55;
+      background-color: rgba(49, 45, 29, 0.3);
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s;
+    }
+
+    .nav-toggle:checked ~ .nav-scrim {
+      opacity: 1;
+      visibility: visible;
     }
 
     .header-actions {
@@ -392,10 +434,10 @@ const isActive = (item: NavItem) => {
     }
 
     .site-nav {
-      /* NOTE: .site-header uses backdrop-filter, which makes it the containing
-         block for this position:fixed drawer. So we can't rely on inset/bottom
-         stretching to the viewport — set an explicit full-height instead. */
+      /* Drawer fix față de viewport (headerul nu mai are backdrop-filter pe
+         mobil, deci nu mai e containing block). z-index peste scrim. */
       position: fixed;
+      z-index: 60;
       top: 0;
       right: 0;
       left: auto;
