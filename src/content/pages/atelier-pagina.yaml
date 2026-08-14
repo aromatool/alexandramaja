@@ -14,7 +14,11 @@ process:
     alt: >-
       Alexandra pregătind macerate din plante și flori pentru preparatele create
       în atelier.
-  incerc: {}
+  incerc:
+    image: /images/atelier-pagina/process/incerc/image.webp
+    alt: >-
+      Cremă artizanală cu arnică în etapa de testare, alături de plante,
+      macerate și notițele Alexandrei.
   creez:
     image: /images/atelier-pagina/process/creez/image.webp
     alt: >-
