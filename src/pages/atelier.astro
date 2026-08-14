@@ -12,6 +12,9 @@ const reader = createReader(process.cwd(), keystaticConfig);
 const atelierPage = await reader.singletons.atelierPage.read();
 const heroImage = atelierPage?.heroImage ?? null;
 const heroImageAlt = atelierPage?.heroImageAlt ?? 'Atelierul Alexandrei';
+const proc = atelierPage?.process;
+const journalImage = atelierPage?.journalImage ?? null;
+const journalImageAlt = atelierPage?.journalImageAlt ?? '';
 
 // ============================================================================
 // ATELIERUL ALEXANDREI — prototip INTERN, ascuns.
@@ -46,24 +49,32 @@ const steps = [
     title: 'Culeg',
     text: 'Plante pe care le cunosc și le aleg — de pe versanții pe care urc în fiecare an, din grădină, de la marginea pădurii. Le adun când sunt gata, nu când îmi convine mie.',
     note: 'Fotografie: mâini care culeg, plante de munte, lumină de dimineață',
+    image: proc?.culeg?.image ?? null,
+    alt: proc?.culeg?.alt ?? '',
   },
   {
     n: 'II',
     title: 'Pregătesc',
     text: 'Usuc, macerez, infuzez. E partea în care nu se vede nimic și trece timp — săptămâni în care uleiul prinde încet culoarea și mirosul plantei.',
     note: 'Fotografie: borcane de macerat la fereastră, flori uscate, in',
+    image: proc?.pregatesc?.image ?? null,
+    alt: proc?.pregatesc?.alt ?? '',
   },
   {
     n: 'III',
     title: 'Încerc',
     text: 'Formulez și ajustez. Schimb o proporție, aștept, miros din nou. Fac și desfac până când simt că e bine — nu până când e „destul de bine".',
     note: 'Fotografie: mortar și pistil, note de mână, picături',
+    image: proc?.incerc?.image ?? null,
+    alt: proc?.incerc?.alt ?? '',
   },
   {
     n: 'IV',
     title: 'Creez',
     text: 'Produsul final, în cantități mici. Fiecare lot iese puțin diferit, pentru că plantele nu sunt niciodată identice — și mie asta îmi place.',
     note: 'Fotografie: cremă într-un recipient simplu, ceramică, masă de lemn',
+    image: proc?.creez?.image ?? null,
+    alt: proc?.creez?.alt ?? '',
   },
 ];
 ---
@@ -125,7 +136,8 @@ const steps = [
         {
           steps.map((s) => (
             <li class="step">
-              <figure class="step-media photo-ph" data-note={s.note}>
+              <figure class:list={['step-media', { 'photo-ph': !s.image }]} data-note={!s.image ? s.note : undefined}>
+                {s.image && <img src={s.image} alt={s.alt || s.title} loading="lazy" decoding="async" />}
                 <span class="step-num" aria-hidden="true">{s.n}</span>
               </figure>
               <div class="step-text">
@@ -271,12 +283,18 @@ const steps = [
     journal.length > 0 && (
       <section class="section">
         <div class="container atl-journal">
-          <figure class="journal-media photo-ph" data-note="Fotografie: un borcan de macerat lângă un caiet deschis">
-            <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-              <path d="M20 33 V16" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" />
-              <path d="M20 18 c0-3.6 2-6.4 5-7.4 -0.3 3.6-2 6.4-5 7.4Z" fill="currentColor" fill-opacity="0.2" />
-              <path d="M20 18 c0-3.6 -2-6.4 -5-7.4 0.3 3.6 2 6.4 5 7.4Z" fill="currentColor" fill-opacity="0.2" />
-            </svg>
+          <figure class:list={['journal-media', { 'photo-ph': !journalImage }]} data-note={!journalImage ? 'Fotografie: un borcan de macerat lângă un caiet deschis' : undefined}>
+            {
+              journalImage ? (
+                <img src={journalImage} alt={journalImageAlt || 'Din caietul Alexandrei'} loading="lazy" decoding="async" />
+              ) : (
+                <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                  <path d="M20 33 V16" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" />
+                  <path d="M20 18 c0-3.6 2-6.4 5-7.4 -0.3 3.6-2 6.4-5 7.4Z" fill="currentColor" fill-opacity="0.2" />
+                  <path d="M20 18 c0-3.6 -2-6.4 -5-7.4 0.3 3.6 2 6.4 5 7.4Z" fill="currentColor" fill-opacity="0.2" />
+                </svg>
+              )
+            }
           </figure>
           <div class="journal-text">
             <span class="eyebrow">Din caietul meu</span>
@@ -454,6 +472,13 @@ const steps = [
     aspect-ratio: 5 / 4;
     border-radius: var(--radius-lg);
     position: relative;
+    overflow: hidden;
+  }
+  .step-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: inherit;
   }
   .step-num {
     position: absolute;
@@ -463,7 +488,9 @@ const steps = [
     font-size: clamp(1.6rem, 3vw, 2.2rem);
     letter-spacing: 0.06em;
     color: var(--accent-terracotta-deep);
-    opacity: 0.8;
+    opacity: 0.85;
+    z-index: 1;
+    text-shadow: 0 1px 6px rgba(244, 237, 230, 0.9);
   }
   .step-title {
     font-size: clamp(1.5rem, 3vw, 2rem);
@@ -724,11 +751,18 @@ const steps = [
   .journal-media {
     aspect-ratio: 4 / 5;
     border-radius: var(--radius-lg);
+    overflow: hidden;
   }
   .journal-media svg {
     width: 48px;
     height: 48px;
     opacity: 0.5;
+  }
+  .journal-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: inherit;
   }
   .journal-text h2 {
     margin: 0.4rem 0 0;

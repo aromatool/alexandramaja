@@ -145,8 +145,8 @@ export default config({
       },
     }),
     // --- Atelier (pagina): pozele editabile din pagina /atelier ---
-    // Momentan doar poza mare din cap (hero). Restul plasticelor (procesul,
-    // caietul) rămân placeholder în cod; le pot expune aici la cerere.
+    // Toate „plasturii" foto din pagina /atelier sunt editabili de aici. Dacă
+    // un câmp e gol, în pagină rămâne caseta-placeholder cu nota respectivă.
     atelierPage: singleton({
       label: 'Atelier — pagina',
       path: 'src/content/pages/atelier-pagina',
@@ -159,8 +159,67 @@ export default config({
           publicPath: '/images/atelier-pagina/',
         }),
         heroImageAlt: fields.text({
-          label: 'Descrierea pozei (accesibilitate)',
+          label: 'Descrierea pozei hero (accesibilitate)',
           description: 'Ce se vede în poză, într-o propoziție.',
+        }),
+        // Pozele pentru secțiunea „De la plantă la produs" (4 etape fixe).
+        process: fields.object(
+          {
+            culeg: fields.object(
+              {
+                image: fields.image({
+                  label: 'Poză',
+                  directory: 'public/images/atelier-pagina',
+                  publicPath: '/images/atelier-pagina/',
+                }),
+                alt: fields.text({ label: 'Descriere (accesibilitate)' }),
+              },
+              { label: '„Culeg" — poză' }
+            ),
+            pregatesc: fields.object(
+              {
+                image: fields.image({
+                  label: 'Poză',
+                  directory: 'public/images/atelier-pagina',
+                  publicPath: '/images/atelier-pagina/',
+                }),
+                alt: fields.text({ label: 'Descriere (accesibilitate)' }),
+              },
+              { label: '„Pregătesc" — poză' }
+            ),
+            incerc: fields.object(
+              {
+                image: fields.image({
+                  label: 'Poză',
+                  directory: 'public/images/atelier-pagina',
+                  publicPath: '/images/atelier-pagina/',
+                }),
+                alt: fields.text({ label: 'Descriere (accesibilitate)' }),
+              },
+              { label: '„Încerc" — poză' }
+            ),
+            creez: fields.object(
+              {
+                image: fields.image({
+                  label: 'Poză',
+                  directory: 'public/images/atelier-pagina',
+                  publicPath: '/images/atelier-pagina/',
+                }),
+                alt: fields.text({ label: 'Descriere (accesibilitate)' }),
+              },
+              { label: '„Creez" — poză' }
+            ),
+          },
+          { label: 'Pozele „De la plantă la produs"' }
+        ),
+        journalImage: fields.image({
+          label: 'Poza „Din caietul meu"',
+          description: 'Ex: un borcan de macerat lângă un caiet deschis.',
+          directory: 'public/images/atelier-pagina',
+          publicPath: '/images/atelier-pagina/',
+        }),
+        journalImageAlt: fields.text({
+          label: 'Descrierea pozei „Din caietul meu"',
         }),
       },
     }),
