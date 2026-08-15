@@ -59,6 +59,7 @@ const atelier = defineCollection({
       .default([]),
     ingredients: z.array(z.string()).optional().default([]),
     usage: z.string().optional().nullable(),
+    storage: z.string().optional().nullable(),
     // Elemente de brand „loturi mici" — NU scarcity agresiv.
     batch: z.string().optional().nullable(),       // ex: „Lot mic de vară"
     season: z.string().optional().nullable(),       // ex: „Ediție de toamnă"

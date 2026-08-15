@@ -281,6 +281,11 @@ export default config({
           label: 'Cum se folosește (opțional)',
           multiline: true,
         }),
+        storage: fields.text({
+          label: 'Mod de păstrare (opțional)',
+          description: 'ex: „Se păstrează la loc răcoros și ferit de razele soarelui."',
+          multiline: true,
+        }),
         batch: fields.text({
           label: 'Lot (opțional)',
           description: 'ex: „Lot mic de vară". Fără urgență agresivă.',

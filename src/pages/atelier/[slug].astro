@@ -156,6 +156,15 @@ if (d.relatedArticles?.length) {
           </div>
         )
       }
+
+      {
+        d.storage && (
+          <div class="prod-block">
+            <h2 class="prod-block-h">Mod de păstrare</h2>
+            <p class="prod-usage">{d.storage}</p>
+          </div>
+        )
+      }
     </div>
   </article>
 
