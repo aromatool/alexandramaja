@@ -5,6 +5,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import BotanicalDivider from '../../components/BotanicalDivider.astro';
 import AtelierBag from '../../components/AtelierBag.astro';
 import ToteIcon from '../../components/ToteIcon.astro';
+import SproutIcon from '../../components/SproutIcon.astro';
 import { availabilityInfo, NOTIFY_ANCHOR } from '../../lib/atelier';
 
 // Pagina de detaliu a unui lucru din atelier. La fel de ascunsă ca listarea
@@ -115,7 +116,9 @@ if (d.relatedArticles?.length) {
                     {av.label}
                   </p>
                   <p class="prod-return-msg">{av.message}</p>
-                  <a href={NOTIFY_ANCHOR} class="prod-return-cta">Anunță-mă când revine →</a>
+                  <a href={NOTIFY_ANCHOR} class="wait-btn">
+                    <SproutIcon />Așteptăm împreună
+                  </a>
                 </div>
               )
             }
@@ -351,17 +354,34 @@ if (d.relatedArticles?.length) {
     font-size: 0.95rem;
     line-height: 1.65;
   }
-  .prod-return-cta {
-    display: inline-block;
-    margin-top: 0.75rem;
+  /* Buton „Așteptăm împreună" — oglinda blândă a lui „Pune în desagă". Aceeași
+     formă (pilulă cu iconiță), dar în lavandă, ca să distingă starea de
+     așteptare de acțiunea de comandă. */
+  .wait-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    margin-top: 1rem;
+    font-family: var(--font-body);
     font-size: 0.9rem;
-    color: var(--accent-sage-dark);
-    text-decoration: none;
-    border-bottom: 1px solid var(--accent-pink);
-    padding-bottom: 2px;
-  }
-  .prod-return-cta:hover {
+    font-weight: 500;
     color: var(--accent-lavender-deep);
+    background-color: var(--bg-soft);
+    border: 1.5px solid var(--accent-lavender);
+    padding: 0.55rem 1.15rem;
+    border-radius: 999px;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+  .wait-btn:hover {
+    background-color: var(--accent-lavender);
+    color: var(--button-text);
+  }
+  .wait-btn :global(.sprout-icon) {
+    width: 1.15em;
+    height: 1.15em;
+    flex: none;
   }
 
   @media (max-width: 760px) {
