@@ -1,0 +1,251 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import BotanicalDivider from '../components/BotanicalDivider.astro';
+import RequestForm from '../components/RequestForm.astro';
+import { createReader } from '@keystatic/core/reader';
+import keystaticConfig from '../../keystatic.config';
+
+// „Vorbe de leac" — întâlnirea lunară cu oameni din domeniul sănătății.
+// Invitatul, tema, data și locul sunt editabile din Keystatic (Pagini →
+// „Vorbe de leac") — Alexandra le schimbă singură, în fiecare lună.
+const reader = createReader(process.cwd(), keystaticConfig);
+const vdl = await reader.singletons.vorbeDeLeac.read();
+
+const guestName = vdl?.guestName?.trim();
+const guestRole = vdl?.guestRole?.trim();
+const guestPhoto = vdl?.guestPhoto ?? null;
+const guestPhotoAlt = vdl?.guestPhotoAlt || guestName || 'Invitata Vorbe de leac';
+const theme = vdl?.theme?.trim();
+const date = vdl?.date?.trim();
+const location = vdl?.location?.trim();
+const price = vdl?.price?.trim();
+const description = vdl?.description?.trim();
+const registrationOpen = vdl?.registrationOpen ?? false;
+
+const hasEpisode = Boolean(guestName);
+
+const whatsappTemplate = `Bună, Alexandra! Sunt {{name}}, aș vrea să mă înscriu la Vorbe de leac${
+  theme ? ` — ${theme}` : ''
+}${date ? `, ${date}` : ''}.`;
+---
+
+<BaseLayout
+  title="Vorbe de leac"
+  description="În fiecare lună, o discuție așezată despre sănătate și prevenție, cu oameni din domeniu."
+>
+  <article class="vdl">
+    <div class="container-narrow mx-auto vdl-head text-center">
+      <span class="eyebrow">Vorbe de leac</span>
+      <h1>O discuție lunară despre sănătate, fără grabă</h1>
+      <p class="lead mx-auto">
+        În fiecare lună, invit pe cineva din domeniul sănătății — medici,
+        nutriționiști, moașe — pentru o discuție așezată despre prevenție și
+        stare de bine. Vorbe alese, cu grijă.
+      </p>
+    </div>
+
+    <BotanicalDivider />
+
+    {
+      hasEpisode ? (
+        <div class="container-narrow mx-auto vdl-episode">
+          <div class="vdl-grid">
+            <figure class:list={['vdl-photo', { 'photo-ph': !guestPhoto }]} data-note={!guestPhoto ? 'Poza invitatei/invitatului, portret cald, lumină naturală' : undefined}>
+              {
+                guestPhoto ? (
+                  <img src={guestPhoto} alt={guestPhotoAlt} loading="eager" />
+                ) : (
+                  <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <circle cx="20" cy="15" r="6" stroke="currentColor" stroke-width="1.2" fill="currentColor" fill-opacity="0.15" />
+                    <path d="M9 33c0-6.5 5-11 11-11s11 4.5 11 11" stroke="currentColor" stroke-width="1.2" fill="none" stroke-linecap="round" />
+                  </svg>
+                )
+              }
+            </figure>
+            <div class="vdl-info">
+              {theme && <span class="vdl-theme">{theme}</span>}
+              <h2 class="vdl-guest">{guestName}</h2>
+              {guestRole && <p class="vdl-role">{guestRole}</p>}
+              {description && <p class="vdl-desc">{description}</p>}
+              <div class="vdl-facts">
+                {date && (
+                  <div class="vdl-fact">
+                    <span class="vdl-fact-icon" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3.5" y="5" width="17" height="15" rx="2.5" fill="currentColor" fill-opacity="0.14" />
+                        <path d="M8 3v4M16 3v4M3.5 9.5h17" />
+                      </svg>
+                    </span>
+                    <span class="vdl-fact-text">{date}</span>
+                  </div>
+                )}
+                {location && (
+                  <div class="vdl-fact">
+                    <span class="vdl-fact-icon" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 21s7-6.3 7-11.3A7 7 0 0 0 5 9.7C5 14.7 12 21 12 21Z" fill="currentColor" fill-opacity="0.14" />
+                        <circle cx="12" cy="9.6" r="2.1" />
+                      </svg>
+                    </span>
+                    <span class="vdl-fact-text">{location}</span>
+                  </div>
+                )}
+                {price && (
+                  <div class="vdl-fact">
+                    <span class="vdl-fact-icon" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12.6 3.4 20 10.8c.8.8.8 2.1 0 2.9l-6.3 6.3c-.8.8-2.1.8-2.9 0L3.4 12.6c-.4-.4-.6-.9-.6-1.5V4c0-.6.4-1 1-1h7.4c.6 0 1.1.2 1.5.6Z" fill="currentColor" fill-opacity="0.14" />
+                        <circle cx="7.7" cy="7.7" r="1.2" fill="currentColor" />
+                      </svg>
+                    </span>
+                    <span class="vdl-fact-text">{price}</span>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {
+            registrationOpen ? (
+              <div class="vdl-register">
+                <RequestForm
+                  source="vorbe-de-leac"
+                  submitLabel="Vreau să particip"
+                  successNote="Mulțumesc! Acum se deschide WhatsApp, ca să-ți confirm locul. 🌿"
+                  whatsappTemplate={whatsappTemplate}
+                  fields={[
+                    { name: 'name', label: 'Numele tău', required: true, autocomplete: 'name' },
+                    { name: 'phone', label: 'Numărul de telefon', type: 'tel', required: true, autocomplete: 'tel' },
+                  ]}
+                />
+              </div>
+            ) : (
+              <p class="vdl-closed text-center">
+                Înscrierile pentru ediția asta s-au încheiat. Următoarea vine
+                luna viitoare — revino atunci.
+              </p>
+            )
+          }
+        </div>
+      ) : (
+        <p class="vdl-closed text-center">
+          Pregătesc următoarea ediție. Revino în curând, ca să vezi cine ne
+          este invitat.
+        </p>
+      )
+    }
+  </article>
+</BaseLayout>
+
+<style>
+  .vdl {
+    padding-block: clamp(2rem, 5vw, 4rem) clamp(3.5rem, 7vw, 5.5rem);
+  }
+
+  .vdl-head h1 {
+    margin: 0.75rem 0 1rem;
+    font-size: clamp(1.8rem, 4vw, 2.5rem);
+  }
+
+  .vdl-episode {
+    margin-top: clamp(2rem, 5vw, 3rem);
+  }
+
+  .vdl-grid {
+    display: grid;
+    grid-template-columns: 0.8fr 1.2fr;
+    gap: clamp(1.75rem, 4vw, 3rem);
+    align-items: start;
+  }
+
+  .vdl-photo {
+    margin: 0;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    aspect-ratio: 1;
+  }
+  .vdl-photo.photo-ph svg {
+    width: 48px;
+    height: 48px;
+    opacity: 0.5;
+  }
+  .vdl-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .vdl-theme {
+    font-size: 0.6875rem;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--accent-sage-dark);
+    font-weight: 600;
+  }
+  .vdl-guest {
+    margin: 0.5rem 0 0.15rem;
+    font-size: clamp(1.6rem, 3.4vw, 2.1rem);
+  }
+  .vdl-role {
+    color: var(--text-muted);
+    font-style: italic;
+    margin-bottom: 1rem;
+  }
+  .vdl-desc {
+    color: var(--text-secondary);
+    margin-bottom: 1.25rem;
+  }
+  .vdl-facts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem 1.5rem;
+  }
+  .vdl-fact {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.65rem;
+  }
+  .vdl-fact-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    flex: none;
+    border-radius: 50%;
+    background-color: var(--tint-sage);
+    color: var(--accent-sage-dark);
+  }
+  .vdl-fact-icon svg {
+    width: 17px;
+    height: 17px;
+  }
+  .vdl-fact-text {
+    font-size: 0.95rem;
+    color: var(--text-main);
+  }
+
+  .vdl-register {
+    margin-top: clamp(2rem, 5vw, 3rem);
+    padding-top: clamp(2rem, 5vw, 3rem);
+    border-top: 1px solid var(--border-soft);
+  }
+
+  .vdl-closed {
+    margin-top: clamp(2rem, 5vw, 3rem);
+    color: var(--text-muted);
+    font-style: italic;
+    max-width: 46ch;
+    margin-inline: auto;
+  }
+
+  @media (max-width: 720px) {
+    .vdl-grid {
+      grid-template-columns: 1fr;
+    }
+    .vdl-photo {
+      max-width: 220px;
+      margin-inline: auto;
+    }
+  }
+</style>

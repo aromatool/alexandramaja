@@ -1,0 +1,185 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import BotanicalDivider from '../components/BotanicalDivider.astro';
+import RequestForm from '../components/RequestForm.astro';
+import { createReader } from '@keystatic/core/reader';
+import keystaticConfig from '../../keystatic.config';
+
+// Pagina cărții Alexandrei. Coperta, textul și prețul sunt editabile din
+// Keystatic (Pagini → „Cartea — pagina") — ea le pune singură, fără cod.
+const reader = createReader(process.cwd(), keystaticConfig);
+const carte = await reader.singletons.cartePage.read();
+
+const cover = carte?.cover ?? null;
+const coverAlt = carte?.coverAlt || 'Coperta cărții „Dezvoltare de la gura sobei”';
+const pitch = carte?.pitch?.trim();
+const price = carte?.price?.trim();
+const note = carte?.note?.trim();
+const isPreorder = (carte?.status ?? 'precomanda') === 'precomanda';
+---
+
+<BaseLayout
+  title="Dezvoltare de la gura sobei"
+  description={pitch || 'Cartea Alexandrei — dezvoltare personală, scrisă la gura sobei.'}
+>
+  <article class="prod">
+    <div class="container">
+      <div class="prod-grid">
+        <div class="prod-media">
+          <figure class:list={['prod-photo', 'prod-photo-main', { 'photo-ph': !cover }]} data-note={!cover ? 'Coperta cărții, fotografiată sau scanată — pe fundal simplu' : undefined}>
+            {
+              cover ? (
+                <img src={cover} alt={coverAlt} loading="eager" fetchpriority="high" />
+              ) : (
+                <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                  <path d="M20 33 V16" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" />
+                  <path d="M20 18 c0-3.6 2-6.4 5-7.4 -0.3 3.6-2 6.4-5 7.4Z" fill="currentColor" fill-opacity="0.2" />
+                  <path d="M20 18 c0-3.6 -2-6.4 -5-7.4 0.3 3.6 2 6.4 5 7.4Z" fill="currentColor" fill-opacity="0.2" />
+                </svg>
+              )
+            }
+          </figure>
+        </div>
+
+        <div class="prod-info">
+          <span class="prod-cat">Cartea Alexandrei</span>
+          <h1 class="prod-name">Dezvoltare de la gura sobei</h1>
+          <p class="prod-lead">
+            {pitch || 'O carte despre dezvoltare personală, scrisă cu răbdare, la gura sobei.'}
+          </p>
+
+          <div class="prod-meta">
+            <span class="tag">{isPreorder ? 'Precomandă' : 'Disponibilă acum'}</span>
+          </div>
+
+          <div class="prod-buy">
+            {price && <span class="price-tag">{price}</span>}
+            {note && <p class="prod-note">{note}</p>}
+
+            <RequestForm
+              source="carte"
+              submitLabel={isPreorder ? 'Precomandă cartea' : 'Vreau cartea'}
+              successNote="Mulțumesc! Acum se deschide WhatsApp, ca să vorbim direct despre carte. 🌿"
+              whatsappTemplate={'Bună, Alexandra! Sunt {{name}}, aș vrea să precomand cartea „Dezvoltare de la gura sobei”. {{message}}'}
+              fields={[
+                { name: 'name', label: 'Numele tău', required: true, autocomplete: 'name' },
+                { name: 'phone', label: 'Numărul de telefon', type: 'tel', required: true, autocomplete: 'tel' },
+                { name: 'message', label: 'Un mesaj (opțional)', type: 'textarea', rows: 2 },
+              ]}
+            />
+            <p class="prod-order-note">
+              Se deschide WhatsApp cu mesajul deja pregătit — vorbim direct despre
+              livrare și plată. Nimic automat.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <BotanicalDivider />
+  </article>
+</BaseLayout>
+
+<style>
+  .prod {
+    padding-top: clamp(1.5rem, 4vw, 2.5rem);
+    padding-bottom: clamp(3.5rem, 7vw, 5.5rem);
+  }
+
+  .prod-grid {
+    display: grid;
+    grid-template-columns: 1.05fr 0.95fr;
+    gap: clamp(2rem, 5vw, 4rem);
+    align-items: start;
+  }
+
+  .prod-photo {
+    margin: 0;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    aspect-ratio: 4 / 5;
+  }
+  .prod-photo-main.photo-ph svg {
+    width: 56px;
+    height: 56px;
+    opacity: 0.5;
+  }
+  .prod-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .prod-info {
+    position: sticky;
+    top: 2rem;
+  }
+  .prod-cat {
+    font-size: 0.6875rem;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--accent-sage-dark);
+    font-weight: 600;
+  }
+  .prod-name {
+    font-size: clamp(2rem, 4.5vw, 3rem);
+    line-height: 1.1;
+    margin: 0.5rem 0 1rem;
+  }
+  .prod-lead {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: clamp(1.2rem, 2.4vw, 1.5rem);
+    line-height: 1.5;
+    color: var(--text-secondary);
+    max-width: 36ch;
+  }
+
+  .prod-meta {
+    margin-top: 1.25rem;
+  }
+  .tag {
+    display: inline-block;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--accent-sage-dark);
+    background-color: var(--tint-sage);
+    padding: 0.3rem 0.75rem;
+    border-radius: 999px;
+  }
+
+  .prod-buy {
+    margin-top: 1.75rem;
+    padding-top: 1.75rem;
+    border-top: 1px solid var(--border-soft);
+  }
+
+  .price-tag {
+    display: inline-block;
+    margin-bottom: 1rem;
+  }
+
+  .prod-note {
+    font-size: 0.9rem;
+    font-style: italic;
+    color: var(--text-muted);
+    margin: -0.5rem 0 1.25rem;
+  }
+
+  .prod-order-note {
+    margin-top: 1rem;
+    font-size: 0.85rem;
+    font-style: italic;
+    color: var(--text-muted);
+    text-align: center;
+  }
+
+  @media (max-width: 820px) {
+    .prod-grid {
+      grid-template-columns: 1fr;
+    }
+    .prod-info {
+      position: static;
+    }
+  }
+</style>

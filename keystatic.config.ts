@@ -18,7 +18,7 @@ export default config({
     brand: { name: 'Alexandra Maja' },
     navigation: {
       Conținut: ['biblioteca', 'atelier'],
-      Pagini: ['home', 'despre', 'atelierPage', 'announcement'],
+      Pagini: ['home', 'despre', 'atelierPage', 'announcement', 'cartePage', 'vorbeDeLeac'],
     },
   },
   // --- Pagini editabile (text din paginile „construite") ---
@@ -261,6 +261,84 @@ export default config({
           label: 'Link (unde duce anunțul)',
           description: 'Ex: /atelier — sau orice adresă completă (https://...).',
           defaultValue: '/atelier',
+        }),
+      },
+    }),
+    // --- Pagina cărții (precomandă) ---
+    cartePage: singleton({
+      label: 'Cartea — pagina',
+      path: 'src/content/pages/carte',
+      schema: {
+        status: fields.select({
+          label: 'Stadiu',
+          options: [
+            { label: 'Precomandă', value: 'precomanda' },
+            { label: 'Disponibilă acum', value: 'disponibila' },
+          ],
+          defaultValue: 'precomanda',
+        }),
+        cover: fields.image({
+          label: 'Coperta',
+          directory: 'public/images/carte',
+          publicPath: '/images/carte/',
+        }),
+        coverAlt: fields.text({
+          label: 'Descrierea copertei (accesibilitate)',
+        }),
+        pitch: fields.text({
+          label: 'Câteva rânduri despre carte',
+          multiline: true,
+          description: 'Apare sub titlu, pe pagină.',
+        }),
+        price: fields.text({
+          label: 'Preț (text)',
+          defaultValue: '',
+        }),
+        note: fields.text({
+          label: 'Notă mică (opțional)',
+          description: 'Ex: „Ajunge la tipar în 2 săptămâni".',
+        }),
+      },
+    }),
+    // --- Vorbe de leac (întâlnirea lunară) ---
+    vorbeDeLeac: singleton({
+      label: 'Vorbe de leac',
+      path: 'src/content/pages/vorbe-de-leac',
+      schema: {
+        registrationOpen: fields.checkbox({
+          label: 'Înscrieri deschise',
+          description: 'Debifează după ediție, până pregătești următoarea.',
+          defaultValue: true,
+        }),
+        guestName: fields.text({ label: 'Numele invitatei/invitatului' }),
+        guestRole: fields.text({
+          label: 'Ocupație',
+          description: 'Ex: „medic neurolog".',
+        }),
+        guestPhoto: fields.image({
+          label: 'Poza invitatei/invitatului (opțional)',
+          directory: 'public/images/vorbe-de-leac',
+          publicPath: '/images/vorbe-de-leac/',
+        }),
+        guestPhotoAlt: fields.text({
+          label: 'Descrierea pozei (accesibilitate)',
+        }),
+        theme: fields.text({ label: 'Tema discuției' }),
+        date: fields.text({
+          label: 'Data și ora',
+          description: 'Text liber, ex: „14 septembrie 2026, ora 18:00".',
+        }),
+        location: fields.text({
+          label: 'Locul (oraș / adresă)',
+        }),
+        price: fields.text({
+          label: 'Preț (text, opțional)',
+          description: 'Ex: „50 lei" sau „Gratuit". Lasă gol dacă nu vrei să apară.',
+        }),
+        description: fields.text({
+          label: 'Descriere',
+          multiline: true,
+          description: 'Câteva fraze despre invitat și temă.',
         }),
       },
     }),

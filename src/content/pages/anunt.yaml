@@ -1,6 +1,6 @@
-enabled: false
+enabled: true
 icon: carte
 eyebrow: Noutate
 message: Cartea Alexandrei a apărut
 highlight: Dezvoltare de la gura sobei
-linkHref: /atelier
+linkHref: /carte
