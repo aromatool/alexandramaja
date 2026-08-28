@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import BotanicalDivider from '../components/BotanicalDivider.astro';
+import RequestForm from '../components/RequestForm.astro';
 
 // O SINGURĂ ofertă la MVP. Pagina nu e un meniu de servicii — e o invitație
 // la o singură întâlnire, gândită în jurul transformării (de la „copleșit și
@@ -10,11 +11,6 @@ import BotanicalDivider from '../components/BotanicalDivider.astro';
 // Numele ofertei. Ales ca să numească valoarea (claritatea), nu „relaxarea”.
 // De validat final în vocea Alexandrei.
 const offerName = 'Punem lucrurile în ordine';
-
-// Endpoint-ul unde ajung cererile de programare (Formspree).
-// Îl iei de la formspree.io și îl pui aici, ex: 'https://formspree.io/f/xxxxxxx'.
-// Cât timp e gol, formularul rămâne în mod demo (afișează doar un mesaj).
-const BOOKING_ENDPOINT = 'https://formspree.io/f/maqrdylo';
 
 // Cum decurge întâlnirea — pași, nu „features”.
 const flow = [
@@ -78,7 +74,7 @@ const faqs = [
   },
   {
     q: 'Cât durează și cum ne întâlnim?',
-    a: 'Ne rezervăm timp fără grabă — în jur de 90 de minute. De obicei ne vedem față în față, ca să putem face și scanarea ZYTO. Dacă îți e mai la îndemână, putem discuta și online — doar că atunci scanarea nu e posibilă; rămâne discuția holistică și recomandările. După ce trimiți cererea, îți scriu personal ca să stabilim ziua.',
+    a: 'Ne rezervăm timp fără grabă — în jur de 90 de minute. De obicei ne vedem față în față, ca să putem face și scanarea ZYTO. Dacă îți e mai la îndemână, putem discuta și online — doar că atunci scanarea nu e posibilă; rămâne discuția holistică și recomandările. După ce trimiți cererea, continuăm direct pe WhatsApp ca să stabilim ziua.',
   },
 ];
 
@@ -289,56 +285,28 @@ const faqs = [
 
       <ol class="booking-steps">
         <li><span class="booking-step-n" aria-hidden="true">1</span>Îmi lași câteva rânduri despre tine, în formularul de mai jos.</li>
-        <li><span class="booking-step-n" aria-hidden="true">2</span>Îți răspund personal, de obicei în câteva zile.</li>
-        <li><span class="booking-step-n" aria-hidden="true">3</span>Dacă simțim amândouă că e potrivit, stabilim ziua.</li>
-        <li><span class="booking-step-n" aria-hidden="true">4</span>Rezervi locul și ne vedem, fără grabă.</li>
+        <li><span class="booking-step-n" aria-hidden="true">2</span>Se deschide WhatsApp, cu mesajul deja pregătit — trimiți și vorbim direct.</li>
+        <li><span class="booking-step-n" aria-hidden="true">3</span>Stabilim ziua împreună.</li>
+        <li><span class="booking-step-n" aria-hidden="true">4</span>Vii la întâlnire, fără grabă.</li>
       </ol>
 
-      {/*
-        Fluxul C: cererea ajunge la Alexandra pe email (prin Formspree),
-        ea confirmă personal, apoi omul plătește ca să rezerve. Plata NU e
-        automată pe site — deliberat. Endpoint-ul e în BOOKING_ENDPOINT (sus).
-      */}
-      <form
-        class="booking-form"
-        data-booking
-        action={BOOKING_ENDPOINT || undefined}
-        method="POST"
-      >
-        <input type="hidden" name="_subject" value="Cerere nouă de programare (site)" />
-        <div class="field">
-          <label for="b-name">Numele tău</label>
-          <input id="b-name" name="name" type="text" required autocomplete="name" />
-        </div>
-        <div class="field">
-          <label for="b-email">Adresa de email</label>
-          <input id="b-email" name="email" type="email" required autocomplete="email" />
-        </div>
-        <div class="field">
-          <label for="b-phone">Numărul de telefon</label>
-          <input id="b-phone" name="phone" type="tel" required autocomplete="tel" />
-        </div>
-        <div class="field">
-          <label for="b-why">Ce te-a făcut să te gândești la întâlnirea asta acum?</label>
-          <textarea id="b-why" name="why" rows="3"></textarea>
-        </div>
-        <div class="field">
-          <label for="b-hope">Ce ai vrea să înțelegi mai bine despre tine?</label>
-          <textarea id="b-hope" name="hope" rows="3"></textarea>
-        </div>
-        <button type="submit" class="btn btn-warm">Trimite cererea</button>
-        <p class="booking-fineprint">
-          Îți răspund personal, de obicei în câteva zile. Nu ajungi pe nicio
-          listă și nu primești mesaje automate.
-        </p>
-      </form>
-      <p class="booking-note" data-booking-note hidden>
-        Mulțumesc — am primit rândurile tale. Îți scriu personal în câteva zile,
-        ca să vedem împreună dacă e potrivit. 🌿
-      </p>
-      <p class="booking-error" data-booking-error hidden>
-        Ceva n-a mers la trimitere. Mai încearcă o dată sau scrie-mi direct pe
-        email. Îmi pare rău pentru bătaia de cap.
+      <RequestForm
+        source="lucreaza-cu-alexandra"
+        submitLabel="Trimite cererea"
+        successNote="Mulțumesc — am primit rândurile tale. Acum se deschide WhatsApp, ca să continuăm direct discuția. 🌿"
+        errorNote="Ceva n-a mers la trimitere. Mai încearcă o dată sau scrie-mi direct pe WhatsApp. Îmi pare rău pentru bătaia de cap."
+        whatsappTemplate={'Bună, Alexandra! Sunt {{name}}, tocmai am trimis o cerere de programare prin site (Punem lucrurile în ordine). Aștept să vorbim!'}
+        fields={[
+          { name: 'name', label: 'Numele tău', required: true, autocomplete: 'name' },
+          { name: 'email', label: 'Adresa de email', type: 'email', required: true, autocomplete: 'email' },
+          { name: 'phone', label: 'Numărul de telefon', type: 'tel', required: true, autocomplete: 'tel' },
+          { name: 'why', label: 'Ce te-a făcut să te gândești la întâlnirea asta acum?', type: 'textarea' },
+          { name: 'hope', label: 'Ce ai vrea să înțelegi mai bine despre tine?', type: 'textarea' },
+        ]}
+      />
+      <p class="booking-fineprint text-center">
+        Datele tale rămân doar între noi — nu ajungi pe nicio listă și nu
+        primești mesaje automate.
       </p>
     </div>
   </section>
@@ -715,73 +683,11 @@ const faqs = [
     color: var(--accent-terracotta-deep);
   }
 
-  .booking-form {
-    display: flex;
-    flex-direction: column;
-    gap: 1.25rem;
-    max-width: 560px;
-    margin-inline: auto;
-  }
-
-  /* `hidden` trebuie să învingă `display: flex` de mai sus. */
-  .booking-form[hidden] {
-    display: none;
-  }
-
-  .field {
-    display: flex;
-    flex-direction: column;
-    gap: 0.4rem;
-  }
-  .field label {
-    font-size: 0.95rem;
-    font-weight: 600;
-    color: var(--text-secondary);
-  }
-  .field input,
-  .field textarea {
-    font-family: var(--font-body);
-    font-size: 1rem;
-    padding: 0.85rem 1.1rem;
-    border-radius: var(--radius);
-    border: 1.5px solid var(--border-soft);
-    background-color: var(--bg-soft);
-    color: var(--text-main);
-    width: 100%;
-    resize: vertical;
-  }
-  .field input:focus,
-  .field textarea:focus {
-    outline: none;
-    border-color: var(--accent-lavender);
-  }
-
-  .booking-form .btn {
-    align-self: center;
-    margin-top: 0.5rem;
-  }
-
   .booking-fineprint {
     font-size: 0.9rem;
     font-style: italic;
     color: var(--text-muted);
-    text-align: center;
-    margin-inline: auto;
-  }
-
-  .booking-note {
     margin-top: 1.5rem;
-    text-align: center;
-    font-weight: 600;
-    color: var(--accent-sage-dark);
-    max-width: 46ch;
-    margin-inline: auto;
-  }
-
-  .booking-error {
-    margin-top: 1.5rem;
-    text-align: center;
-    color: var(--accent-terracotta-deep);
     max-width: 46ch;
     margin-inline: auto;
   }
@@ -851,52 +757,6 @@ const faqs = [
 </style>
 
 <script>
-  // Formularul de programare — trimite real prin endpoint-ul din `action`
-  // (Formspree). Dacă nu e setat niciun `action`, rămâne în mod demo.
-  document.querySelectorAll<HTMLFormElement>('form[data-booking]').forEach((form) => {
-    const note = form.parentElement?.querySelector<HTMLElement>('[data-booking-note]');
-    const errorNote = form.parentElement?.querySelector<HTMLElement>('[data-booking-error]');
-    const button = form.querySelector<HTMLButtonElement>('button[type="submit"]');
-
-    form.addEventListener('submit', async (event) => {
-      event.preventDefault();
-
-      // Mod demo: fără endpoint, doar arătăm mesajul de mulțumire.
-      if (!form.action || !/^https?:\/\//.test(form.getAttribute('action') || '')) {
-        form.hidden = true;
-        if (note) note.hidden = false;
-        return;
-      }
-
-      if (errorNote) errorNote.hidden = true;
-      const originalLabel = button?.textContent;
-      if (button) {
-        button.disabled = true;
-        button.textContent = 'Se trimite…';
-      }
-
-      try {
-        const response = await fetch(form.action, {
-          method: 'POST',
-          body: new FormData(form),
-          headers: { Accept: 'application/json' },
-        });
-        if (response.ok) {
-          form.hidden = true;
-          if (note) note.hidden = false;
-        } else {
-          throw new Error('Bad response');
-        }
-      } catch {
-        if (button) {
-          button.disabled = false;
-          button.textContent = originalLabel ?? 'Trimite cererea';
-        }
-        if (errorNote) errorNote.hidden = false;
-      }
-    });
-  });
-
   document.querySelectorAll<HTMLFormElement>('form[data-newsletter]').forEach((form) => {
     form.addEventListener('submit', async (event) => {
       event.preventDefault();

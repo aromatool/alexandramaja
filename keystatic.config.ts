@@ -18,7 +18,7 @@ export default config({
     brand: { name: 'Alexandra Maja' },
     navigation: {
       Conținut: ['biblioteca', 'atelier'],
-      Pagini: ['home', 'despre', 'atelierPage'],
+      Pagini: ['home', 'despre', 'atelierPage', 'announcement'],
     },
   },
   // --- Pagini editabile (text din paginile „construite") ---
@@ -220,6 +220,47 @@ export default config({
         }),
         journalImageAlt: fields.text({
           label: 'Descrierea pozei „Din caietul meu"',
+        }),
+      },
+    }),
+    // --- Bara de anunț (sus, deasupra meniului) ---
+    // Pentru lansări sau anunțuri temporare (carte nouă, Vorbe de leac etc.).
+    // Nu e popup — stă discret sus și poate fi închisă. Dacă „Activă" e
+    // debifat, nu apare deloc pe site.
+    announcement: singleton({
+      label: 'Bară de anunț (sus pe site)',
+      path: 'src/content/pages/anunt',
+      schema: {
+        enabled: fields.checkbox({
+          label: 'Activă (vizibilă pe site)',
+          defaultValue: false,
+        }),
+        icon: fields.select({
+          label: 'Iconiță',
+          options: [
+            { label: 'Carte', value: 'carte' },
+            { label: 'Eveniment / Vorbe de leac', value: 'eveniment' },
+          ],
+          defaultValue: 'carte',
+        }),
+        eyebrow: fields.text({
+          label: 'Etichetă mică',
+          description: 'Ex: „Noutate", „Eveniment lunar".',
+          defaultValue: 'Noutate',
+        }),
+        message: fields.text({
+          label: 'Text anunț',
+          description: 'Ex: „Cartea Alexandrei a apărut".',
+        }),
+        highlight: fields.text({
+          label: 'Parte accentuată (opțional)',
+          description:
+            'Apare cu accent, cu alt scris. Ex: titlul cărții, sau „14 septembrie, cu dr. Deborah".',
+        }),
+        linkHref: fields.text({
+          label: 'Link (unde duce anunțul)',
+          description: 'Ex: /atelier — sau orice adresă completă (https://...).',
+          defaultValue: '/atelier',
         }),
       },
     }),

@@ -1,0 +1,184 @@
+---
+// Bară discretă deasupra header-ului, pentru anunțuri temporare (ex: lansare
+// de carte, Vorbe de leac). NU e popup — nu întrerupe, doar stă sus și poate
+// fi închisă. Editabilă din Keystatic (singleton „announcement") — Alexandra
+// o activează/dezactivează și îi schimbă textul singură, fără cod.
+import { createReader } from '@keystatic/core/reader';
+import keystaticConfig from '../../keystatic.config';
+
+const reader = createReader(process.cwd(), keystaticConfig);
+const announcement = await reader.singletons.announcement.read();
+// Cheia de închidere include textul, ca un anunț NOU să apară din nou chiar
+// dacă cel vechi a fost închis în aceeași sesiune de navigare.
+const dismissKey = `announce-dismissed:${announcement?.message ?? ''}`;
+---
+
+{
+  announcement?.enabled && announcement.message && (
+    <div class="announce" id="announce-bar" data-dismiss-key={dismissKey}>
+      <div class="container announce-inner">
+        <a href={announcement.linkHref || '/'} class="announce-main">
+          <span class="announce-icon" aria-hidden="true">
+            {announcement.icon === 'eveniment' ? (
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 5.5h16a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H9l-4.5 3.2a.6.6 0 0 1-.95-.5V16.5H4a1 1 0 0 1-1-1v-9a1 1 0 0 1 1-1Z" fill="currentColor" fill-opacity="0.16" />
+                <path d="M8 10h8M8 13h5" />
+              </svg>
+            ) : (
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M6.5 3.5h10A1.5 1.5 0 0 1 18 5v14.4a.7.7 0 0 1-1 .64L13 18l-4 2.04a.7.7 0 0 1-1-.64V5A1.5 1.5 0 0 1 6.5 3.5Z" fill="currentColor" fill-opacity="0.16" />
+                <path d="M9.5 8.5h5M9.5 11.5h3.2" />
+              </svg>
+            )}
+          </span>
+          <span class="announce-copy">
+            {announcement.eyebrow && <span class="announce-eyebrow">{announcement.eyebrow}</span>}
+            <span class="announce-text">
+              {announcement.message}{' '}
+              {announcement.highlight && <em>{announcement.highlight}</em>}
+            </span>
+          </span>
+          <svg class="announce-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M5 12h14M13 6l6 6-6 6" />
+          </svg>
+        </a>
+        <button type="button" class="announce-close" aria-label="Închide anunțul" id="announce-close">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true">
+            <path d="M6 6l12 12M18 6L6 18" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  )
+}
+
+<style>
+  .announce {
+    background: linear-gradient(135deg, var(--tint-lavender), var(--tint-terracotta));
+    border-bottom: 1px solid var(--border-soft);
+  }
+
+  .announce-inner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    padding: 0.65rem 2.75rem 0.65rem 1rem;
+    position: relative;
+  }
+
+  .announce-main {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.65rem;
+    text-decoration: none;
+    color: var(--text-main);
+  }
+
+  .announce-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    flex: none;
+    border-radius: 50%;
+    background-color: rgba(251, 247, 242, 0.65);
+    color: var(--accent-lavender-deep);
+  }
+
+  .announce-icon svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .announce-copy {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+    line-height: 1.25;
+  }
+
+  .announce-eyebrow {
+    font-family: var(--font-body);
+    font-size: 0.625rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent-sage-dark);
+  }
+
+  .announce-text {
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    font-weight: 500;
+  }
+
+  .announce-text em {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 0.95rem;
+  }
+
+  .announce-arrow {
+    width: 15px;
+    height: 15px;
+    flex: none;
+    transition: transform 0.2s ease;
+  }
+
+  .announce-main:hover .announce-arrow {
+    transform: translateX(3px);
+  }
+
+  .announce-close {
+    position: absolute;
+    right: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    color: var(--text-muted);
+    border-radius: 50%;
+  }
+
+  .announce-close:hover {
+    background-color: rgba(49, 45, 29, 0.08);
+    color: var(--text-main);
+  }
+
+  .announce-close svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  @media (max-width: 640px) {
+    .announce-inner {
+      padding: 0.6rem 2.5rem 0.6rem 0.85rem;
+    }
+
+    .announce-eyebrow {
+      display: none;
+    }
+
+    .announce-text {
+      font-size: 0.78rem;
+    }
+  }
+</style>
+
+<script>
+  const bar = document.getElementById('announce-bar');
+  const key = bar?.dataset.dismissKey;
+  const closeBtn = document.getElementById('announce-close');
+  if (bar && key && sessionStorage.getItem(key)) {
+    bar.remove();
+  }
+  closeBtn?.addEventListener('click', () => {
+    if (key) sessionStorage.setItem(key, '1');
+    bar?.remove();
+  });
+</script>

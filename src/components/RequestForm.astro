@@ -1,0 +1,191 @@
+---
+// Formular reutilizabil: nume/contact + un mesaj scurt → salvează cererea
+// într-un tab din Google Sheet (per `source`) și deschide WhatsApp cu un
+// mesaj scurt, pre-completat, direct către Alexandra. Fără cont, fără coș —
+// aceeași filozofie „conversațională” ca desaga din Atelier.
+import { WHATSAPP_NUMBER } from '../lib/atelier';
+
+export interface RequestFieldConfig {
+  name: string;
+  label: string;
+  type?: 'text' | 'email' | 'tel' | 'textarea';
+  required?: boolean;
+  autocomplete?: string;
+  rows?: number;
+}
+
+interface Props {
+  source: string;
+  fields: RequestFieldConfig[];
+  submitLabel?: string;
+  successNote: string;
+  errorNote?: string;
+  // Mesajul WhatsApp — text liber cu {{numeCamp}} pentru interpolare.
+  // Ține-l scurt: contextul detaliat rămâne în Sheet, nu în chat.
+  whatsappTemplate: string;
+  idPrefix?: string;
+}
+
+const {
+  source,
+  fields,
+  submitLabel = 'Trimite',
+  successNote,
+  errorNote = 'Ceva n-a mers la trimitere. Mai încearcă o dată sau scrie-mi direct pe WhatsApp.',
+  whatsappTemplate,
+  idPrefix = source,
+} = Astro.props;
+---
+
+<div class="request-wrap">
+  <form
+    class="request-form"
+    data-request-form
+    data-source={source}
+    data-whatsapp-template={whatsappTemplate}
+    data-wa={WHATSAPP_NUMBER}
+  >
+    {
+      fields.map((f) => (
+        <div class="field">
+          <label for={`${idPrefix}-${f.name}`}>{f.label}</label>
+          {f.type === 'textarea' ? (
+            <textarea id={`${idPrefix}-${f.name}`} name={f.name} rows={f.rows ?? 3} required={f.required} />
+          ) : (
+            <input
+              id={`${idPrefix}-${f.name}`}
+              name={f.name}
+              type={f.type ?? 'text'}
+              required={f.required}
+              autocomplete={f.autocomplete}
+            />
+          )}
+        </div>
+      ))
+    }
+    <button type="submit" class="btn btn-warm">{submitLabel}</button>
+  </form>
+  <p class="request-note" data-request-note hidden>{successNote}</p>
+  <p class="request-error" data-request-error hidden>{errorNote}</p>
+</div>
+
+<style>
+  .request-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    max-width: 560px;
+    margin-inline: auto;
+  }
+
+  .request-form[hidden] {
+    display: none;
+  }
+
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+  .field label {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+  }
+  .field input,
+  .field textarea {
+    font-family: var(--font-body);
+    font-size: 1rem;
+    padding: 0.85rem 1.1rem;
+    border-radius: var(--radius);
+    border: 1.5px solid var(--border-soft);
+    background-color: var(--bg-soft);
+    color: var(--text-main);
+    width: 100%;
+    resize: vertical;
+  }
+  .field input:focus,
+  .field textarea:focus {
+    outline: none;
+    border-color: var(--accent-lavender);
+  }
+
+  .request-form .btn {
+    align-self: center;
+    margin-top: 0.5rem;
+  }
+
+  .request-note {
+    margin-top: 1.5rem;
+    text-align: center;
+    font-weight: 600;
+    color: var(--accent-sage-dark);
+    max-width: 46ch;
+    margin-inline: auto;
+  }
+
+  .request-error {
+    margin-top: 1.5rem;
+    text-align: center;
+    color: var(--accent-terracotta-deep);
+    max-width: 46ch;
+    margin-inline: auto;
+  }
+</style>
+
+<script>
+  function fillTemplate(template: string, fields: Record<string, string>): string {
+    return template.replace(/\{\{(\w+)\}\}/g, (_, key: string) => fields[key] ?? '');
+  }
+
+  document.querySelectorAll<HTMLFormElement>('form[data-request-form]').forEach((form) => {
+    const wrap = form.parentElement;
+    const note = wrap?.querySelector<HTMLElement>('[data-request-note]');
+    const errorNote = wrap?.querySelector<HTMLElement>('[data-request-error]');
+    const button = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+    const source = form.dataset.source ?? '';
+    const template = form.dataset.whatsappTemplate ?? '';
+    const wa = form.dataset.wa ?? '';
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      if (errorNote) errorNote.hidden = true;
+
+      const data = new FormData(form);
+      const fieldsObj: Record<string, string> = {};
+      data.forEach((value, key) => {
+        fieldsObj[key] = String(value);
+      });
+
+      const originalLabel = button?.textContent;
+      if (button) {
+        button.disabled = true;
+        button.textContent = 'Se trimite…';
+      }
+
+      try {
+        const response = await fetch('/api/request', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: JSON.stringify({ source, fields: fieldsObj }),
+        });
+        const result = (await response.json().catch(() => ({}))) as { ok?: boolean };
+        if (!response.ok || !result.ok) throw new Error('request_failed');
+
+        form.hidden = true;
+        if (note) note.hidden = false;
+
+        const message = fillTemplate(template, fieldsObj);
+        if (message && wa) {
+          window.location.href = `https://wa.me/${wa}?text=${encodeURIComponent(message)}`;
+        }
+      } catch {
+        if (button) {
+          button.disabled = false;
+          button.textContent = originalLabel ?? 'Trimite';
+        }
+        if (errorNote) errorNote.hidden = false;
+      }
+    });
+  });
+</script>
