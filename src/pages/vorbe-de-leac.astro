@@ -13,14 +13,19 @@ const vdl = await reader.singletons.vorbeDeLeac.read();
 
 const guestName = vdl?.guestName?.trim();
 const guestRole = vdl?.guestRole?.trim();
-const guestPhoto = vdl?.guestPhoto ?? null;
-const guestPhotoAlt = vdl?.guestPhotoAlt || guestName || 'Invitata Vorbe de leac';
+const poster = vdl?.poster ?? null;
+const posterAlt = vdl?.posterAlt || `Afiș Vorbe de leac — ${guestName || 'ediția curentă'}`;
 const theme = vdl?.theme?.trim();
 const date = vdl?.date?.trim();
 const location = vdl?.location?.trim();
 const price = vdl?.price?.trim();
+const seats = vdl?.seats?.trim();
 const description = vdl?.description?.trim();
 const registrationOpen = vdl?.registrationOpen ?? false;
+const introTitle = vdl?.introTitle?.trim() || 'O discuție lunară despre sănătate, fără grabă';
+const introText =
+  vdl?.introText?.trim() ||
+  'În fiecare lună, invit pe cineva din domeniul sănătății — medici, nutriționiști, moașe — pentru o discuție așezată despre prevenție și stare de bine. Vorbe alese, cu grijă.';
 
 const hasEpisode = Boolean(guestName);
 
@@ -36,12 +41,8 @@ const whatsappTemplate = `Bună, Alexandra! Sunt {{name}}, aș vrea să mă îns
   <article class="vdl">
     <div class="container-narrow mx-auto vdl-head text-center">
       <span class="eyebrow">Vorbe de leac</span>
-      <h1>O discuție lunară despre sănătate, fără grabă</h1>
-      <p class="lead mx-auto">
-        În fiecare lună, invit pe cineva din domeniul sănătății — medici,
-        nutriționiști, moașe — pentru o discuție așezată despre prevenție și
-        stare de bine. Vorbe alese, cu grijă.
-      </p>
+      <h1>{introTitle}</h1>
+      <p class="lead mx-auto">{introText}</p>
     </div>
 
     <BotanicalDivider />
@@ -49,20 +50,21 @@ const whatsappTemplate = `Bună, Alexandra! Sunt {{name}}, aș vrea să mă îns
     {
       hasEpisode ? (
         <div class="container-narrow mx-auto vdl-episode">
-          <div class="vdl-grid">
-            <figure class:list={['vdl-photo', { 'photo-ph': !guestPhoto }]} data-note={!guestPhoto ? 'Poza invitatei/invitatului, portret cald, lumină naturală' : undefined}>
-              {
-                guestPhoto ? (
-                  <img src={guestPhoto} alt={guestPhotoAlt} loading="eager" />
-                ) : (
-                  <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                    <circle cx="20" cy="15" r="6" stroke="currentColor" stroke-width="1.2" fill="currentColor" fill-opacity="0.15" />
-                    <path d="M9 33c0-6.5 5-11 11-11s11 4.5 11 11" stroke="currentColor" stroke-width="1.2" fill="none" stroke-linecap="round" />
-                  </svg>
-                )
-              }
-            </figure>
-            <div class="vdl-info">
+          {
+            poster ? (
+              <figure class="vdl-poster">
+                <img src={poster} alt={posterAlt} loading="eager" fetchpriority="high" />
+              </figure>
+            ) : (
+              <figure class="vdl-poster photo-ph" data-note="Afișul ediției — poză/grafică cu invitatul, tema, data și locul">
+                <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                  <circle cx="20" cy="15" r="6" stroke="currentColor" stroke-width="1.2" fill="currentColor" fill-opacity="0.15" />
+                  <path d="M9 33c0-6.5 5-11 11-11s11 4.5 11 11" stroke="currentColor" stroke-width="1.2" fill="none" stroke-linecap="round" />
+                </svg>
+              </figure>
+            )
+          }
+          <div class="vdl-info">
               {theme && <span class="vdl-theme">{theme}</span>}
               <h2 class="vdl-guest">{guestName}</h2>
               {guestRole && <p class="vdl-role">{guestRole}</p>}
@@ -101,8 +103,20 @@ const whatsappTemplate = `Bună, Alexandra! Sunt {{name}}, aș vrea să mă îns
                     <span class="vdl-fact-text">{price}</span>
                   </div>
                 )}
+                {seats && (
+                  <div class="vdl-fact">
+                    <span class="vdl-fact-icon" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="9" cy="8" r="3" fill="currentColor" fill-opacity="0.14" />
+                        <path d="M3.5 20c0-3.6 2.5-6 5.5-6s5.5 2.4 5.5 6" />
+                        <circle cx="17" cy="9" r="2.4" fill="currentColor" fill-opacity="0.14" />
+                        <path d="M15.5 20c-.1-2.6 1-4.8 2.8-5.7" />
+                      </svg>
+                    </span>
+                    <span class="vdl-fact-text">{seats}</span>
+                  </div>
+                )}
               </div>
-            </div>
           </div>
 
           {
@@ -121,8 +135,8 @@ const whatsappTemplate = `Bună, Alexandra! Sunt {{name}}, aș vrea să mă îns
               </div>
             ) : (
               <p class="vdl-closed text-center">
-                Înscrierile pentru ediția asta s-au încheiat. Următoarea vine
-                luna viitoare — revino atunci.
+                Toate locurile pentru ediția asta s-au ocupat — mă bucur să
+                văd atâta interes! Următoarea vine luna viitoare, revino atunci.
               </p>
             )
           }
@@ -151,28 +165,30 @@ const whatsappTemplate = `Bună, Alexandra! Sunt {{name}}, aș vrea să mă îns
     margin-top: clamp(2rem, 5vw, 3rem);
   }
 
-  .vdl-grid {
-    display: grid;
-    grid-template-columns: 0.8fr 1.2fr;
-    gap: clamp(1.75rem, 4vw, 3rem);
-    align-items: start;
-  }
-
-  .vdl-photo {
-    margin: 0;
+  .vdl-poster {
+    margin: 0 0 clamp(2rem, 5vw, 3rem);
     border-radius: var(--radius-lg);
     overflow: hidden;
+    box-shadow: var(--shadow-soft);
+    max-width: 560px;
+    margin-inline: auto;
     aspect-ratio: 1;
   }
-  .vdl-photo.photo-ph svg {
+  .vdl-poster.photo-ph svg {
     width: 48px;
     height: 48px;
     opacity: 0.5;
   }
-  .vdl-photo img {
+  .vdl-poster img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    display: block;
+  }
+
+  .vdl-info {
+    max-width: 640px;
+    margin-inline: auto;
   }
 
   .vdl-theme {
@@ -240,12 +256,8 @@ const whatsappTemplate = `Bună, Alexandra! Sunt {{name}}, aș vrea să mă îns
   }
 
   @media (max-width: 720px) {
-    .vdl-grid {
-      grid-template-columns: 1fr;
-    }
-    .vdl-photo {
-      max-width: 220px;
-      margin-inline: auto;
+    .vdl-poster {
+      max-width: 100%;
     }
   }
 </style>

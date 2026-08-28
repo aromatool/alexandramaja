@@ -1,9 +1,14 @@
 showInMenu: true
+introTitle: O discuție lunară despre sănătate, fără grabă
+introText: >-
+  Vorbe de leac este o serie de întâlniri lunare, ca un podcast live, în care
+  aducem mai aproape de noi medici din diferite specialități și răspunsuri pe
+  înțelesul tuturor.
 registrationOpen: true
 guestName: dr.Debora Marias
 guestRole: medic specialist neurologie
-guestPhoto: /images/vorbe-de-leac/guestPhoto.jpg
-guestPhotoAlt: >-
+poster: /images/vorbe-de-leac/guestPhoto.jpg
+posterAlt: >-
   Afiș „Vorbe de leac — Creierul sub presiune": întâlnire cu dr. Debora Marias,
   medic specialist neurologie, și Alexandra Maja. 24 septembrie, ora
   18:00–21:00, la Wisdom Culture Lab, Cluj-Napoca. 150 lei, 30 de locuri.
@@ -11,6 +16,7 @@ theme: CREIERUL SUB PRESIUNE
 date: 24 septembrie, orele 18-21
 location: ' Wisdom Culture Lab, Cluj-Napoca'
 price: 150 lei
+seats: 30 de locuri
 description: >-
   Invitata mea este dr. Debora Marias, medic specialist neurologie. Vom vorbi
   despre ceața mentală, problemele de memorie, migrene, stres, somn și acele

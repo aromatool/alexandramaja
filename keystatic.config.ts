@@ -310,6 +310,16 @@ export default config({
           description: 'Bifează când vrei să anunți public pagina „Vorbe de leac".',
           defaultValue: false,
         }),
+        introTitle: fields.text({
+          label: 'Titlu (sus pe pagină)',
+          defaultValue: 'O discuție lunară despre sănătate, fără grabă',
+        }),
+        introText: fields.text({
+          label: 'Descriere (sub titlu)',
+          multiline: true,
+          defaultValue:
+            'În fiecare lună, invit pe cineva din domeniul sănătății — medici, nutriționiști, moașe — pentru o discuție așezată despre prevenție și stare de bine. Vorbe alese, cu grijă.',
+        }),
         registrationOpen: fields.checkbox({
           label: 'Înscrieri deschise',
           description: 'Debifează după ediție, până pregătești următoarea.',
@@ -320,13 +330,14 @@ export default config({
           label: 'Ocupație',
           description: 'Ex: „medic neurolog".',
         }),
-        guestPhoto: fields.image({
-          label: 'Poza invitatei/invitatului (opțional)',
+        poster: fields.image({
+          label: 'Afiș / poză eveniment (opțional)',
+          description: 'Afișul întreg al ediției — invitat, temă, dată, loc. Apare mare, sus pe pagină.',
           directory: 'public/images/vorbe-de-leac',
           publicPath: '/images/vorbe-de-leac/',
         }),
-        guestPhotoAlt: fields.text({
-          label: 'Descrierea pozei (accesibilitate)',
+        posterAlt: fields.text({
+          label: 'Descrierea afișului (accesibilitate)',
         }),
         theme: fields.text({ label: 'Tema discuției' }),
         date: fields.text({
@@ -339,6 +350,10 @@ export default config({
         price: fields.text({
           label: 'Preț (text, opțional)',
           description: 'Ex: „50 lei" sau „Gratuit". Lasă gol dacă nu vrei să apară.',
+        }),
+        seats: fields.text({
+          label: 'Locuri disponibile (opțional)',
+          description: 'Ex: „30 de locuri" — capacitatea sălii.',
         }),
         description: fields.text({
           label: 'Descriere',
