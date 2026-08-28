@@ -2,7 +2,7 @@ import { WHATSAPP_NUMBER } from './atelier';
 
 // Sursele acceptate de /api/request — fiecare devine un tab în Google Sheet.
 // Ca să adaugi o secțiune nouă (ex: „vorbe-de-leac”), pui cheia aici.
-export const REQUEST_SOURCES = ['carte', 'lucreaza-cu-alexandra', 'vorbe-de-leac'] as const;
+export const REQUEST_SOURCES = ['carte', 'lucreaza-cu-alexandra', 'vorbe-de-leac', 'atelier'] as const;
 export type RequestSource = (typeof REQUEST_SOURCES)[number];
 
 export function isRequestSource(value: string): value is RequestSource {

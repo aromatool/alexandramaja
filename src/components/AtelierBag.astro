@@ -38,10 +38,21 @@ import { WHATSAPP_NUMBER } from '../lib/atelier';
 
     <div class="bag-foot" data-bag-foot hidden>
       <p class="bag-total"><span>Cam atât</span><span data-bag-total></span></p>
-      <a class="bag-send" data-bag-send target="_blank" rel="noopener">Trimite lista Alexandrei</a>
+      <div class="bag-field">
+        <label for="bag-name">Numele tău</label>
+        <input id="bag-name" type="text" data-bag-name required autocomplete="name" />
+      </div>
+      <div class="bag-field">
+        <label for="bag-phone">Numărul de telefon</label>
+        <input id="bag-phone" type="tel" data-bag-phone required autocomplete="tel" />
+      </div>
+      <button type="button" class="bag-send" data-bag-send>Trimite lista Alexandrei</button>
       <p class="bag-note">
         Se deschide WhatsApp cu lista deja scrisă. Îți răspund personal — confirm
         ce e disponibil și cum se plătește. Nimic automat.
+      </p>
+      <p class="bag-error" data-bag-error hidden>
+        Ceva n-a mers. Mai încearcă o dată sau scrie-mi direct pe WhatsApp.
       </p>
     </div>
   </aside>
@@ -240,21 +251,54 @@ import { WHATSAPP_NUMBER } from '../lib/atelier';
     color: var(--text-main);
     margin-bottom: 1rem;
   }
+  .bag-field {
+    margin-bottom: 0.85rem;
+  }
+  .bag-field label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: 0.35rem;
+  }
+  .bag-field input {
+    width: 100%;
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    padding: 0.7rem 0.9rem;
+    border-radius: var(--radius);
+    border: 1.5px solid var(--border-soft);
+    background-color: var(--bg-soft);
+    color: var(--text-main);
+  }
+  .bag-field input:focus {
+    outline: none;
+    border-color: var(--accent-lavender);
+  }
   .bag-send {
     display: block;
+    width: 100%;
     text-align: center;
     font-family: var(--font-body);
+    font-size: 1rem;
     font-weight: 500;
     color: var(--button-text);
     background-color: var(--accent-sage);
     padding: 0.9rem 1.5rem;
+    border: none;
     border-radius: var(--radius-sm);
     text-decoration: none;
+    cursor: pointer;
+    margin-top: 0.5rem;
     transition: background-color 0.2s ease;
   }
   .bag-send:hover {
     background-color: var(--button-bg-hover);
     color: var(--button-text);
+  }
+  .bag-send:disabled {
+    opacity: 0.7;
+    cursor: default;
   }
   .bag-note {
     margin-top: 0.9rem;
@@ -262,6 +306,12 @@ import { WHATSAPP_NUMBER } from '../lib/atelier';
     font-style: italic;
     color: var(--text-muted);
     line-height: 1.6;
+  }
+  .bag-error {
+    margin-top: 0.75rem;
+    font-size: 0.85rem;
+    color: var(--accent-terracotta-deep);
+    text-align: center;
   }
 </style>
 
@@ -281,7 +331,10 @@ import { WHATSAPP_NUMBER } from '../lib/atelier';
     const footEl = root.querySelector<HTMLElement>('[data-bag-foot]');
     const totalEl = root.querySelector<HTMLElement>('[data-bag-total]');
     const countEl = root.querySelector<HTMLElement>('[data-bag-count]');
-    const sendEl = root.querySelector<HTMLAnchorElement>('[data-bag-send]');
+    const sendEl = root.querySelector<HTMLButtonElement>('[data-bag-send]');
+    const nameEl = root.querySelector<HTMLInputElement>('[data-bag-name]');
+    const phoneEl = root.querySelector<HTMLInputElement>('[data-bag-phone]');
+    const errorEl = root.querySelector<HTMLElement>('[data-bag-error]');
 
     const read = (): BagItem[] => {
       try {
@@ -299,13 +352,16 @@ import { WHATSAPP_NUMBER } from '../lib/atelier';
       return m ? parseInt(m[0], 10) : 0;
     };
 
-    const buildMessage = () => {
-      const lines = items.map(
-        (i) => `• ${i.name}${i.price ? ' — ' + i.price : ''}${i.qty > 1 ? ' ×' + i.qty : ''}`
-      );
-      const total = items.reduce((s, i) => s + priceNum(i.price) * i.qty, 0);
+    const itemLines = () =>
+      items.map((i) => `${i.name}${i.price ? ' — ' + i.price : ''}${i.qty > 1 ? ' ×' + i.qty : ''}`);
+
+    const totalLei = () => items.reduce((s, i) => s + priceNum(i.price) * i.qty, 0);
+
+    const buildMessage = (name: string) => {
+      const total = totalLei();
       const totalLine = total > 0 ? `\n(cam ${total} lei)` : '';
-      return `Bună, Alexandra! Aș vrea din atelier:\n${lines.join('\n')}${totalLine}\nMai sunt disponibile?`;
+      const nameLine = name ? `Bună, Alexandra! Sunt ${name}. Aș vrea din atelier:\n` : `Bună, Alexandra! Aș vrea din atelier:\n`;
+      return `${nameLine}${itemLines().map((l) => `• ${l}`).join('\n')}${totalLine}\nMai sunt disponibile?`;
     };
 
     const render = () => {
@@ -351,9 +407,8 @@ import { WHATSAPP_NUMBER } from '../lib/atelier';
           listEl?.appendChild(li);
         });
 
-        const total = items.reduce((s, i) => s + priceNum(i.price) * i.qty, 0);
+        const total = totalLei();
         if (totalEl) totalEl.textContent = total > 0 ? `${total} lei` : '—';
-        if (sendEl) sendEl.href = `https://wa.me/${wa}?text=${encodeURIComponent(buildMessage())}`;
       }
     };
 
@@ -386,6 +441,44 @@ import { WHATSAPP_NUMBER } from '../lib/atelier';
       save();
       render();
       open();
+    });
+
+    sendEl?.addEventListener('click', async () => {
+      const name = nameEl?.value.trim() ?? '';
+      const phone = phoneEl?.value.trim() ?? '';
+      if (errorEl) errorEl.hidden = true;
+
+      if (!name || !phone) {
+        if (errorEl) {
+          errorEl.textContent = 'Completează numele și telefonul, ca să pot ține evidența comenzii.';
+          errorEl.hidden = false;
+        }
+        return;
+      }
+
+      const waUrl = `https://wa.me/${wa}?text=${encodeURIComponent(buildMessage(name))}`;
+      const originalLabel = sendEl.textContent;
+      sendEl.disabled = true;
+      sendEl.textContent = 'Se trimite…';
+
+      // Salvarea în Sheet e „best effort" — nu blocăm comanda reală pe WhatsApp
+      // dacă webhook-ul e temporar indisponibil.
+      try {
+        await fetch('/api/request', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            source: 'atelier',
+            fields: { name, phone, items: itemLines().join('; '), total: totalLei() > 0 ? `${totalLei()} lei` : '' },
+          }),
+        });
+      } catch {
+        // ignorăm — comanda continuă pe WhatsApp indiferent
+      }
+
+      sendEl.disabled = false;
+      sendEl.textContent = originalLabel;
+      window.location.href = waUrl;
     });
 
     trigger?.addEventListener('click', open);
