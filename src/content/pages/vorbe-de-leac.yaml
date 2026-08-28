@@ -1,11 +1,23 @@
-showInMenu: false
+showInMenu: true
 registrationOpen: true
-guestName: dr. Deborah
-guestRole: medic neurolog
-theme: Prevenirea bolilor neurodegenerative
-date: 24 septembrie ora 18
-location: Cluj, sala polivalenta
+guestName: dr.Debora Marias
+guestRole: medic specialist neurologie
+guestPhoto: /images/vorbe-de-leac/guestPhoto.jpeg
+guestPhotoAlt: >-
+  Afiș „Vorbe de leac — Creierul sub presiune": întâlnire cu dr. Debora Marias,
+  medic specialist neurologie, și Alexandra Maja. 24 septembrie, ora
+  18:00–21:00, la Wisdom Culture Lab, Cluj-Napoca. 150 lei, 30 de locuri.
+theme: CREIERUL SUB PRESIUNE
+date: 24 septembrie, ora 19-21
+location: ' Wisdom Culture Lab, Cluj-Napoca'
 price: 150 lei
 description: >-
-  O sa avem o intalnier cu un medic de exceptie, bauturi si mancare si vorbe
-  bune
+  nvitata mea este dr. Debora Marias, medic specialist neurologie. Vom vorbi
+  despre ceața mentală, problemele de memorie, migrene, stres, somn și acele
+  semne pe care nu ar trebui să le ignorăm. Vom afla și ce putem face, prin
+  obiceiuri mici și realiste, pentru a reduce riscul bolilor precum Alzheimer,
+  Parkinson sau demență.
+
+
+  Noi punem întrebările, medicul ne răspunde, iar conversația continuă firesc,
+  la un pahar de prosecco, cu aperitive și ceva dulce.
