@@ -305,6 +305,11 @@ export default config({
       label: 'Vorbe de leac',
       path: 'src/content/pages/vorbe-de-leac',
       schema: {
+        showInMenu: fields.checkbox({
+          label: 'Arată în meniu',
+          description: 'Bifează când vrei să anunți public pagina „Vorbe de leac".',
+          defaultValue: false,
+        }),
         registrationOpen: fields.checkbox({
           label: 'Înscrieri deschise',
           description: 'Debifează după ediție, până pregătești următoarea.',

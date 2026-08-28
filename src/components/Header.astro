@@ -3,6 +3,8 @@
 // each links to /biblioteca#<slug>, which preselects that category on the
 // Biblioteca index (client-side filter + deep-link).
 import CategoryIcon from './CategoryIcon.astro';
+import { createReader } from '@keystatic/core/reader';
+import keystaticConfig from '../../keystatic.config';
 
 interface NavChild {
   href: string;
@@ -33,11 +35,16 @@ const links: NavItem[] = [
     ],
   },
   { href: '/atelier', label: 'Atelier', activeMatch: '/atelier' },
-  // „Vorbe de leac" e construită (pagina + Keystatic), dar încă nelegată din
-  // meniu — Alexandra vrea s-o anunțe ea când e momentul. Adaug link-ul înapoi
-  // când dă semnalul.
   { href: '/lucreaza-cu-alexandra', label: 'Lucrează cu Alexandra', activeMatch: '/lucreaza-cu-alexandra' },
 ];
+
+// „Vorbe de leac" apare în meniu doar când Alexandra bifează „Arată în meniu"
+// din Keystatic (Pagini → „Vorbe de leac") — ea decide când anunță public.
+const reader = createReader(process.cwd(), keystaticConfig);
+const vorbeDeLeac = await reader.singletons.vorbeDeLeac.read();
+if (vorbeDeLeac?.showInMenu) {
+  links.splice(4, 0, { href: '/vorbe-de-leac', label: 'Vorbe de leac', activeMatch: '/vorbe-de-leac' });
+}
 
 const path = Astro.url.pathname;
 const isActive = (item: NavItem) => {
