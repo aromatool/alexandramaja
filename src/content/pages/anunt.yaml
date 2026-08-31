@@ -1,6 +1,6 @@
-enabled: false
-icon: carte
-eyebrow: Noutate
-message: Cartea Alexandrei a apărut
-highlight: Dezvoltare de la gura sobei
-linkHref: /carte
+enabled: true
+icon: eveniment
+eyebrow: Eveniment nou
+message: Vorbe de leac — Creierul sub presiune
+highlight: 24 septembrie, cu dr. Debora Marias
+linkHref: /vorbe-de-leac
