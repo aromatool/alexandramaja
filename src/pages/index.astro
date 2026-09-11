@@ -103,6 +103,36 @@ const benefits = home.benefits.map((b, i) => ({
     </div>
   </section>
 
+  <!-- ================= NOUTĂȚI ================= -->
+  {home.noutati && home.noutati.length > 0 && (
+    <section class="noutati">
+      <div class="container">
+        <div class="noutati-header">
+          <span class="script noutati-script">Noutăți</span>
+          <span class="noutati-rule" aria-hidden="true"></span>
+        </div>
+        <div class="noutati-grid">
+          {home.noutati.map((n) => (
+            <a href={n.link} class="noutate-card">
+              {n.image && (
+                <div class="noutate-img">
+                  <img src={n.image} alt={n.title} loading="lazy" />
+                </div>
+              )}
+              {!n.image && <div class="noutate-img noutate-img--ph" aria-hidden="true"></div>}
+              <div class="noutate-body">
+                <span class={`noutate-tag noutate-tag--${n.tagColor}`}>{n.tag}</span>
+                <h3 class="noutate-title">{n.title}</h3>
+                <p class="noutate-text">{n.text}</p>
+                <span class="noutate-link">{n.linkLabel} →</span>
+              </div>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
   <!-- ================= ABOUT · ARTICLES · NEWSLETTER ================= -->
   <section class="section home-band">
     <div class="container home-grid">
@@ -306,6 +336,145 @@ const benefits = home.benefits.map((b, i) => ({
     font-size: 0.9rem;
     color: var(--text-secondary);
     margin-top: 0.15rem;
+  }
+
+  /* ===================== NOUTĂȚI ===================== */
+  .noutati {
+    padding-block: clamp(2.5rem, 5vw, 3.5rem);
+    border-bottom: 1px solid var(--border-soft);
+  }
+
+  .noutati-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.75rem;
+  }
+
+  .noutati-script {
+    font-size: 1.9rem;
+    line-height: 1;
+    white-space: nowrap;
+  }
+
+  .noutati-rule {
+    flex: 1;
+    height: 1px;
+    background: var(--border-soft);
+  }
+
+  .noutati-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr));
+    gap: 1.25rem;
+  }
+
+  .noutate-card {
+    display: flex;
+    gap: 0;
+    background: var(--bg-card);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius);
+    overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+    transition: box-shadow 0.2s, border-color 0.2s;
+  }
+
+  .noutate-card:hover {
+    border-color: var(--accent-lavender);
+    box-shadow: 0 4px 20px rgba(154, 122, 132, 0.12);
+  }
+
+  .noutate-img {
+    flex: none;
+    width: 140px;
+    background: var(--tint-sage);
+    overflow: hidden;
+  }
+
+  .noutate-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .noutate-img--ph {
+    background: linear-gradient(135deg, var(--tint-lavender) 0%, var(--tint-sage) 100%);
+  }
+
+  .noutate-body {
+    flex: 1;
+    padding: 1.4rem 1.6rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .noutate-tag {
+    display: inline-block;
+    font-family: var(--font-body);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 0.2em 0.75em;
+    border-radius: 99px;
+    width: fit-content;
+  }
+
+  .noutate-tag--lavender {
+    background: var(--tint-lavender);
+    color: var(--accent-lavender-deep);
+  }
+
+  .noutate-tag--sage {
+    background: var(--tint-sage);
+    color: var(--accent-sage-dark);
+  }
+
+  .noutate-tag--terracotta {
+    background: var(--tint-terracotta);
+    color: var(--accent-terracotta);
+  }
+
+  .noutate-title {
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    font-weight: 500;
+    line-height: 1.25;
+    color: var(--text-main);
+    margin: 0;
+  }
+
+  .noutate-text {
+    font-size: 0.92rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin: 0;
+    flex: 1;
+  }
+
+  .noutate-link {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--accent-sage-dark);
+    margin-top: 0.25rem;
+  }
+
+  .noutate-card:hover .noutate-link {
+    color: var(--accent-lavender-deep);
+  }
+
+  @media (max-width: 560px) {
+    .noutate-card {
+      flex-direction: column;
+    }
+    .noutate-img {
+      width: 100%;
+      height: 160px;
+    }
   }
 
   /* ===================== HOME BAND ===================== */

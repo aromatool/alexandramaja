@@ -20,3 +20,20 @@ aboutText: >-
   susține fiecare pas. Călătoresc, învăț, experimentez și împărtășesc aici tot
   ce descopăr și trăiesc.
 aboutPhoto: /images/home/aboutPhoto.jpeg
+noutati:
+  - tag: Carte
+    tagColor: lavender
+    title: Dezvoltare de la gura sobei e disponibilă
+    text: >-
+      O carte caldă și așezată, pentru momentele în care simți nevoia
+      să te întorci spre tine.
+    link: /carte
+    linkLabel: Vezi cartea
+  - tag: Eveniment
+    tagColor: sage
+    title: Vorbe de leac — prima întâlnire
+    text: >-
+      Septembrie, cu dr. Deborah — o discuție blândă despre prevenirea
+      bolilor neurodegenerative.
+    link: /vorbe-de-leac
+    linkLabel: Află detalii

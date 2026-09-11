@@ -77,6 +77,33 @@ export default config({
           directory: 'public/images/home',
           publicPath: '/images/home/',
         }),
+        noutati: fields.array(
+          fields.object({
+            tag: fields.text({ label: 'Etichetă (ex: Carte, Eveniment, Nou)' }),
+            tagColor: fields.select({
+              label: 'Culoare etichetă',
+              options: [
+                { label: 'Lavandă', value: 'lavender' },
+                { label: 'Sage (verde)', value: 'sage' },
+                { label: 'Teracotă', value: 'terracotta' },
+              ],
+              defaultValue: 'lavender',
+            }),
+            title: fields.text({ label: 'Titlu' }),
+            text: fields.text({ label: 'Text scurt', multiline: true }),
+            link: fields.text({ label: 'Link (ex: /carte)' }),
+            linkLabel: fields.text({ label: 'Text link (ex: Vezi cartea)', defaultValue: 'Află mai mult' }),
+            image: fields.image({
+              label: 'Imagine (opțional)',
+              directory: 'public/images/noutati',
+              publicPath: '/images/noutati/',
+            }),
+          }),
+          {
+            label: 'Noutăți (secțiunea de pe homepage)',
+            itemLabel: (p) => p.fields.title.value || 'Noutate',
+          }
+        ),
       },
     }),
     despre: singleton({
