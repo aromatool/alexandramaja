@@ -21,19 +21,22 @@ aboutText: >-
   ce descopăr și trăiesc.
 aboutPhoto: /images/home/aboutPhoto.jpeg
 noutati:
-  - tag: Carte
+  - tag: Carte nouă
     tagColor: lavender
-    title: Dezvoltare de la gura sobei e disponibilă
+    title: Dezvoltare personală de la gura sobei
     text: >-
-      O carte caldă și așezată, pentru momentele în care simți nevoia
-      să te întorci spre tine.
+      O călătorie prin copilărie, adolescență și viața de adult — scrisă nu ca
+      să-ți arate cum să trăiești, ci ca să te invite să privești propria
+      poveste cu alți ochi.
     link: /carte
     linkLabel: Vezi cartea
-  - tag: Eveniment
+    image: /images/noutati/noutati/0/image.png
+  - tag: Eveniment septembrie
     tagColor: sage
     title: Vorbe de leac — prima întâlnire
     text: >-
-      Septembrie, cu dr. Deborah — o discuție blândă despre prevenirea
-      bolilor neurodegenerative.
+      Prima întâlnire, cu dr. Debora Marias, neurolog. Ceață mentală, somn,
+      memorie și ce putem face azi pentru un creier sănătos mâine.
     link: /vorbe-de-leac
     linkLabel: Află detalii
+    image: /images/noutati/noutati/1/image.jpg
