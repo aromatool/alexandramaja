@@ -255,12 +255,16 @@ const {
         button.textContent = 'Se trimite…';
       }
 
-      // Sheet: best-effort — nu blocăm WhatsApp dacă webhook-ul eșuează
-      fetch('/api/request', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-        body: JSON.stringify({ source, fields: { ...fieldsObj, ...deliveryPayload } }),
-      }).catch(() => {});
+      // Sheet: best-effort — așteptăm răspunsul dar nu blocăm WhatsApp pe eroare
+      try {
+        await fetch('/api/request', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: JSON.stringify({ source, fields: { ...fieldsObj, ...deliveryPayload } }),
+        });
+      } catch {
+        // ignorăm — comanda continuă pe WhatsApp indiferent
+      }
 
       form.hidden = true;
       if (note) note.hidden = false;
