@@ -250,38 +250,28 @@ const {
         ...(wantsDelivery && cod ? { codPostal: cod } : {}),
       };
 
-      const originalLabel = button?.textContent;
       if (button) {
         button.disabled = true;
         button.textContent = 'Se trimite…';
       }
 
-      try {
-        const response = await fetch('/api/request', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-          body: JSON.stringify({ source, fields: { ...fieldsObj, ...deliveryPayload } }),
-        });
-        const result = (await response.json().catch(() => ({}))) as { ok?: boolean };
-        if (!response.ok || !result.ok) throw new Error('request_failed');
+      // Sheet: best-effort — nu blocăm WhatsApp dacă webhook-ul eșuează
+      fetch('/api/request', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({ source, fields: { ...fieldsObj, ...deliveryPayload } }),
+      }).catch(() => {});
 
-        form.hidden = true;
-        if (note) note.hidden = false;
+      form.hidden = true;
+      if (note) note.hidden = false;
 
-        let message = fillTemplate(template, fieldsObj);
-        if (wantsDelivery && adresa) {
-          const loc = [adresa, cod ? `${cod} ${oras}` : oras, judet].filter(Boolean).join(', ');
-          message += `\n\nLivrare la:\n${loc}`;
-        }
-        if (message && wa) {
-          window.location.href = `https://wa.me/${wa}?text=${encodeURIComponent(message)}`;
-        }
-      } catch {
-        if (button) {
-          button.disabled = false;
-          button.textContent = originalLabel ?? 'Trimite';
-        }
-        if (errorNote) errorNote.hidden = false;
+      let message = fillTemplate(template, fieldsObj);
+      if (wantsDelivery && adresa) {
+        const loc = [adresa, cod ? `${cod} ${oras}` : oras, judet].filter(Boolean).join(', ');
+        message += `\n\nLivrare la:\n${loc}`;
+      }
+      if (message && wa) {
+        window.location.href = `https://wa.me/${wa}?text=${encodeURIComponent(message)}`;
       }
     });
   });
