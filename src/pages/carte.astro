@@ -57,7 +57,7 @@ const isPreorder = (carte?.status ?? 'precomanda') === 'precomanda';
             {note && <p class="prod-note">{note}</p>}
 
             <RequestForm
-              source=”carte”
+              source="carte"
               submitLabel={isPreorder ? 'Precomandă cartea' : 'Vreau cartea'}
               successNote=”Mulțumesc! Acum se deschide WhatsApp, ca să vorbim direct despre carte. 🌿”
               whatsappTemplate={'Bună, Alexandra! Sunt {{name}}, aș vrea să precomand cartea „Dezvoltare de la gura sobei”. {{message}}'}
