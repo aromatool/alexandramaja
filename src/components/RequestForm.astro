@@ -20,10 +20,9 @@ interface Props {
   submitLabel?: string;
   successNote: string;
   errorNote?: string;
-  // Mesajul WhatsApp — text liber cu {{numeCamp}} pentru interpolare.
-  // Ține-l scurt: contextul detaliat rămâne în Sheet, nu în chat.
   whatsappTemplate: string;
   idPrefix?: string;
+  showDelivery?: boolean;
 }
 
 const {
@@ -34,6 +33,7 @@ const {
   errorNote = 'Ceva n-a mers la trimitere. Mai încearcă o dată sau scrie-mi direct pe WhatsApp.',
   whatsappTemplate,
   idPrefix = source,
+  showDelivery = false,
 } = Astro.props;
 ---
 
@@ -63,6 +63,34 @@ const {
         </div>
       ))
     }
+    {showDelivery && (
+      <>
+        <label class="delivery-toggle">
+          <input type="checkbox" name="livrare_check" data-delivery-check />
+          <span>Dorești livrare prin curier?</span>
+        </label>
+        <div class="delivery-fields" data-delivery-fields hidden>
+          <div class="field">
+            <label for={`${idPrefix}-adresa`}>Adresă (stradă, nr., bloc, ap.)</label>
+            <input id={`${idPrefix}-adresa`} name="adresa" type="text" autocomplete="street-address" />
+          </div>
+          <div class="field field--row">
+            <div>
+              <label for={`${idPrefix}-oras`}>Oraș</label>
+              <input id={`${idPrefix}-oras`} name="oras" type="text" autocomplete="address-level2" />
+            </div>
+            <div>
+              <label for={`${idPrefix}-judet`}>Județ</label>
+              <input id={`${idPrefix}-judet`} name="judet" type="text" autocomplete="address-level1" />
+            </div>
+          </div>
+          <div class="field">
+            <label for={`${idPrefix}-cod`}>Cod poștal</label>
+            <input id={`${idPrefix}-cod`} name="codPostal" type="text" autocomplete="postal-code" />
+          </div>
+        </div>
+      </>
+    )}
     <button type="submit" class="btn btn-warm">{submitLabel}</button>
   </form>
   <p class="request-note" data-request-note hidden>{successNote}</p>
@@ -110,6 +138,50 @@ const {
     border-color: var(--accent-lavender);
   }
 
+  .delivery-toggle {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+  }
+  .delivery-toggle input[type='checkbox'] {
+    width: 1.1rem;
+    height: 1.1rem;
+    accent-color: var(--accent-lavender);
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+
+  .delivery-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    border-radius: var(--radius);
+    border: 1.5px solid var(--border-soft);
+    background: var(--bg-soft);
+  }
+  .delivery-fields[hidden] { display: none; }
+
+  .field--row {
+    flex-direction: row;
+    gap: 1rem;
+  }
+  .field--row > div {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+  .field--row label {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+  }
+
   .request-form .btn {
     align-self: center;
     margin-top: 0.5rem;
@@ -147,6 +219,13 @@ const {
     const template = form.dataset.whatsappTemplate ?? '';
     const wa = form.dataset.wa ?? '';
 
+    const deliveryCheck = form.querySelector<HTMLInputElement>('[data-delivery-check]');
+    const deliveryFields = form.querySelector<HTMLElement>('[data-delivery-fields]');
+
+    deliveryCheck?.addEventListener('change', () => {
+      if (deliveryFields) deliveryFields.hidden = !deliveryCheck.checked;
+    });
+
     form.addEventListener('submit', async (event) => {
       event.preventDefault();
       if (errorNote) errorNote.hidden = true;
@@ -156,6 +235,20 @@ const {
       data.forEach((value, key) => {
         fieldsObj[key] = String(value);
       });
+
+      const wantsDelivery = deliveryCheck?.checked ?? false;
+      const adresa = (form.querySelector<HTMLInputElement>('[name="adresa"]')?.value ?? '').trim();
+      const oras = (form.querySelector<HTMLInputElement>('[name="oras"]')?.value ?? '').trim();
+      const judet = (form.querySelector<HTMLInputElement>('[name="judet"]')?.value ?? '').trim();
+      const cod = (form.querySelector<HTMLInputElement>('[name="codPostal"]')?.value ?? '').trim();
+
+      const deliveryPayload: Record<string, string> = {
+        livrare: wantsDelivery ? 'da' : 'nu',
+        ...(wantsDelivery && adresa ? { adresa } : {}),
+        ...(wantsDelivery && oras ? { oras } : {}),
+        ...(wantsDelivery && judet ? { judet } : {}),
+        ...(wantsDelivery && cod ? { codPostal: cod } : {}),
+      };
 
       const originalLabel = button?.textContent;
       if (button) {
@@ -167,7 +260,7 @@ const {
         const response = await fetch('/api/request', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-          body: JSON.stringify({ source, fields: fieldsObj }),
+          body: JSON.stringify({ source, fields: { ...fieldsObj, ...deliveryPayload } }),
         });
         const result = (await response.json().catch(() => ({}))) as { ok?: boolean };
         if (!response.ok || !result.ok) throw new Error('request_failed');
@@ -175,7 +268,11 @@ const {
         form.hidden = true;
         if (note) note.hidden = false;
 
-        const message = fillTemplate(template, fieldsObj);
+        let message = fillTemplate(template, fieldsObj);
+        if (wantsDelivery && adresa) {
+          const loc = [adresa, cod ? `${cod} ${oras}` : oras, judet].filter(Boolean).join(', ');
+          message += `\n\nLivrare la:\n${loc}`;
+        }
         if (message && wa) {
           window.location.href = `https://wa.me/${wa}?text=${encodeURIComponent(message)}`;
         }

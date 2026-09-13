@@ -46,6 +46,33 @@ import { WHATSAPP_NUMBER } from '../lib/atelier';
         <label for="bag-phone">Numărul de telefon</label>
         <input id="bag-phone" type="tel" data-bag-phone required autocomplete="tel" />
       </div>
+
+      <label class="bag-delivery-toggle">
+        <input type="checkbox" data-bag-delivery-check />
+        <span>Dorești livrare prin curier?</span>
+      </label>
+
+      <div class="bag-delivery-fields" data-bag-delivery hidden>
+        <div class="bag-field">
+          <label for="bag-adresa">Adresă (stradă, nr., bloc, ap.)</label>
+          <input id="bag-adresa" type="text" data-bag-adresa autocomplete="street-address" />
+        </div>
+        <div class="bag-field bag-field--row">
+          <div>
+            <label for="bag-oras">Oraș</label>
+            <input id="bag-oras" type="text" data-bag-oras autocomplete="address-level2" />
+          </div>
+          <div>
+            <label for="bag-judet">Județ</label>
+            <input id="bag-judet" type="text" data-bag-judet autocomplete="address-level1" />
+          </div>
+        </div>
+        <div class="bag-field">
+          <label for="bag-cod">Cod poștal</label>
+          <input id="bag-cod" type="text" data-bag-cod autocomplete="postal-code" />
+        </div>
+      </div>
+
       <button type="button" class="bag-send" data-bag-send>Trimite lista Alexandrei</button>
       <p class="bag-note">
         Se deschide WhatsApp cu lista deja scrisă. Îți răspund personal — confirm
@@ -275,6 +302,48 @@ import { WHATSAPP_NUMBER } from '../lib/atelier';
     outline: none;
     border-color: var(--accent-lavender);
   }
+  .bag-delivery-toggle {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    cursor: pointer;
+    margin-bottom: 0.25rem;
+  }
+  .bag-delivery-toggle input[type="checkbox"] {
+    width: 1rem;
+    height: 1rem;
+    accent-color: var(--accent-lavender);
+    cursor: pointer;
+    flex: none;
+  }
+  .bag-delivery-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    padding: 1rem;
+    background: var(--bg-soft);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius);
+    margin-bottom: 0.25rem;
+  }
+  .bag-delivery-fields[hidden] {
+    display: none;
+  }
+  .bag-field--row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+  }
+  .bag-field--row label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: 0.35rem;
+  }
+
   .bag-send {
     display: block;
     width: 100%;
@@ -335,6 +404,16 @@ import { WHATSAPP_NUMBER } from '../lib/atelier';
     const nameEl = root.querySelector<HTMLInputElement>('[data-bag-name]');
     const phoneEl = root.querySelector<HTMLInputElement>('[data-bag-phone]');
     const errorEl = root.querySelector<HTMLElement>('[data-bag-error]');
+    const deliveryCheck = root.querySelector<HTMLInputElement>('[data-bag-delivery-check]');
+    const deliveryFields = root.querySelector<HTMLElement>('[data-bag-delivery]');
+    const adresaEl = root.querySelector<HTMLInputElement>('[data-bag-adresa]');
+    const orasEl = root.querySelector<HTMLInputElement>('[data-bag-oras]');
+    const judetEl = root.querySelector<HTMLInputElement>('[data-bag-judet]');
+    const codEl = root.querySelector<HTMLInputElement>('[data-bag-cod]');
+
+    deliveryCheck?.addEventListener('change', () => {
+      if (deliveryFields) deliveryFields.hidden = !deliveryCheck.checked;
+    });
 
     const read = (): BagItem[] => {
       try {
@@ -361,7 +440,15 @@ import { WHATSAPP_NUMBER } from '../lib/atelier';
       const total = totalLei();
       const totalLine = total > 0 ? `\n(cam ${total} lei)` : '';
       const nameLine = name ? `Bună, Alexandra! Sunt ${name}. Aș vrea din atelier:\n` : `Bună, Alexandra! Aș vrea din atelier:\n`;
-      return `${nameLine}${itemLines().map((l) => `• ${l}`).join('\n')}${totalLine}\nMai sunt disponibile?`;
+      const wantsDelivery = deliveryCheck?.checked;
+      const adresa = adresaEl?.value.trim() ?? '';
+      const oras = orasEl?.value.trim() ?? '';
+      const judet = judetEl?.value.trim() ?? '';
+      const cod = codEl?.value.trim() ?? '';
+      const deliveryLine = wantsDelivery
+        ? `\n\nLivrare la:\n${adresa}${cod ? ', ' + cod : ''} ${oras}${judet ? ', ' + judet : ''}`.trim()
+        : '';
+      return `${nameLine}${itemLines().map((l) => `• ${l}`).join('\n')}${totalLine}${deliveryLine}\nMai sunt disponibile?`;
     };
 
     const render = () => {
@@ -469,7 +556,17 @@ import { WHATSAPP_NUMBER } from '../lib/atelier';
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             source: 'atelier',
-            fields: { name, phone, items: itemLines().join('; '), total: totalLei() > 0 ? `${totalLei()} lei` : '' },
+            fields: {
+              name,
+              phone,
+              items: itemLines().join('; '),
+              total: totalLei() > 0 ? `${totalLei()} lei` : '',
+              livrare: deliveryCheck?.checked ? 'da' : 'nu',
+              adresa: adresaEl?.value.trim() ?? '',
+              oras: orasEl?.value.trim() ?? '',
+              judet: judetEl?.value.trim() ?? '',
+              codPostal: codEl?.value.trim() ?? '',
+            },
           }),
         });
       } catch {

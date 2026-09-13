@@ -57,15 +57,16 @@ const isPreorder = (carte?.status ?? 'precomanda') === 'precomanda';
             {note && <p class="prod-note">{note}</p>}
 
             <RequestForm
-              source="carte"
+              source=”carte”
               submitLabel={isPreorder ? 'Precomandă cartea' : 'Vreau cartea'}
-              successNote="Mulțumesc! Acum se deschide WhatsApp, ca să vorbim direct despre carte. 🌿"
+              successNote=”Mulțumesc! Acum se deschide WhatsApp, ca să vorbim direct despre carte. 🌿”
               whatsappTemplate={'Bună, Alexandra! Sunt {{name}}, aș vrea să precomand cartea „Dezvoltare de la gura sobei”. {{message}}'}
               fields={[
                 { name: 'name', label: 'Numele tău', required: true, autocomplete: 'name' },
                 { name: 'phone', label: 'Numărul de telefon', type: 'tel', required: true, autocomplete: 'tel' },
                 { name: 'message', label: 'Un mesaj (opțional)', type: 'textarea', rows: 2 },
               ]}
+              showDelivery={true}
             />
             <p class="prod-order-note">
               Se deschide WhatsApp cu mesajul deja pregătit — vorbim direct despre
