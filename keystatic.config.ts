@@ -79,6 +79,11 @@ export default config({
         }),
         noutati: fields.array(
           fields.object({
+            enabled: fields.checkbox({
+              label: 'Activ (vizibil pe site)',
+              description: 'Debifează ca să ascunzi cardul temporar, fără să-l ștergi.',
+              defaultValue: true,
+            }),
             tag: fields.text({ label: 'Etichetă (ex: Carte, Eveniment, Nou)' }),
             tagColor: fields.select({
               label: 'Culoare etichetă',

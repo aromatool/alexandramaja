@@ -17,6 +17,10 @@ const articles = (await getCollection('biblioteca', ({ data }) => !data.draft))
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
   .slice(0, 2);
 
+// Cardurile de „Noutăți" au o bifă „Activ" — Alexandra le ascunde temporar
+// (fără să le șteargă) debifând-o din Keystatic.
+const activeNoutati = (home.noutati ?? []).filter((n) => n.enabled !== false);
+
 // Iconițele rămân în cod (design) și se asociază fiecărui beneficiu după poziție.
 const benefitIcons = ['sprout', 'heart', 'flower', 'home'];
 const benefits = home.benefits.map((b, i) => ({
@@ -104,7 +108,7 @@ const benefits = home.benefits.map((b, i) => ({
   </section>
 
   <!-- ================= NOUTĂȚI ================= -->
-  {home.noutati && home.noutati.length > 0 && (
+  {activeNoutati.length > 0 && (
     <section class="noutati">
       <div class="container">
         <div class="noutati-header">
@@ -112,7 +116,7 @@ const benefits = home.benefits.map((b, i) => ({
           <span class="noutati-rule" aria-hidden="true"></span>
         </div>
         <div class="noutati-grid">
-          {home.noutati.map((n) => (
+          {activeNoutati.map((n) => (
             <a href={n.link} class="noutate-card">
               {n.image && (
                 <div class="noutate-img">
