@@ -31,12 +31,11 @@ noutati:
     link: /carte
     linkLabel: Vezi cartea
     image: /images/noutati/noutati/0/image.jpg
-  - tag: Septembrie
+  - tag: În curând
     tagColor: sage
-    title: Vorbe de leac — prima întâlnire fizică in Cluj
+    title: Vorbe de leac — următoarea ediție
     text: >-
-      Prima întâlnire, cu dr. Debora Marias, neurolog. Ceață mentală, somn,
-      memorie și ce putem face azi pentru un creier sănătos mâine.
+      Pregătesc a doua ediție, de data asta cu un medic pediatru. Detaliile
+      vin în curând — până atunci, poți retrăi prima seară.
     link: /vorbe-de-leac
-    linkLabel: Află detalii
-    image: /images/noutati/noutati/1/image.jpg
+    linkLabel: Vezi prima ediție
