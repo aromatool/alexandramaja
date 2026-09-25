@@ -4,7 +4,7 @@ introText: >-
   Vorbe de leac este o serie de întâlniri lunare, ca un podcast live, în care
   aducem mai aproape de noi medici din diferite specialități și răspunsuri pe
   înțelesul tuturor.
-registrationOpen: true
+registrationOpen: false
 guestName: dr.Debora Marias
 guestRole: medic specialist neurologie
 poster: /images/vorbe-de-leac/poster.jpg
