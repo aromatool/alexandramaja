@@ -39,10 +39,10 @@ const links: NavItem[] = [
 ];
 
 // „Vorbe de leac" apare în meniu doar când Alexandra bifează „Arată în meniu"
-// din Keystatic (Pagini → „Vorbe de leac") — ea decide când anunță public.
+// din Keystatic (Pagini → „Vorbe de leac — pagina") — ea decide când anunță public.
 const reader = createReader(process.cwd(), keystaticConfig);
-const vorbeDeLeac = await reader.singletons.vorbeDeLeac.read();
-if (vorbeDeLeac?.showInMenu) {
+const vorbeDeLeacPage = await reader.singletons.vorbeDeLeacPage.read();
+if (vorbeDeLeacPage?.showInMenu) {
   links.splice(4, 0, { href: '/vorbe-de-leac', label: 'Vorbe de leac', activeMatch: '/vorbe-de-leac' });
 }
 

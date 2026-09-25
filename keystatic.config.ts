@@ -17,8 +17,8 @@ export default config({
   ui: {
     brand: { name: 'Alexandra Maja' },
     navigation: {
-      Conținut: ['biblioteca', 'atelier'],
-      Pagini: ['home', 'despre', 'atelierPage', 'announcement', 'cartePage', 'vorbeDeLeac'],
+      Conținut: ['biblioteca', 'atelier', 'vorbeDeLeac'],
+      Pagini: ['home', 'despre', 'atelierPage', 'announcement', 'cartePage', 'vorbeDeLeacPage'],
     },
   },
   // --- Pagini editabile (text din paginile „construite") ---
@@ -327,9 +327,9 @@ export default config({
         }),
       },
     }),
-    // --- Vorbe de leac (întâlnirea lunară) ---
-    vorbeDeLeac: singleton({
-      label: 'Vorbe de leac',
+    // --- Vorbe de leac — pagina (text general, nu ține de o ediție anume) ---
+    vorbeDeLeacPage: singleton({
+      label: 'Vorbe de leac — pagina',
       path: 'src/content/pages/vorbe-de-leac',
       schema: {
         showInMenu: fields.checkbox({
@@ -346,46 +346,6 @@ export default config({
           multiline: true,
           defaultValue:
             'În fiecare lună, invit pe cineva din domeniul sănătății — medici, nutriționiști, moașe — pentru o discuție așezată despre prevenție și stare de bine. Vorbe alese, cu grijă.',
-        }),
-        registrationOpen: fields.checkbox({
-          label: 'Înscrieri deschise',
-          description: 'Debifează după ediție, până pregătești următoarea.',
-          defaultValue: true,
-        }),
-        guestName: fields.text({ label: 'Numele invitatei/invitatului' }),
-        guestRole: fields.text({
-          label: 'Ocupație',
-          description: 'Ex: „medic neurolog".',
-        }),
-        poster: fields.image({
-          label: 'Afiș / poză eveniment (opțional)',
-          description: 'Afișul întreg al ediției — invitat, temă, dată, loc. Apare mare, sus pe pagină.',
-          directory: 'public/images/vorbe-de-leac',
-          publicPath: '/images/vorbe-de-leac/',
-        }),
-        posterAlt: fields.text({
-          label: 'Descrierea afișului (accesibilitate)',
-        }),
-        theme: fields.text({ label: 'Tema discuției' }),
-        date: fields.text({
-          label: 'Data și ora',
-          description: 'Text liber, ex: „14 septembrie 2026, ora 18:00".',
-        }),
-        location: fields.text({
-          label: 'Locul (oraș / adresă)',
-        }),
-        price: fields.text({
-          label: 'Preț (text, opțional)',
-          description: 'Ex: „50 lei" sau „Gratuit". Lasă gol dacă nu vrei să apară.',
-        }),
-        seats: fields.text({
-          label: 'Locuri disponibile (opțional)',
-          description: 'Ex: „30 de locuri" — capacitatea sălii.',
-        }),
-        description: fields.text({
-          label: 'Descriere',
-          multiline: true,
-          description: 'Câteva fraze despre invitat și temă.',
         }),
       },
     }),
@@ -522,6 +482,98 @@ export default config({
         story: fields.markdoc({
           label: 'Poveste lungă (opțional)',
           description: 'Textul de pe viitoarea pagină a produsului. Nu e obligatoriu acum.',
+        }),
+      },
+    }),
+    // --- Vorbe de leac — edițiile ---
+    // O intrare per ediție. Cele "Viitoare" apar pe pagina principală, cu
+    // formular de înscriere; cele "Trecute" intră în arhivă, cu rezumat
+    // (textul lung, mai jos) și galerie foto.
+    vorbeDeLeac: collection({
+      label: 'Vorbe de leac (ediții)',
+      slugField: 'title',
+      path: 'src/content/vorbe-de-leac/*',
+      format: { contentField: 'recap' },
+      entryLayout: 'content',
+      columns: ['title', 'guestName', 'status'],
+      schema: {
+        title: fields.slug({
+          name: { label: 'Tema ediției', description: 'Ex: „Creierul sub presiune".' },
+          slug: {
+            label: 'Adresă (slug)',
+            description: 'Se generează din temă. Folosit în link (/vorbe-de-leac/...).',
+          },
+        }),
+        status: fields.select({
+          label: 'Stadiu',
+          options: [
+            { label: 'Viitoare', value: 'viitoare' },
+            { label: 'Trecută', value: 'trecuta' },
+          ],
+          defaultValue: 'viitoare',
+        }),
+        registrationOpen: fields.checkbox({
+          label: 'Înscrieri deschise',
+          description: 'Doar pentru ediția viitoare. Debifează dacă s-au ocupat locurile.',
+          defaultValue: true,
+        }),
+        guestName: fields.text({ label: 'Numele invitatei/invitatului' }),
+        guestRole: fields.text({
+          label: 'Ocupație',
+          description: 'Ex: „medic neurolog".',
+        }),
+        poster: fields.image({
+          label: 'Afiș / poză eveniment (opțional)',
+          description: 'Afișul întreg al ediției — invitat, temă, dată, loc.',
+          directory: 'public/images/vorbe-de-leac',
+          publicPath: '/images/vorbe-de-leac/',
+        }),
+        posterAlt: fields.text({
+          label: 'Descrierea afișului (accesibilitate)',
+        }),
+        date: fields.date({ label: 'Data' }),
+        time: fields.text({
+          label: 'Ora (opțional)',
+          description: 'Ex: „18:00–21:00".',
+        }),
+        location: fields.text({
+          label: 'Locul (oraș / adresă)',
+        }),
+        price: fields.text({
+          label: 'Preț (text, opțional)',
+          description: 'Ex: „150 lei" sau „Gratuit".',
+        }),
+        seats: fields.text({
+          label: 'Locuri disponibile (opțional)',
+          description: 'Ex: „30 de locuri" — capacitatea sălii.',
+        }),
+        description: fields.text({
+          label: 'Descriere (pentru ediția viitoare)',
+          multiline: true,
+          description: 'Câteva fraze despre invitat și temă, pentru anunț.',
+        }),
+        gallery: fields.array(
+          fields.object({
+            image: fields.image({
+              label: 'Fotografie',
+              directory: 'public/images/vorbe-de-leac',
+              publicPath: '/images/vorbe-de-leac/',
+            }),
+            alt: fields.text({ label: 'Descrierea pozei (accesibilitate)' }),
+          }),
+          {
+            label: 'Galerie foto (pentru ediția trecută)',
+            itemLabel: (p) => p.fields.alt.value || 'Fotografie',
+          }
+        ),
+        draft: fields.checkbox({
+          label: 'Ciornă',
+          description: 'Bifat = nu apare pe site.',
+          defaultValue: false,
+        }),
+        recap: fields.markdoc({
+          label: 'Rezumat (ce s-a întâmplat, pentru ediția trecută)',
+          description: 'Textul lung de pe pagina ediției — cum a fost, ce s-a discutat.',
         }),
       },
     }),

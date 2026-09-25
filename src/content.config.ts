@@ -95,4 +95,39 @@ const atelier = defineCollection({
   }),
 });
 
-export const collections = { biblioteca, atelier };
+// „Vorbe de leac" — întâlnirea lunară cu oameni din domeniul sănătății.
+// Fiecare ediție e o intrare proprie: cele viitoare apar pe pagina principală
+// (cu formular de înscriere), cele trecute intră în arhivă, cu rezumat și
+// galerie foto — pagina lor de detaliu (/vorbe-de-leac/<slug>).
+const vorbeDeLeac = defineCollection({
+  loader: glob({ pattern: '**/*.{md,mdoc}', base: './src/content/vorbe-de-leac' }),
+  schema: z.object({
+    title: z.string(), // tema ediției — dublează ca titlu + sursă de slug
+    status: z.enum(['viitoare', 'trecuta']).optional().default('viitoare'),
+    registrationOpen: z.boolean().optional().default(true),
+    guestName: z.string(),
+    guestRole: z.string().optional().nullable(),
+    poster: z.string().optional().nullable(),
+    posterAlt: z.string().optional().nullable(),
+    date: z.coerce.date().optional().nullable(),
+    time: z.string().optional().nullable(), // ex: „18:00–21:00"
+    location: z.string().optional().nullable(),
+    price: z.string().optional().nullable(),
+    seats: z.string().optional().nullable(),
+    description: z.string().optional().nullable(),
+    // Galerie foto pentru edițiile trecute. Keystatic salvează în
+    // public/images/vorbe-de-leac/<slug>/…
+    gallery: z
+      .array(
+        z.object({
+          image: z.string(),
+          alt: z.string().optional().nullable(),
+        })
+      )
+      .optional()
+      .default([]),
+    draft: z.boolean().optional().default(false),
+  }),
+});
+
+export const collections = { biblioteca, atelier, vorbeDeLeac };

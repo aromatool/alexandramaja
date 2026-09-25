@@ -2,36 +2,51 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import BotanicalDivider from '../components/BotanicalDivider.astro';
 import RequestForm from '../components/RequestForm.astro';
+import { getCollection } from 'astro:content';
 import { createReader } from '@keystatic/core/reader';
 import keystaticConfig from '../../keystatic.config';
 
 // „Vorbe de leac" — întâlnirea lunară cu oameni din domeniul sănătății.
-// Invitatul, tema, data și locul sunt editabile din Keystatic (Pagini →
-// „Vorbe de leac") — Alexandra le schimbă singură, în fiecare lună.
+// Textul general al paginii vine din singleton-ul „Vorbe de leac — pagina";
+// edițiile (viitoare + trecute) vin din colecția „vorbeDeLeac" — Alexandra
+// adaugă o intrare nouă în Keystatic pentru fiecare lună.
 const reader = createReader(process.cwd(), keystaticConfig);
-const vdl = await reader.singletons.vorbeDeLeac.read();
+const page = await reader.singletons.vorbeDeLeacPage.read();
 
-const guestName = vdl?.guestName?.trim();
-const guestRole = vdl?.guestRole?.trim();
-const poster = vdl?.poster ?? null;
-const posterAlt = vdl?.posterAlt || `Afiș Vorbe de leac — ${guestName || 'ediția curentă'}`;
-const theme = vdl?.theme?.trim();
-const date = vdl?.date?.trim();
-const location = vdl?.location?.trim();
-const price = vdl?.price?.trim();
-const seats = vdl?.seats?.trim();
-const description = vdl?.description?.trim();
-const registrationOpen = vdl?.registrationOpen ?? false;
-const introTitle = vdl?.introTitle?.trim() || 'O discuție lunară despre sănătate, fără grabă';
+const formatDate = (d?: Date | null) =>
+  d ? d.toLocaleDateString('ro-RO', { day: 'numeric', month: 'long', year: 'numeric' }) : '';
+
+const allEditions = (await getCollection('vorbeDeLeac')).filter((e) => !e.data.draft);
+
+const upcoming = allEditions
+  .filter((e) => e.data.status === 'viitoare')
+  .sort((a, b) => (a.data.date?.getTime() ?? Infinity) - (b.data.date?.getTime() ?? Infinity))[0];
+
+const past = allEditions
+  .filter((e) => e.data.status === 'trecuta')
+  .sort((a, b) => (b.data.date?.getTime() ?? 0) - (a.data.date?.getTime() ?? 0));
+
+const introTitle = page?.introTitle?.trim() || 'O discuție lunară despre sănătate, fără grabă';
 const introText =
-  vdl?.introText?.trim() ||
+  page?.introText?.trim() ||
   'În fiecare lună, invit pe cineva din domeniul sănătății — medici, nutriționiști, moașe — pentru o discuție așezată despre prevenție și stare de bine. Vorbe alese, cu grijă.';
 
-const hasEpisode = Boolean(guestName);
+const u = upcoming?.data;
+const guestName = u?.guestName?.trim();
+const guestRole = u?.guestRole?.trim();
+const poster = u?.poster ?? null;
+const posterAlt = u?.posterAlt || `Afiș Vorbe de leac — ${guestName || 'ediția curentă'}`;
+const theme = u?.title?.trim();
+const dateLabel = u ? [formatDate(u.date), u.time].filter(Boolean).join(', ') : '';
+const location = u?.location?.trim();
+const price = u?.price?.trim();
+const seats = u?.seats?.trim();
+const description = u?.description?.trim();
+const registrationOpen = u?.registrationOpen ?? false;
 
 const whatsappTemplate = `Bună, Alexandra! Sunt {{name}}, aș vrea să mă înscriu la Vorbe de leac${
   theme ? ` — ${theme}` : ''
-}${date ? `, ${date}` : ''}.`;
+}${dateLabel ? `, ${dateLabel}` : ''}.`;
 ---
 
 <BaseLayout
@@ -48,7 +63,7 @@ const whatsappTemplate = `Bună, Alexandra! Sunt {{name}}, aș vrea să mă îns
     <BotanicalDivider />
 
     {
-      hasEpisode ? (
+      upcoming ? (
         <div class="container-narrow mx-auto vdl-episode">
           {
             poster ? (
@@ -70,7 +85,7 @@ const whatsappTemplate = `Bună, Alexandra! Sunt {{name}}, aș vrea să mă îns
               {guestRole && <p class="vdl-role">{guestRole}</p>}
               {description && <p class="vdl-desc">{description}</p>}
               <div class="vdl-facts">
-                {date && (
+                {dateLabel && (
                   <div class="vdl-fact">
                     <span class="vdl-fact-icon" aria-hidden="true">
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round">
@@ -78,7 +93,7 @@ const whatsappTemplate = `Bună, Alexandra! Sunt {{name}}, aș vrea să mă îns
                         <path d="M8 3v4M16 3v4M3.5 9.5h17" />
                       </svg>
                     </span>
-                    <span class="vdl-fact-text">{date}</span>
+                    <span class="vdl-fact-text">{dateLabel}</span>
                   </div>
                 )}
                 {location && (
@@ -146,6 +161,45 @@ const whatsappTemplate = `Bună, Alexandra! Sunt {{name}}, aș vrea să mă îns
           Pregătesc următoarea ediție. Revino în curând, ca să vezi cine ne
           este invitat.
         </p>
+      )
+    }
+
+    {
+      past.length > 0 && (
+        <>
+          <BotanicalDivider />
+          <div class="container-narrow mx-auto vdl-archive">
+            <div class="vdl-archive-head text-center">
+              <span class="eyebrow">Din caietul meu</span>
+              <h2>Ediții anterioare</h2>
+            </div>
+            <div class="vdl-archive-grid">
+              {past.map((ed) => (
+                <a href={`/vorbe-de-leac/${ed.id}`} class="vdl-card">
+                  <figure class:list={['vdl-card-media', { 'photo-ph': !ed.data.poster }]}>
+                    {ed.data.poster ? (
+                      <img src={ed.data.poster} alt={ed.data.posterAlt ?? ed.data.title} loading="lazy" decoding="async" />
+                    ) : (
+                      <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                        <circle cx="20" cy="15" r="6" stroke="currentColor" stroke-width="1.2" fill="currentColor" fill-opacity="0.15" />
+                        <path d="M9 33c0-6.5 5-11 11-11s11 4.5 11 11" stroke="currentColor" stroke-width="1.2" fill="none" stroke-linecap="round" />
+                      </svg>
+                    )}
+                  </figure>
+                  <div class="vdl-card-body">
+                    <span class="vdl-card-date">{formatDate(ed.data.date)}</span>
+                    <h3 class="vdl-card-title">{ed.data.title}</h3>
+                    <p class="vdl-card-guest">
+                      {ed.data.guestName}
+                      {ed.data.guestRole && ` — ${ed.data.guestRole}`}
+                    </p>
+                    <span class="vdl-card-more">Vezi rezumatul →</span>
+                  </div>
+                </a>
+              ))}
+            </div>
+          </div>
+        </>
       )
     }
   </article>
@@ -253,6 +307,86 @@ const whatsappTemplate = `Bună, Alexandra! Sunt {{name}}, aș vrea să mă îns
     font-style: italic;
     max-width: 46ch;
     margin-inline: auto;
+  }
+
+  /* ===================== ARHIVA ===================== */
+  .vdl-archive {
+    margin-top: clamp(2rem, 5vw, 3rem);
+  }
+  .vdl-archive-head h2 {
+    margin: 0.5rem 0 0;
+  }
+  .vdl-archive-grid {
+    margin-top: clamp(2rem, 4vw, 2.5rem);
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1.5rem;
+  }
+  .vdl-card {
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    color: inherit;
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow-card);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  }
+  .vdl-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-soft);
+  }
+  .vdl-card-media {
+    margin: 0;
+    aspect-ratio: 1;
+    background: linear-gradient(150deg, #efe7dd, #e8e1d2);
+    color: var(--accent-sage-dark);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .vdl-card-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .vdl-card-media svg {
+    width: 44px;
+    height: 44px;
+    opacity: 0.6;
+  }
+  .vdl-card-body {
+    padding: 1.15rem 1.25rem 1.35rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+  .vdl-card-date {
+    font-size: 0.6875rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+  .vdl-card-title {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 1.15rem;
+    color: var(--text-main);
+  }
+  .vdl-card-guest {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+  }
+  .vdl-card-more {
+    margin-top: 0.4rem;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--accent-sage-dark);
+  }
+  .vdl-card:hover .vdl-card-more {
+    color: var(--accent-lavender-deep);
   }
 
   @media (max-width: 720px) {

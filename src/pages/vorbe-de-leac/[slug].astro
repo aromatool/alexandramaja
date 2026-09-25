@@ -1,0 +1,185 @@
+---
+import { getCollection, render } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import BotanicalDivider from '../../components/BotanicalDivider.astro';
+
+// Pagina de arhivă a unei ediții trecute — rezumat + galerie foto.
+export async function getStaticPaths() {
+  const editions = await getCollection('vorbeDeLeac', ({ data }) => !data.draft);
+  return editions.map((item) => ({ params: { slug: item.id }, props: { item } }));
+}
+
+interface Props {
+  item: CollectionEntry<'vorbeDeLeac'>;
+}
+
+const { item } = Astro.props;
+const d = item.data;
+const { Content } = await render(item);
+
+const dateLabel = d.date
+  ? [
+      d.date.toLocaleDateString('ro-RO', { day: 'numeric', month: 'long', year: 'numeric' }),
+      d.time,
+    ]
+      .filter(Boolean)
+      .join(', ')
+  : d.time;
+---
+
+<BaseLayout title={`${d.title} — Vorbe de leac`} description={d.description || `Vorbe de leac: ${d.title}, cu ${d.guestName}.`}>
+  <article class="vdle">
+    <div class="container">
+      <a href="/vorbe-de-leac" class="vdle-back">← Vorbe de leac</a>
+
+      <div class="vdle-head">
+        {
+          d.poster ? (
+            <figure class="vdle-poster">
+              <img src={d.poster} alt={d.posterAlt ?? d.title} loading="eager" fetchpriority="high" />
+            </figure>
+          ) : (
+            <figure class="vdle-poster photo-ph" data-note="Afișul ediției — poză/grafică cu invitatul, tema, data și locul">
+              <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <circle cx="20" cy="15" r="6" stroke="currentColor" stroke-width="1.2" fill="currentColor" fill-opacity="0.15" />
+                <path d="M9 33c0-6.5 5-11 11-11s11 4.5 11 11" stroke="currentColor" stroke-width="1.2" fill="none" stroke-linecap="round" />
+              </svg>
+            </figure>
+          )
+        }
+        <div class="vdle-info">
+          <span class="eyebrow">Vorbe de leac &middot; ediție trecută</span>
+          <h1>{d.title}</h1>
+          <p class="vdle-guest">
+            {d.guestName}
+            {d.guestRole && <span class="vdle-role"> — {d.guestRole}</span>}
+          </p>
+          {dateLabel && <p class="vdle-date">{dateLabel}{d.location && ` · ${d.location}`}</p>}
+        </div>
+      </div>
+    </div>
+
+    <BotanicalDivider />
+
+    <div class="container-reading mx-auto vdle-body">
+      <div class="prose">
+        <Content />
+      </div>
+    </div>
+
+    {
+      d.gallery.length > 0 && (
+        <div class="container mx-auto vdle-gallery-wrap">
+          <span class="eyebrow text-center vdle-gallery-label">Din seara aceea</span>
+          <div class="vdle-gallery">
+            {d.gallery.map((g) => (
+              <figure class="vdle-gallery-item">
+                <img src={g.image} alt={g.alt ?? d.title} loading="lazy" decoding="async" />
+              </figure>
+            ))}
+          </div>
+        </div>
+      )
+    }
+  </article>
+</BaseLayout>
+
+<style>
+  .vdle {
+    padding-top: clamp(1.5rem, 4vw, 2.5rem);
+    padding-bottom: clamp(3.5rem, 7vw, 5.5rem);
+  }
+  .vdle-back {
+    display: inline-block;
+    font-size: 0.9rem;
+    text-decoration: none;
+    color: var(--text-secondary);
+    margin-bottom: clamp(1.5rem, 4vw, 2.5rem);
+  }
+  .vdle-back:hover {
+    color: var(--accent-lavender-deep);
+  }
+
+  .vdle-head {
+    display: grid;
+    grid-template-columns: 0.85fr 1.15fr;
+    gap: clamp(2rem, 5vw, 3.5rem);
+    align-items: center;
+  }
+
+  .vdle-poster {
+    margin: 0;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    aspect-ratio: 1;
+    box-shadow: var(--shadow-soft);
+  }
+  .vdle-poster.photo-ph svg {
+    width: 48px;
+    height: 48px;
+    opacity: 0.5;
+  }
+  .vdle-poster img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .vdle-guest {
+    font-family: var(--font-display);
+    font-size: clamp(1.3rem, 2.6vw, 1.6rem);
+    color: var(--text-main);
+    margin-top: 0.5rem;
+  }
+  .vdle-role {
+    color: var(--text-muted);
+    font-style: italic;
+    font-size: 0.85em;
+  }
+  .vdle-date {
+    margin-top: 0.5rem;
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+  }
+
+  .vdle-body {
+    margin-top: clamp(2rem, 5vw, 3rem);
+  }
+
+  .vdle-gallery-wrap {
+    margin-top: clamp(2.5rem, 5vw, 4rem);
+  }
+  .vdle-gallery-label {
+    display: block;
+    margin-bottom: 1.5rem;
+  }
+  .vdle-gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1rem;
+  }
+  .vdle-gallery-item {
+    margin: 0;
+    aspect-ratio: 1;
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .vdle-gallery-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  @media (max-width: 720px) {
+    .vdle-head {
+      grid-template-columns: 1fr;
+    }
+    .vdle-poster {
+      max-width: 420px;
+      margin-inline: auto;
+    }
+  }
+</style>
