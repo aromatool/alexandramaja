@@ -65,6 +65,15 @@ const inclus = [
           <span class="fn-fact-text">120 lei<small>de persoană</small></span>
         </div>
       </div>
+
+      <figure class="fn-hero">
+        <img
+          src="/images/farmacia-naturala-de-acasa/hero.jpg"
+          alt="Borcane cu macerate de gălbenele și plante, unturi și lavandă uscată, pregătite artizanal pe o masă de lemn"
+          loading="eager"
+          fetchpriority="high"
+        />
+      </figure>
     </div>
 
     <BotanicalDivider />
@@ -150,6 +159,21 @@ const inclus = [
     justify-content: center;
     gap: 1rem 1.75rem;
     margin-top: 2rem;
+  }
+
+  .fn-hero {
+    margin: clamp(2rem, 5vw, 3rem) auto 0;
+    max-width: 640px;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-soft);
+    aspect-ratio: 4 / 3;
+  }
+  .fn-hero img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
   }
   .fn-fact {
     display: inline-flex;
