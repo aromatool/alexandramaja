@@ -42,3 +42,12 @@ noutati:
     link: /vorbe-de-leac
     linkLabel: Vezi prima ediție
     image: /images/noutati/noutati/1/image.jpg
+  - enabled: true
+    tag: Atelier practic
+    tagColor: terracotta
+    title: Farmacia naturală de acasă
+    text: >-
+      Atelier practic de toamnă — remedii naturale pentru virozele de sezon,
+      pregătite chiar cu mâna ta. 22 octombrie, EduCafe, Florești.
+    link: /farmacia-naturala-de-acasa
+    linkLabel: Vezi detalii

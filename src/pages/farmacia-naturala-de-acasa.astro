@@ -1,0 +1,245 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import BotanicalDivider from '../components/BotanicalDivider.astro';
+import RequestForm from '../components/RequestForm.astro';
+
+// Atelier practic de toamnă — eveniment unic, 22 octombrie. Conținut fix
+// (nu e editabil din Keystatic, la fel ca „Lucrează cu Alexandra") — dacă
+// devine recurent, îl mutăm într-o colecție, ca la „Vorbe de leac".
+const descoperim = [
+  'Ce plante sunt potrivite în sezonul rece și sub ce formă le putem folosi',
+  'Ce uleiuri esențiale pot fi integrate în rutina de acasă',
+  'Ce putem face în episoade de răceală, febră sau disconfort digestiv',
+  'Cum pregătim remedii simple, inspirate din leacurile de odinioară',
+  'Cum putem construi, pas cu pas, o mică „farmacie naturală" pentru familie',
+];
+
+const inclus = [
+  'Ingrediente',
+  'Recipiente',
+  'Preparatele realizate în cadrul atelierului',
+  'Ghidul cu rețete',
+  'Băuturi și gustări sănătoase',
+];
+---
+
+<BaseLayout
+  title="Farmacia naturală de acasă"
+  description="Atelier practic de toamnă — remedii naturale pentru virozele de sezon, pregătite cu mâna ta. 22 octombrie, EduCafe, Florești."
+>
+  <article class="fn">
+    <div class="container-narrow mx-auto fn-head text-center">
+      <span class="eyebrow">Atelier practic</span>
+      <h1>Farmacia naturală de acasă</h1>
+      <p class="lead mx-auto">
+        În sezonul rece, multe dintre lucrurile de care avem nevoie pot începe
+        chiar din propria casă.
+      </p>
+
+      <div class="fn-facts">
+        <div class="fn-fact">
+          <span class="fn-fact-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3.5" y="5" width="17" height="15" rx="2.5" fill="currentColor" fill-opacity="0.14" />
+              <path d="M8 3v4M16 3v4M3.5 9.5h17" />
+            </svg>
+          </span>
+          <span class="fn-fact-text">22 octombrie<small>18:00, ~3 ore</small></span>
+        </div>
+        <div class="fn-fact">
+          <span class="fn-fact-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 21s7-6.3 7-11.3A7 7 0 0 0 5 9.7C5 14.7 12 21 12 21Z" fill="currentColor" fill-opacity="0.14" />
+              <circle cx="12" cy="9.6" r="2.1" />
+            </svg>
+          </span>
+          <span class="fn-fact-text">EduCafe<small>Florești</small></span>
+        </div>
+        <div class="fn-fact">
+          <span class="fn-fact-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12.6 3.4 20 10.8c.8.8.8 2.1 0 2.9l-6.3 6.3c-.8.8-2.1.8-2.9 0L3.4 12.6c-.4-.4-.6-.9-.6-1.5V4c0-.6.4-1 1-1h7.4c.6 0 1.1.2 1.5.6Z" fill="currentColor" fill-opacity="0.14" />
+              <circle cx="7.7" cy="7.7" r="1.2" fill="currentColor" />
+            </svg>
+          </span>
+          <span class="fn-fact-text">120 lei<small>de persoană</small></span>
+        </div>
+      </div>
+    </div>
+
+    <BotanicalDivider />
+
+    <div class="container-reading mx-auto fn-body">
+      <p>
+        La acest atelier de 3 ore vom vorbi despre remedii naturale pentru
+        virozele de sezon și, mai ales, vom pune mâna efectiv să pregătim
+        câteva dintre ele.
+      </p>
+
+      <h2 class="fn-h2">Vom descoperi împreună</h2>
+      <ul class="fn-list">
+        {descoperim.map((item) => (
+          <li>
+            <span class="fn-mark" aria-hidden="true">🌿</span>
+            <span>{item}</span>
+          </li>
+        ))}
+      </ul>
+
+      <p>
+        Vom prepara împreună mai multe produse pe care fiecare participant le
+        va lua acasă, iar la final vei primi și un ghid cu rețete și idei
+        practice pentru sezonul de toamnă.
+      </p>
+
+      <h2 class="fn-h2">Ce este inclus</h2>
+      <ul class="fn-list">
+        {inclus.map((item) => (
+          <li>
+            <span class="fn-mark" aria-hidden="true">🌿</span>
+            <span>{item}</span>
+          </li>
+        ))}
+      </ul>
+      <p class="fn-price-note">
+        Toate sunt incluse în taxa de participare de <span class="price-tag">120 lei</span> / persoană.
+      </p>
+
+      <p class="fn-personal">
+        Îmi doresc să fie o seară practică, relaxată și plină de informații pe
+        care chiar să le poți folosi acasă — nu doar un curs pe care îl asculți
+        și apoi îl uiți.
+      </p>
+      <p class="fn-sign script">Alexandra</p>
+    </div>
+
+    <BotanicalDivider />
+
+    <div class="container-narrow mx-auto fn-register">
+      <div class="text-center fn-register-head">
+        <span class="eyebrow">Înscriere</span>
+        <h2>Locurile sunt limitate</h2>
+      </div>
+      <RequestForm
+        source="farmacia-naturala"
+        submitLabel="Vreau să particip"
+        successNote="Mulțumesc! Acum se deschide WhatsApp, ca să-ți confirm locul. 🌿"
+        whatsappTemplate={'Bună, Alexandra! Sunt {{name}}, aș vrea să particip la atelierul „Farmacia naturală de acasă", 22 octombrie, la EduCafe Florești.'}
+        fields={[
+          { name: 'name', label: 'Numele tău', required: true, autocomplete: 'name' },
+          { name: 'phone', label: 'Numărul de telefon', type: 'tel', required: true, autocomplete: 'tel' },
+        ]}
+      />
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .fn {
+    padding-block: clamp(2rem, 5vw, 4rem) clamp(3.5rem, 7vw, 5.5rem);
+  }
+
+  .fn-head h1 {
+    margin: 0.75rem 0 1rem;
+    font-size: clamp(1.8rem, 4vw, 2.5rem);
+  }
+
+  .fn-facts {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem 1.75rem;
+    margin-top: 2rem;
+  }
+  .fn-fact {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.65rem;
+  }
+  .fn-fact-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    flex: none;
+    border-radius: 50%;
+    background-color: var(--tint-sage);
+    color: var(--accent-sage-dark);
+  }
+  .fn-fact-icon svg {
+    width: 17px;
+    height: 17px;
+  }
+  .fn-fact-text {
+    font-size: 0.95rem;
+    color: var(--text-main);
+    text-align: left;
+    line-height: 1.25;
+  }
+  .fn-fact-text small {
+    display: block;
+    font-size: 0.78rem;
+    color: var(--text-muted);
+  }
+
+  .fn-body {
+    margin-top: clamp(1rem, 3vw, 1.5rem);
+  }
+  .fn-body p {
+    color: var(--text-secondary);
+    line-height: 1.75;
+    margin-bottom: 1.25rem;
+  }
+
+  .fn-h2 {
+    font-size: clamp(1.3rem, 2.6vw, 1.6rem);
+    margin: 2rem 0 1rem;
+  }
+
+  .fn-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+  }
+  .fn-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.7rem;
+    color: var(--text-main);
+  }
+  .fn-mark {
+    flex: none;
+    line-height: 1.5;
+  }
+
+  .fn-price-note {
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .fn-personal {
+    margin-top: 2rem;
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: clamp(1.1rem, 2.2vw, 1.3rem);
+    color: var(--text-main);
+    line-height: 1.6;
+  }
+  .fn-sign {
+    font-size: clamp(1.8rem, 3.5vw, 2.25rem);
+    margin-top: 0.5rem;
+  }
+
+  .fn-register-head {
+    margin-bottom: 2rem;
+  }
+  .fn-register-head h2 {
+    margin-top: 0.5rem;
+  }
+</style>
