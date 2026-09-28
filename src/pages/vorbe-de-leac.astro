@@ -142,6 +142,7 @@ const whatsappTemplate = `Bună, Alexandra! Sunt {{name}}, aș vrea să mă îns
                   submitLabel="Vreau să particip"
                   successNote="Mulțumesc! Acum se deschide WhatsApp, ca să-ți confirm locul. 🌿"
                   whatsappTemplate={whatsappTemplate}
+                  extraFields={{ editie: [theme, dateLabel].filter(Boolean).join(' — ') || 'Vorbe de leac' }}
                   fields={[
                     { name: 'name', label: 'Numele tău', required: true, autocomplete: 'name' },
                     { name: 'phone', label: 'Numărul de telefon', type: 'tel', required: true, autocomplete: 'tel' },

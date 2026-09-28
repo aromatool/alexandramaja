@@ -23,6 +23,10 @@ interface Props {
   whatsappTemplate: string;
   idPrefix?: string;
   showDelivery?: boolean;
+  // Câmpuri ascunse, trimise odată cu formularul — utile ca să deosebești
+  // în Sheet la ce anume se referă cererea (ex: la ce ediție s-a înscris),
+  // fără să creezi un tab nou de fiecare dată.
+  extraFields?: Record<string, string>;
 }
 
 const {
@@ -34,6 +38,7 @@ const {
   whatsappTemplate,
   idPrefix = source,
   showDelivery = false,
+  extraFields,
 } = Astro.props;
 ---
 
@@ -45,6 +50,11 @@ const {
     data-whatsapp-template={whatsappTemplate}
     data-wa={WHATSAPP_NUMBER}
   >
+    {
+      extraFields && Object.entries(extraFields).map(([name, value]) => (
+        <input type="hidden" name={name} value={value} />
+      ))
+    }
     {
       fields.map((f) => (
         <div class="field">
