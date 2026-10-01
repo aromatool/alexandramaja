@@ -65,6 +65,9 @@ const whatsappTemplate = `Bună, Alexandra! Sunt {{name}}, aș vrea să mă îns
     {
       upcoming ? (
         <div class="container-narrow mx-auto vdl-episode">
+          <div class="vdl-upcoming-head text-center">
+            <span class="eyebrow">Ediția care urmează</span>
+          </div>
           {
             poster ? (
               <figure class="vdl-poster">
@@ -218,6 +221,10 @@ const whatsappTemplate = `Bună, Alexandra! Sunt {{name}}, aș vrea să mă îns
 
   .vdl-episode {
     margin-top: clamp(2rem, 5vw, 3rem);
+  }
+
+  .vdl-upcoming-head {
+    margin-bottom: clamp(1.25rem, 3vw, 1.75rem);
   }
 
   .vdl-poster {
