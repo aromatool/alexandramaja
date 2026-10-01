@@ -33,7 +33,7 @@ noutati:
     linkLabel: Vezi cartea
     image: /images/noutati/noutati/0/image.jpg
   - enabled: true
-    tag: În curând
+    tag: 4 noiembrie
     tagColor: sage
     title: Vorbe de leac — Copilul în sezonul virozelor
     text: >-
@@ -44,7 +44,7 @@ noutati:
     linkLabel: Vezi detalii și înscrie-te
     image: /images/vorbe-de-leac/poster-copilul-in-sezonul-virozelor.jpg
   - enabled: true
-    tag: Atelier practic
+    tag: 22 octombrie
     tagColor: terracotta
     title: Farmacia naturală de acasă
     text: >-
