@@ -32,15 +32,16 @@ noutati:
     link: /carte
     linkLabel: Vezi cartea
     image: /images/noutati/noutati/0/image.jpg
-  - enabled: false
+  - enabled: true
     tag: În curând
     tagColor: sage
-    title: Vorbe de leac — următoarea ediție
+    title: Vorbe de leac — Copilul în sezonul virozelor
     text: >-
-      Pregătesc a doua ediție, de data asta cu un medic pediatru. Detaliile vin
-      în curând — până atunci, poți retrăi prima seară.
+      A doua ediție, cu medic pediatru dr. Ruxandra Pop-Kun — despre
+      imunitate naturală la copii. 4 noiembrie, Wisdom Culture Club,
+      Cluj-Napoca.
     link: /vorbe-de-leac
-    linkLabel: Vezi prima ediție
+    linkLabel: Vezi detalii și înscrie-te
     image: /images/noutati/noutati/1/image.jpg
   - enabled: true
     tag: Atelier practic
