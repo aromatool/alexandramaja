@@ -12,6 +12,13 @@
 3. **Aprobare de către Alexandra**: citește, editează, aprobă versiunea finală. În prima etapă aprobarea este manuală, într-un canal privat; nu există încă butoane funcționale.
 4. **Publicare**: numai după aprobare, se copiază articolul acceptat în colecția Keystatic sau se pregătește un PR separat de publicare, cu confirmare finală înainte de merge. Postările Facebook/Instagram și newsletterele nu se trimit fără un pas separat de aprobare.
 
+## Modul imagini — de activat ulterior
+Agentul poate pregăti și imagini de copertă și vizualuri social media, **dar instalarea unui skill Claude Code nu oferă de la sine un generator de imagini**. Va trebui ales și conectat un provider autorizat cu acces la generare (de exemplu OpenAI Images ori Runway), verificând costurile și condițiile de utilizare.
+
+Flux propus: articol documentat → brief și prompt vizual → 2–3 imagini candidate, doar dacă integrarea este disponibilă → verificare fidelitate plante/ingrediente → optimizare pentru web și `imageAlt` → aprobare **separată** de către Alexandra → transferul exclusiv al variantei aprobate în `public/images/biblioteca/<slug>/` sau prin Keystatic.
+
+Materialele vizuale neaprobate, prompturile și referințele rămân în repository-ul editorial privat. Pentru imagini care trebuie să documenteze corect plante, produse sau evenimente reale, se folosesc preferabil fotografii verificate, nu vizualuri inventate. **Nu există momentan generare de imagini automatizată** în această configurație.
+
 ## Stările editoriale
 `IDEI` → `PROPUS` → `ÎN REVIZIE` → `APROBAT` → `PUBLICAT`.
 `RESPINS` poate închide orice propunere. Numai Alexandra poate atribui `APROBAT`. Aprobarea este pentru o versiune identificabilă, nu pentru orice modificare viitoare.
