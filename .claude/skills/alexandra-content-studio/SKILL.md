@@ -35,6 +35,15 @@ Salvează propunerile și materialele neaprobate NUMAI în spațiul privat confi
 4. **QA**: verifică surse, siguranță, acuratețe, dubluri, ton, lizibilitate, diacritice, linkuri și faptul că nu atribui Alexandrei experiențe inventate.
 5. **Handoff**: livrează un rezumat clar cu starea **PROPUS / ÎN REVIZIE**, probleme deschise și întrebări pentru Alexandra. Nu declara materiale **APROBATE** în numele ei.
 
+## Imagini editoriale (opțional, după conectarea unui generator)
+- Pentru fiecare articol pregătește un **brief vizual**: subiectul imaginii, obiecte, lumină, compoziție, paletă, încadrare landscape pentru coperta Bibliotecii, recomandări pentru Instagram, plus textul alt în română.
+- Stil consecvent: fotografie editorială naturală, ivoire, crem, verde salvie, lavandă discretă, lumină moale, atmosferă botanică autentică; nu folosi imagini generice de wellness sau estetica artificială cu plastic/strălucire exagerată.
+- Dacă există un instrument de generare de imagini autorizat și configurat, poate produce **2–3 variante** și poate pregăti o versiune optimizată pentru web, cu compresie și verificare vizuală. Dacă NU există, creează numai prompturi/briefuri, nu pretinde că imaginile au fost produse.
+- Pentru identificarea plantelor, tehnici de preparare sau detalii cu relevanță medicală preferă fotografii autentice, verificate și utilizate legal. Nu prezenta ilustrațiile AI drept dovadă botanică; verifică anomaliile de frunze, flori, ingrediente și gesturi.
+- Nu reprezenta chipul Alexandrei, un produs al ei sau un eveniment real ca fotografie autentică dacă imaginea nu provine dintr-o sursă reală autorizată. Fără imitarea unei identități fără consimțământ.
+- Salvează prompturile, imaginile și selecțiile neaprobate **numai în spațiul editorial privat**. Nu comite niciun asset în repo-ul public înainte de aprobare. Imaginea are un pas explicit de aprobare, separat de text.
+- Verifică drepturile de utilizare și costul providerului, formatul WebP/JPEG, raportul de aspect, dimensiunea fișierului și `imageAlt`; nu inventa costuri sau licențe.
+
 ## Aprobare și publicare
 - **Niciun merge, push în `main`, salvare în Keystatic, publicare social media sau trimitere MailerLite** fără aprobarea explicită a Alexandrei pentru materialul respectiv.
 - O aprobare pentru o propunere nu este automat o aprobare pentru versiunea finală. După modificări substanțiale cere o nouă aprobare.
