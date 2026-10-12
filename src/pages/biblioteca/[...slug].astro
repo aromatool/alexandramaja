@@ -2,7 +2,7 @@
 import { getCollection, render } from 'astro:content';
 import type { CollectionEntry } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import NewsletterSignup from '../../components/NewsletterSignup.astro';
+import ArticleWhatsAppCTA from '../../components/ArticleWhatsAppCTA.astro';
 import BotanicalDivider from '../../components/BotanicalDivider.astro';
 import ArticleCard from '../../components/ArticleCard.astro';
 
@@ -90,14 +90,10 @@ const related = all
     </div>
   </article>
 
-  <!-- Newsletter -->
-  <section class="section post-newsletter">
+  <!-- Conversație directă: CTA principal doar pe paginile articolelor. -->
+  <section class="section post-contact">
     <div class="container">
-      <NewsletterSignup
-        eyebrow="Ți-a plăcut?"
-        title="Hai să ținem legătura"
-        text="Dacă ți-a fost de folos, din când în când îți scriu personal — un gând, un mic ritual, lucruri pe care le învăț. Fără spam, poți renunța oricând."
-      />
+      <ArticleWhatsAppCTA articleTitle={title} />
     </div>
   </section>
 
@@ -288,7 +284,7 @@ const related = all
     color: var(--lavender-deep);
   }
 
-  .post-newsletter {
+  .post-contact {
     padding-top: clamp(3rem, 7vw, 5rem);
   }
 
