@@ -1,122 +1,95 @@
 ---
-interface Props {
-  articleTitle: string;
-  category?: string;
-}
-
-const { articleTitle, category } = Astro.props;
-const isAromatherapy = category === 'Aromaterapie';
-const message = `Bună, Alexandra! Am citit articolul „${articleTitle}” pe site-ul tău și aș vrea să te întreb ceva despre uleiurile esențiale Young Living.`;
+const message = 'Bună, Alexandra! Am citit un articol pe site-ul tău și mi-ar plăcea să povestim puțin.';
 const whatsappHref = `https://wa.me/40754015566?text=${encodeURIComponent(message)}`;
 ---
 
 <aside class="conversation" aria-labelledby="conversation-heading">
   <div class="conversation-inner">
-    <span class="eyebrow">Un gând, o întrebare?</span>
-    <h2 id="conversation-heading">Hai să povestim pe WhatsApp</h2>
+    <h2 id="conversation-heading">Mai povestim?</h2>
     <p class="conversation-text">
-      {isAromatherapy
-        ? 'Dacă ai întrebări despre uleiurile esențiale sau vrei să descoperi ce produse Young Living ți s-ar potrivi, îmi poți scrie direct.'
-        : 'Dacă vrei să povestim despre ce ai citit sau ai întrebări legate de plante, aromaterapie și obiceiuri de zi cu zi, îmi poți scrie direct.'}
-      Îți răspund cu drag, fără grabă și fără nicio obligație.
+      Dacă ți-a rămas o întrebare sau un gând după ce ai citit,
+      scrie-mi. Îți răspund cu drag.
     </p>
     <a
       class="conversation-link"
       href={whatsappHref}
       target="_blank"
       rel="noopener noreferrer"
-      aria-label="Deschide WhatsApp și trimite-i un mesaj Alexandrei despre acest articol"
+      aria-label="Scrie-i Alexandrei pe WhatsApp"
     >
-      <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <path d="M21 11.5a8.5 8.5 0 0 1-8.5 8.5 9 9 0 0 1-4-.9L3 21l1.9-5.5a9 9 0 0 1-.9-4A8.5 8.5 0 0 1 12.5 3 8.5 8.5 0 0 1 21 11.5Z" />
-        <path d="M8.8 9.2c.5 2.5 2.5 4.5 5 5.5l1.3-1.1 1.5.8-.5 1.5c-3.8 1-8.3-3.2-8.1-6.3l.8-.4Z" />
-      </svg>
       Scrie-mi pe WhatsApp
+      <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M5 12h14m-6-6 6 6-6 6" />
+      </svg>
     </a>
-    <p class="conversation-note">Conversație personală, nu un mesaj automat.</p>
-    <p class="conversation-disclosure">
-      Sunt Brand Partner independent Young Living și pot beneficia comercial dacă alegi
-      să cumperi produse prin recomandarea mea.
-    </p>
   </div>
 </aside>
 
 <style>
   .conversation {
+    max-width: 900px;
+    margin-inline: auto;
     background: var(--tint-lavender);
     border-radius: var(--radius-lg);
-    padding: clamp(2.5rem, 6vw, 4.5rem) clamp(1.25rem, 5vw, 3rem);
+    padding: clamp(2rem, 4vw, 2.9rem) clamp(1.5rem, 5vw, 3rem);
     text-align: center;
   }
 
   .conversation-inner {
-    max-width: 660px;
+    max-width: 510px;
     margin-inline: auto;
   }
 
   .conversation h2 {
-    margin: 0.65rem 0 0.8rem;
+    font-size: clamp(1.85rem, 3.4vw, 2.35rem);
+    margin-bottom: 0.55rem;
   }
 
   .conversation-text {
-    color: var(--text-secondary);
-    line-height: 1.85;
-    font-size: clamp(1rem, 1.75vw, 1.125rem);
     margin-inline: auto;
+    font-size: 1rem;
+    line-height: 1.75;
+    color: var(--text-secondary);
   }
 
   .conversation-link {
     display: inline-flex;
-    justify-content: center;
     align-items: center;
-    gap: 0.7rem;
-    margin-top: 1.75rem;
-    background: var(--accent-sage-dark);
-    color: var(--bg-soft);
-    border: 1px solid var(--accent-sage-dark);
-    border-radius: var(--radius-sm);
-    padding: 0.92rem 1.6rem;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 1.1rem;
+    padding: 0.25rem 0;
+    font-family: var(--font-body);
     font-size: 0.95rem;
-    font-weight: 700;
-    text-decoration: none;
-    transition: background-color .2s ease, border-color .2s ease, transform .2s ease;
+    font-weight: 600;
+    line-height: 1.5;
+    color: var(--accent-sage-dark);
+    text-decoration: underline;
+    text-decoration-color: var(--accent-sage);
+    text-underline-offset: 5px;
+    text-decoration-thickness: 1px;
   }
 
-  .conversation-link:hover,
-  .conversation-link:focus-visible {
-    background: var(--text-main);
-    border-color: var(--text-main);
-    color: var(--bg-soft);
+  .conversation-link:hover {
+    color: var(--text-main);
+    text-decoration-color: currentColor;
   }
 
   .conversation-link:focus-visible {
-    outline: 3px solid var(--accent-lavender);
-    outline-offset: 3px;
+    outline: 2px solid var(--accent-lavender);
+    outline-offset: 5px;
   }
 
   .conversation-link svg {
     flex: 0 0 auto;
+    transition: transform 0.2s ease;
   }
 
-  .conversation-note {
-    margin: 0.9rem auto 0;
-    color: var(--text-muted);
-    font-size: 0.84rem;
-  }
-
-  .conversation-disclosure {
-    margin: 1.75rem auto 0;
-    max-width: 56ch;
-    color: var(--text-secondary);
-    font-size: 0.75rem;
-    line-height: 1.7;
-  }
-
-  @media (max-width: 520px) {
-    .conversation-link { width: 100%; }
+  .conversation-link:hover svg {
+    transform: translateX(2px);
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .conversation-link { transition: none; }
+    .conversation-link svg { transition: none; }
   }
 </style>
