@@ -1,9 +1,11 @@
 ---
 interface Props {
   articleTitle: string;
+  category?: string;
 }
 
-const { articleTitle } = Astro.props;
+const { articleTitle, category } = Astro.props;
+const isAromatherapy = category === 'Aromaterapie';
 const message = `Bună, Alexandra! Am citit articolul „${articleTitle}” pe site-ul tău și aș vrea să te întreb ceva despre uleiurile esențiale Young Living.`;
 const whatsappHref = `https://wa.me/40754015566?text=${encodeURIComponent(message)}`;
 ---
@@ -13,8 +15,9 @@ const whatsappHref = `https://wa.me/40754015566?text=${encodeURIComponent(messag
     <span class="eyebrow">Un gând, o întrebare?</span>
     <h2 id="conversation-heading">Hai să povestim pe WhatsApp</h2>
     <p class="conversation-text">
-      Dacă ai întrebări despre uleiurile esențiale sau vrei să descoperi
-      ce produse Young Living ți s-ar potrivi, îmi poți scrie direct.
+      {isAromatherapy
+        ? 'Dacă ai întrebări despre uleiurile esențiale sau vrei să descoperi ce produse Young Living ți s-ar potrivi, îmi poți scrie direct.'
+        : 'Dacă vrei să povestim despre ce ai citit sau ai întrebări legate de plante, aromaterapie și obiceiuri de zi cu zi, îmi poți scrie direct.'}
       Îți răspund cu drag, fără grabă și fără nicio obligație.
     </p>
     <a
