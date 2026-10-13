@@ -589,7 +589,9 @@ export default config({
       path: 'src/content/biblioteca/*',
       format: { contentField: 'content' },
       entryLayout: 'content',
-      columns: ['title', 'pubDate'],
+      // Afișează și starea Ciornă direct în lista de articole.
+      // Folosim coloana nativă Keystatic, nu stiluri fragile în admin.
+      columns: ['title', 'draft', 'pubDate'],
       schema: {
         title: fields.slug({
           name: { label: 'Titlu' },
