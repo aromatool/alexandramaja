@@ -21,7 +21,8 @@ const journalImageAlt = atelierPage?.journalImageAlt ?? '';
 // ============================================================================
 // ATELIERUL ALEXANDREI — prototip INTERN, ascuns.
 //   • noindex, nofollow (vezi <BaseLayout noindex>)
-//   • scos din sitemap (astro.config) și din robots.txt
+//   • scos din sitemap prin astro.config.mjs; nu e blocat în robots.txt,
+//     astfel încât Google să poată citi noindex când accesează URL-ul
 //   • NU e în meniu / footer
 //   • fără checkout, fără coș — doar experiența, designul, structura
 // Regula de aur: între „arată a magazin" și „arată a atelierul Alexandrei",
@@ -92,6 +93,7 @@ const steps = [
 ---
 
 <BaseLayout
+  noindex
   title="Atelierul Alexandrei"
   description="Un mic atelier de lucruri făcute cu mâna — unguente, siropuri și cărți, din plante, timp și curiozitate."
 >
