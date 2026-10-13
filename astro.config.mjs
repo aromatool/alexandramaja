@@ -26,7 +26,14 @@ export default defineConfig({
     react(),
     markdoc(),
     keystatic(),
-    sitemap(),
+    sitemap({
+      // Atelierul este un prototip intern, absent din navigație.
+      // Nu îl trimitem în sitemap până când Alexandra decide lansarea.
+      filter: (page) => {
+        const pathname = new URL(page).pathname;
+        return pathname !== '/atelier' && !pathname.startsWith('/atelier/');
+      },
+    }),
   ],
   adapter: cloudflare(),
   vite: import.meta.env.PROD
