@@ -8,8 +8,9 @@ import ToteIcon from '../../components/ToteIcon.astro';
 import SproutIcon from '../../components/SproutIcon.astro';
 import { availabilityInfo, NOTIFY_ANCHOR } from '../../lib/atelier';
 
-// Pagina de detaliu a unui lucru din atelier. La fel de ascunsă ca listarea
-// (noindex + scoasă din sitemap/robots). Comanda e conversațională, prin
+// Pagina de detaliu a unui lucru din atelier. Ca listarea,
+// are noindex și e exclusă din sitemap (dar NU blocată în robots.txt).
+// Comanda e conversațională, prin
 // WhatsApp — fără coș, fără checkout.
 export async function getStaticPaths() {
   const items = await getCollection('atelier', ({ data }) => !data.draft);
@@ -41,7 +42,7 @@ if (d.relatedArticles?.length) {
 }
 ---
 
-<BaseLayout title={d.title} description={d.shortDescription}>
+<BaseLayout noindex title={d.title} description={d.shortDescription}>
   <article class="prod">
     <div class="container">
       <a href="/atelier" class="prod-back">← Atelier</a>
