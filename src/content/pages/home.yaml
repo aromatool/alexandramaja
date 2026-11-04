@@ -32,24 +32,3 @@ noutati:
     link: /carte
     linkLabel: Vezi cartea
     image: /images/noutati/noutati/0/image.jpg
-  - enabled: true
-    tag: 4 noiembrie
-    tagColor: sage
-    title: Vorbe de leac — Copilul în sezonul virozelor
-    text: >-
-      A doua ediție, cu medic pediatru dr. Ruxandra Pop-Kun — despre
-      imunitate naturală la copii. 4 noiembrie, Wisdom Culture Lab,
-      Cluj-Napoca.
-    link: /vorbe-de-leac
-    linkLabel: Vezi detalii și înscrie-te
-    image: /images/vorbe-de-leac/poster-copilul-in-sezonul-virozelor.jpg
-  - enabled: true
-    tag: 22 octombrie
-    tagColor: terracotta
-    title: Farmacia naturală de acasă
-    text: >-
-      Atelier practic de toamnă — remedii naturale pentru virozele de sezon,
-      pregătite chiar cu mâna ta. 22 octombrie, EduCafe, Florești.
-    link: /farmacia-naturala-de-acasa
-    linkLabel: Vezi detalii
-    image: /images/farmacia-naturala-de-acasa/hero.jpg
