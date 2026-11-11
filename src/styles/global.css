@@ -373,11 +373,12 @@ strong {
   border: none;
   box-shadow: none;
   transform: none;
-  color: var(--text-muted);
+  color: var(--text-secondary);
   text-decoration: line-through;
-  font-size: 0.95rem;
+  text-decoration-thickness: 1.5px;
+  font-size: 1.1rem;
   padding: 0;
-  margin-right: 0.5rem;
+  margin-right: 0.6rem;
 }
 .price-tag-old::before {
   content: none;
