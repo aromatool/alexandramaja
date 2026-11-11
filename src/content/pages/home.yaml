@@ -32,3 +32,13 @@ noutati:
     link: /carte
     linkLabel: Vezi cartea
     image: /images/noutati/noutati/0/image.jpg
+  - enabled: true
+    tag: Cadou de sezon
+    tagColor: terracotta
+    title: Feel Better Box
+    text: >-
+      O cutie cu preparate naturale și uleiuri esențiale Young Living, pentru
+      zilele în care ai nevoie de puțină grijă în plus.
+    link: /atelier/feel-better-box
+    linkLabel: Vezi cutia
+    image: /images/atelier/feel-better-box/images/0/image.jpg

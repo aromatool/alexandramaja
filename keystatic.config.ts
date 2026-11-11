@@ -429,6 +429,11 @@ export default config({
           label: 'Preț (text, opțional)',
           description: 'Momentan doar informativ — nu există cumpărare pe site.',
         }),
+        priceOriginal: fields.text({
+          label: 'Preț întreg, înainte de reducere (opțional)',
+          description:
+            'Completează-l DOAR când e o reducere reală — apare tăiat, înaintea prețului de mai sus.',
+        }),
         volume: fields.text({
           label: 'Cantitate (opțional)',
           description: 'ex: „50 ml", „100 g". Apare discret lângă preț.',

@@ -213,6 +213,7 @@ const steps = [
                   </div>
                   {(d.price || d.volume) && (
                     <div class="piece-price">
+                      {d.priceOriginal && <span class="price-tag price-tag-old">{d.priceOriginal}</span>}
                       {d.price && <span class="price-tag">{d.price}</span>}
                       {d.volume && <span class="piece-vol">{d.volume}</span>}
                     </div>

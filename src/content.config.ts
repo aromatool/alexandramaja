@@ -64,6 +64,8 @@ const atelier = defineCollection({
     batch: z.string().optional().nullable(),       // ex: „Lot mic de vară"
     season: z.string().optional().nullable(),       // ex: „Ediție de toamnă"
     price: z.string().optional().nullable(),        // text liber (fără checkout)
+    // Preț întreg, afișat tăiat înaintea lui `price` — doar când e o reducere reală.
+    priceOriginal: z.string().optional().nullable(),
     volume: z.string().optional().nullable(),        // ex: „50 ml" — apare lângă preț
     // Disponibilitate — nu „stoc". Atelierul lucrează cu anotimpuri și loturi
     // mici. `available` = disponibil acum; `seasonal` = lot terminat, revine în

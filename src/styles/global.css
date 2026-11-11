@@ -366,6 +366,23 @@ strong {
   position: relative;
 }
 
+/* Prețul întreg, tăiat — doar o notă calmă lângă biletul real, nu o a doua
+   etichetă la fel de puternică (nicio culoare de reducere agresivă). */
+.price-tag-old {
+  background: none;
+  border: none;
+  box-shadow: none;
+  transform: none;
+  color: var(--text-muted);
+  text-decoration: line-through;
+  font-size: 0.95rem;
+  padding: 0;
+  margin-right: 0.5rem;
+}
+.price-tag-old::before {
+  content: none;
+}
+
 /* gaura pentru sfoară */
 .price-tag::before {
   content: '';

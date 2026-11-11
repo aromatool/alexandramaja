@@ -91,6 +91,7 @@ if (d.relatedArticles?.length) {
 
           <div class="prod-buy">
             <span class="prod-price-wrap">
+              {d.priceOriginal && <span class="price-tag price-tag-old">{d.priceOriginal}</span>}
               {d.price && <span class="price-tag">{d.price}</span>}
               {d.volume && <span class="prod-vol">{d.volume}</span>}
             </span>
