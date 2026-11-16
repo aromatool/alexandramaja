@@ -39,6 +39,10 @@ import { WHATSAPP_NUMBER } from '../lib/atelier';
         <label for="bfbag-phone">Numărul de telefon</label>
         <input id="bfbag-phone" type="tel" data-bfbag-phone required autocomplete="tel" />
       </div>
+      <div class="bfbag-field">
+        <label for="bfbag-consultant">Consultantul care te ajută</label>
+        <input id="bfbag-consultant" type="text" data-bfbag-consultant required placeholder="ex: Alexandra" />
+      </div>
 
       <button type="button" class="bfbag-send" data-bfbag-send>Trimite lista Alexandrei</button>
       <p class="bfbag-note">
@@ -248,6 +252,7 @@ import { WHATSAPP_NUMBER } from '../lib/atelier';
     const sendEl = root.querySelector<HTMLButtonElement>('[data-bfbag-send]');
     const nameEl = root.querySelector<HTMLInputElement>('[data-bfbag-name]');
     const phoneEl = root.querySelector<HTMLInputElement>('[data-bfbag-phone]');
+    const consultantEl = root.querySelector<HTMLInputElement>('[data-bfbag-consultant]');
     const errorEl = root.querySelector<HTMLElement>('[data-bfbag-error]');
 
     const read = (): BagItem[] => {
@@ -278,9 +283,9 @@ import { WHATSAPP_NUMBER } from '../lib/atelier';
       const total = totalLei();
       const totalLine = total > 0 ? `\n(cam ${total} lei)` : '';
       const nameLine = name
-        ? `Bună, Alexandra! Sunt ${name}. Aș vrea pentru Black Friday:\n`
-        : `Bună, Alexandra! Aș vrea pentru Black Friday:\n`;
-      return `${nameLine}${itemLines().map((l) => `• ${l}`).join('\n')}${totalLine}\nMai e disponibil?`;
+        ? `Bună, Alexandra! Sunt ${name}. Aș vrea să mă ajuți cu informații despre produsele de mai jos, de Black Friday:\n`
+        : `Bună, Alexandra! Aș vrea să mă ajuți cu informații despre produsele de mai jos, de Black Friday:\n`;
+      return `${nameLine}${itemLines().map((l) => `• ${l}`).join('\n')}${totalLine}`;
     };
 
     const render = () => {
@@ -365,11 +370,12 @@ import { WHATSAPP_NUMBER } from '../lib/atelier';
     sendEl?.addEventListener('click', async () => {
       const name = nameEl?.value.trim() ?? '';
       const phone = phoneEl?.value.trim() ?? '';
+      const consultant = consultantEl?.value.trim() ?? '';
       if (errorEl) errorEl.hidden = true;
 
-      if (!name || !phone) {
+      if (!name || !phone || !consultant) {
         if (errorEl) {
-          errorEl.textContent = 'Completează numele și telefonul, ca să pot ține evidența.';
+          errorEl.textContent = 'Completează numele, telefonul și consultantul, ca să pot ține evidența.';
           errorEl.hidden = false;
         }
         return;
@@ -389,6 +395,7 @@ import { WHATSAPP_NUMBER } from '../lib/atelier';
             fields: {
               name,
               phone,
+              consultant,
               items: itemLines().join('; '),
               total: totalLei() > 0 ? `${totalLei()} lei` : '',
             },
