@@ -18,69 +18,538 @@ interface Offer {
   tier: Tier;
   image?: string;
   note?: string;
+  description?: string;
 }
 
 const img = (slug: string) => `/images/black-friday/${slug}/image.png`;
 
 const offers: Offer[] = [
   // -50%
-  { id: 'claraderm', name: 'ClaraDerm Spray', size: '60 ml', cod: '36711D', price: '231 lei', tier: '50', image: img('claraderm') },
-  { id: 'forgiveness', name: 'Forgiveness', size: '5 ml', cod: '33287D', price: '210 lei', tier: '50', image: img('forgiveness') },
-  { id: 'light-of-hope', name: 'Light of Hope', size: '5 ml', cod: '36711D', price: '227 lei', tier: '50', image: img('light-of-hope') },
-  { id: 'melissa', name: 'Melissa', size: '5 ml', cod: '32232D', price: '532 lei', tier: '50', image: img('melissa') },
-  { id: 'm-grain', name: 'M-Grain', size: '15 ml', cod: '33144D', price: '177 lei', tier: '50', image: img('m-grain') },
+  { id: 'claraderm', name: 'ClaraDerm Spray', size: '60 ml', cod: '36711D', price: '231 lei', tier: '50', description: `<p class="bf-desc-tag">Îngrijire intensivă și regenerarea pielii</p>
+<p><strong>Conține:</strong> 6 uleiuri esențiale prețioase – Smirnă, Tea Tree, Lavandă, Tămâie, Helichrysum și Mușețel Roman, într-o bază hidratantă de ulei de cocos fracționat.</p>
+<p><strong>Beneficii și utilizări:</strong></p>
+<ul>
+<li>Vindecă răni provocate de arsuri, tăieturi, intervenții chirurgicale.</li>
+<li>Oferă confort pielii după expunerea la soare.</li>
+<li>Ajută la menținerea elasticității și hidratării.</li>
+<li>Îngrijește pielea uscată, aspră sau descuamată.</li>
+</ul>`, image: img('claraderm') },
+  { id: 'forgiveness', name: 'Forgiveness', size: '5 ml', cod: '33287D', price: '210 lei', tier: '50', description: `<p class="bf-desc-tag">Uleiul iertării și al eliberării emoționale</p>
+<p><strong>Conține:</strong> 15 uleiuri esențiale prețioase: Roiniță (Melissa), Mușcată, Tămâie, Santal Hawaiian, Coriandru, Angelică, Lavandă, Bergamotă, Lămâie, Ylang Ylang, Iasomie, Helichrysum, Mușețel Roman, Palmarosa și Trandafir, într-o bază de ulei de susan.</p>
+<p><strong>Beneficii emoționale:</strong></p>
+<ul>
+<li>Încurajează iertarea de sine și a celorlalți.</li>
+<li>Susține eliberarea emoțională și acceptarea.</li>
+<li>Inspiră compasiune, iubire și împăcare.</li>
+<li>Favorizează introspecția și echilibrul emoțional.</li>
+<li>Creează o atmosferă de calm și reconectare cu sine.</li>
+</ul>`, image: img('forgiveness') },
+  { id: 'light-of-hope', name: 'Light of Hope', size: '5 ml', cod: '36711D', price: '227 lei', tier: '50', description: `<p class="bf-desc-tag">Uleiul speranței și al echilibrului emoțional</p>
+<p><strong>Conține:</strong> 4 uleiuri esențiale prețioase – Melissa (Roiniță), Ienupăr, Smirnă și Northern Lights Black Spruce (Molid Negru), într-o bază de ulei de migdale dulci.</p>
+<p>Light of Hope este un blend emoțional profund, creat pentru momentele dificile ale vieții, când avem nevoie să ne regăsim speranța, curajul și încrederea în viitor.</p>
+<p><strong>Beneficii emoționale:</strong></p>
+<ul>
+<li>Încurajează optimismul și gândirea pozitivă.</li>
+<li>Oferă o senzație de liniște, siguranță și stabilitate.</li>
+<li>Susține reconectarea cu propria forță interioară.</li>
+<li>Inspiră acceptarea și eliberarea emoțională.</li>
+<li>Creează o atmosferă reconfortantă în perioadele de schimbare, pierdere sau incertitudine.</li>
+<li>Ideal pentru meditație, rugăciune și introspecție.</li>
+</ul>`, image: img('light-of-hope') },
+  { id: 'melissa', name: 'Melissa', size: '5 ml', cod: '32232D', price: '532 lei', tier: '50', description: `<p class="bf-desc-tag">Calm, echilibru emoțional și îngrijirea pielii</p>
+<p>Melissa este unul dintre cele mai prețioase uleiuri esențiale Young Living, apreciat de peste 2.000 de ani și supranumit tradițional „elixirul vieții”.</p>
+<p><strong>Beneficii și utilizări:</strong></p>
+<ul>
+<li>Demonstrat că alungă anxietatea.</li>
+<li>Creează o atmosferă liniștitoare în perioadele de stres.</li>
+<li>Susține concentrarea și claritatea mentală prin aroma sa.</li>
+<li>Îngrijește și înfrumusețează pielea, oferindu-i un aspect mai fin și echilibrat.</li>
+</ul>
+<p class="bf-desc-callout">🔬 Știai că? Un studiu clinic publicat în 2025, pe 68 de pacienți, a asociat inhalarea uleiului esențial de Melissa cu reducerea anxietății și ameliorarea unor dificultăți de somn.</p>`, image: img('melissa') },
+  { id: 'm-grain', name: 'M-Grain', size: '15 ml', cod: '33144D', price: '177 lei', tier: '50', description: `<p class="bf-desc-tag">Relaxare pentru cap, ceafă și umeri</p>
+<p><strong>Conține:</strong> 6 uleiuri esențiale – Busuioc, Măghiran, Lavandă, Mentă, Mușețel Roman și Helichrysum.</p>
+<p>M-Grain este un blend creat de Gary Young special pentru momentele de tensiune și disconfort resimțite la nivelul capului și gâtului.</p>
+<p><strong>Beneficii și utilizări:</strong></p>
+<ul>
+<li>Se folosește pentru migrene puternice.</li>
+<li>Oferă confort în momentele de tensiune la nivelul capului.</li>
+<li>Susține claritatea mentală.</li>
+<li>Ajută la relaxarea musculaturii încordate din zona gâtului și umerilor prin masaj.</li>
+<li>Aroma de mentă oferă o senzație revigorantă.</li>
+<li>Favorizează relaxarea după perioade de stres și suprasolicitare.</li>
+</ul>`, image: img('m-grain') },
 
   // -40%
-  { id: 'blue-tansy', name: 'Blue Tansy', size: '5 ml', cod: '33041D', price: '418 lei', priceOriginal: '696 lei', tier: '40', image: img('blue-tansy') },
-  { id: 'garys-light', name: "Gary's Light", cod: '36711D', price: '189 lei', priceOriginal: '315 lei', tier: '40', image: img('garys-light') },
-  { id: 'gentle-baby', name: 'Gentle Baby', cod: '33298D', price: '228 lei', priceOriginal: '380 lei', tier: '40', image: img('gentle-baby') },
-  { id: 'helichrysum', name: 'Helichrysum', size: '5 ml', cod: '33103D', price: '372 lei', priceOriginal: '620 lei', tier: '40', image: img('helichrysum') },
-  { id: 'life-9', name: 'Life 9', size: '30 capsule', cod: '18361D', price: '131 lei', tier: '40', image: img('life-9') },
-  { id: 'present-time', name: 'Present Time', size: '5 ml', cod: '33410D', price: '395 lei', tier: '40', image: img('present-time') },
-  { id: 'rise-above', name: 'Rise Above', size: '5 ml', cod: '53449D', price: '195 lei', tier: '40', image: img('rise-above') },
-  { id: 'sage', name: 'Sage', size: '15 ml', cod: '36543D', price: '135 lei', tier: '40', image: img('sage') },
+  { id: 'blue-tansy', name: 'Blue Tansy', size: '5 ml', cod: '33041D', price: '418 lei', priceOriginal: '696 lei', tier: '40', description: `<p class="bf-desc-tag">Calmarea pielii și îngrijire regeneratoare</p>
+<p><strong>Conține:</strong> 100% ulei esențial de Tanacetum annuum (Mușețel Albastru Marocan), bogat în camazulenă, compusul care îi oferă culoarea albastră intensă și care este studiat pentru proprietățile sale antiinflamatoare.</p>
+<p>Unul dintre cele mai prețioase uleiuri pentru îngrijirea pielii, folosit inclusiv în cosmeticele de lux!</p>
+<p><strong>Beneficii și utilizări:</strong></p>
+<ul>
+<li>Calmează pielea iritată, sensibilă și predispusă la roșeață.</li>
+<li>Susține confortul pielii și îngrijirea barierei cutanate.</li>
+<li>Ajută la reducerea aspectului imperfecțiunilor.</li>
+<li>Ideal pentru pielea uscată și sensibilizată.</li>
+<li>Înfrumusețează tenul și îi oferă un aspect uniform.</li>
+<li>Excelent pentru masajul mușchilor obosiți și tensionați.</li>
+<li>Aroma dulce, florală, favorizează relaxarea și echilibrul emoțional.</li>
+</ul>`, image: img('blue-tansy') },
+  { id: 'garys-light', name: "Gary's Light", cod: '36711D', price: '189 lei', priceOriginal: '315 lei', tier: '40', description: `<p class="bf-desc-tag">Curaj, speranță și echilibru emoțional</p>
+<p><strong>Conține:</strong> 9 uleiuri esențiale prețioase – Tămâie Sacră, Cistus, Lemongrass, Scorțișoară, Smirnă, Dorado Azul, Eucalyptus Radiata, Isop și Petitgrain.</p>
+<p>Gary’s Light este un blend cu totul special, inspirat de moștenirea lui Gary Young și creat de Mary Young pentru a aduce lumină, speranță și încredere în momentele dificile. Se spune că înfăptuiește miracole și avem și mărturii ale celor care pot confirma asta.</p>
+<p><strong>Beneficii și utilizări:</strong></p>
+<ul>
+<li>Inspiră curaj, optimism și încredere în sine.</li>
+<li>Favorizează echilibrul emoțional și liniștea interioară.</li>
+<li>Creează o senzație de stabilitate și ancorare.</li>
+<li>Încurajează claritatea mentală și introspecția.</li>
+<li>Ideal pentru meditație, rugăciune și momentele de reconectare cu sine.</li>
+</ul>`, image: img('garys-light') },
+  { id: 'gentle-baby', name: 'Gentle Baby', size: '15 ml', cod: '33298D', price: '228 lei', priceOriginal: '380 lei', tier: '40', image: img('gentle-baby'), description: `<p class="bf-desc-tag">Liniște, relaxare și îngrijire pentru mame și copii</p>
+<p><strong>Conține:</strong> 10 uleiuri esențiale prețioase – Coriandru, Mușcată (Geranium), Palmarosa, Lavandă, Ylang Ylang, Mușețel Roman, Bergamotă, Lămâie, Iasomie și Trandafir.</p>
+<p>Unul dintre cele mai îndrăgite blenduri Young Living, creat special pentru a oferi mamelor o experiență aromatică delicată, reconfortantă și plină de tandrețe!</p>
+<p><strong>Beneficii și utilizări:</strong></p>
+<ul>
+<li>Favorizează relaxarea și echilibrul emoțional.</li>
+<li>Creează o atmosferă liniștitoare în rutina de seară.</li>
+<li>Ideal pentru masajul relaxant al viitoarelor mămici, cu aviz medical.</li>
+<li>Susține îngrijirea pielii și menținerea hidratării.</li>
+<li>Poate fi integrat în ritualurile de îngrijire după naștere.</li>
+<li>Aroma sa florală încurajează momentele de calm și conectare.</li>
+</ul>` },
+  { id: 'helichrysum', name: 'Helichrysum', size: '5 ml', cod: '33103D', price: '372 lei', priceOriginal: '620 lei', tier: '40', description: `<p class="bf-desc-tag">Regenerare și îngrijirea pielii</p>
+<p><strong>Conține:</strong> 100% ulei esențial de Helichrysum italicum, obținut din flori prin distilare cu aburi. Bogat în acetat de neril, gama-curcumen și alfa-pinen.</p>
+<p>Unul dintre cele mai puternice uleiuri pentru vindecarea pielii!</p>
+<p><strong>Beneficii și utilizări:</strong></p>
+<ul>
+<li>Susține regenerarea și refacerea aspectului pielii.</li>
+<li>Îmbunătățește aspectul cicatricilor și al semnelor rămase după leziuni vindecate.</li>
+<li>Calmează și îngrijește pielea sensibilizată.</li>
+<li>Ajută la uniformizarea nuanței și texturii tenului.</li>
+<li>Reduce aspectul liniilor fine și al ridurilor.</li>
+<li>Ideal pentru masajul zonelor musculare tensionate.</li>
+</ul>
+<p class="bf-desc-callout">🔬 Știai că? Studiile au evidențiat proprietățile antiinflamatoare, antioxidante și potențialul de susținere a vindecării rănilor.</p>`, image: img('helichrysum') },
+  { id: 'life-9', name: 'Life 9', size: '30 capsule', cod: '18361D', price: '131 lei', tier: '40', description: `<p class="bf-desc-tag">Echilibrul florei intestinale și sănătatea digestivă</p>
+<p><strong>Conține:</strong> 17 miliarde de culturi bacteriene vii din 9 tulpini benefice, inclusiv Lactobacillus acidophilus, L. rhamnosus, L. plantarum și mai multe specii de Bifidobacterium.</p>
+<p>Life 9 este un probiotic complex Young Living, conceput pentru susținerea microbiomului intestinal, esențial pentru digestie și buna funcționare a organismului.</p>
+<p><strong>Beneficii și utilizări:</strong></p>
+<ul>
+<li>Susține echilibrul florei intestinale.</li>
+<li>Contribuie la menținerea unei digestii sănătoase.</li>
+<li>Minunat pentru tot felul de alergii, alimentare sau respiratorii.</li>
+<li>Util pentru refacerea microbiotei după administrarea antibioticelor, în funcție de tulpinile necesare.</li>
+<li>Susține funcționarea normală a intestinului.</li>
+<li>Microbiomul intestinal are un rol important în funcționarea sistemului imunitar.</li>
+</ul>`, image: img('life-9') },
+  { id: 'present-time', name: 'Present Time', size: '5 ml', cod: '33410D', price: '395 lei', tier: '40', description: `<p class="bf-desc-tag">Trăiește în prezent, eliberează trecutul!</p>
+<p><strong>Conține:</strong> Neroli (flori de portocal amar), Molid Negru și Ylang Ylang, într-o bază de ulei de migdale dulci.</p>
+<p>Present Time este unul dintre cele mai speciale blenduri emoționale Young Living, creat pentru a ne ajuta să lăsăm trecutul în urmă, să renunțăm la griji și să ne reconectăm cu momentul prezent.</p>
+<p><strong>Beneficii emoționale:</strong></p>
+<ul>
+<li>Încurajează eliberarea de regrete și gânduri repetitive.</li>
+<li>Favorizează liniștea interioară și echilibrul emoțional.</li>
+<li>Susține concentrarea asupra momentului prezent.</li>
+<li>Inspiră optimism, încredere și claritate.</li>
+<li>Creează o atmosferă potrivită pentru meditație și introspecție.</li>
+<li>Încurajează acceptarea trecutului și deschiderea către noi începuturi.</li>
+</ul>`, image: img('present-time') },
+  { id: 'rise-above', name: 'Rise Above', size: '5 ml', cod: '53449D', price: '195 lei', tier: '40', description: `<p class="bf-desc-tag">Depășește-ți limitele și redescoperă-ți potențialul!</p>
+<p><strong>Conține:</strong> 12 uleiuri esențiale prețioase – Cedru, Brad Grand Fir, Tămâie, Lavandă, Bergamotă, Dorado Azul, Cardamom, Molid Negru, Trandafir, Camfor, Blue Tansy și Mușcată, într-o bază de ulei de cocos fracționat.</p>
+<p>Rise Above este un blend emoțional creat pentru momentele în care simți că ai nevoie de curaj, încredere și o nouă perspectivă asupra vieții.</p>
+<p><strong>Beneficii emoționale:</strong></p>
+<ul>
+<li>Inspiră curajul și încrederea în propriile forțe.</li>
+<li>Încurajează depășirea blocajelor și convingerilor limitative.</li>
+<li>Favorizează optimismul și gândirea pozitivă.</li>
+<li>Susține claritatea mentală și stabilitatea emoțională.</li>
+<li>Ideal pentru meditație, afirmații pozitive și stabilirea obiectivelor.</li>
+</ul>`, image: img('rise-above') },
+  { id: 'sage', name: 'Sage', size: '15 ml', cod: '36543D', price: '135 lei', tier: '40', description: `<p class="bf-desc-tag">Memorie, concentrare și echilibru feminin</p>
+<p><strong>Conține:</strong> 100% ulei esențial de Salvia officinalis, bogat în compuși aromatici precum 1,8-cineol, camfor și alfa-/beta-tujonă.</p>
+<p>Supranumită de romani „iarba sacră”, salvia este apreciată de secole pentru proprietățile sale aromatice și utilizările tradiționale.</p>
+<p><strong>Beneficii și utilizări:</strong></p>
+<ul>
+<li>Favorizează claritatea mentală, memoria și concentrarea.</li>
+<li>Oferă o senzație de revitalizare în perioadele de oboseală mentală.</li>
+<li>Folosită tradițional pentru confortul feminin la menopauză.</li>
+<li>Masată pe abdomenul inferior reduce durerile date de menstruație.</li>
+<li>Ideală pentru masaj relaxant, bine diluat.</li>
+<li>Aroma erbacee și condimentată creează o atmosferă de echilibru și ancorare.</li>
+</ul>
+<p class="bf-desc-callout">🔬 Știai că? Un studiu pe 135 de participanți a arătat că inhalarea aromei de Salvia officinalis a îmbunătățit anumite performanțe ale memoriei comparativ cu grupul de control.</p>`, image: img('sage') },
 
   // -30%
-  { id: 'believe', name: 'Believe', size: '15 ml', cod: '33287D', price: '221 lei', priceOriginal: '314,47 lei', tier: '30', image: img('believe') },
-  { id: 'comfortone', name: 'ComfortTone', size: '120 capsule', cod: '320408D', price: '173 lei', priceOriginal: '246,91 lei', tier: '30', image: img('comfortone') },
-  { id: 'kidscents-mightypro', name: 'KidScents MightyPro', cod: '30454D', price: '161 lei', tier: '30', image: img('kidscents-mightypro') },
-  { id: 'illumineyes', name: 'IlluminEyes', size: '30 capsule', cod: '36711D', price: '163 lei', tier: '30', image: img('illumineyes') },
-  { id: 'the-essentials-kit', name: 'The Essentials Kit', cod: '51495D', price: '533 lei', tier: '30', image: img('the-essentials-kit') },
-  { id: 'body-butter-cozy-chai', name: 'Body Butter Cozy Chai', size: '62 g', cod: '53629D', price: '134 lei', tier: '30', image: img('body-butter-cozy-chai') },
-  { id: 'thieves', name: 'Thieves', size: '15 ml', cod: '32146D', price: '191 lei', tier: '30', image: img('thieves') },
+  { id: 'believe', name: 'Believe', size: '15 ml', cod: '33287D', price: '221 lei', priceOriginal: '314,47 lei', tier: '30', description: `<p class="bf-desc-tag">Încredere, curaj și putere interioară</p>
+<p><strong>Conține:</strong> 7 uleiuri esențiale – Brad Grand Fir, Coriandru, Bergamotă, Tămâie, Molid Albastru de Idaho, Ylang Ylang și Mușcată (Geranium).</p>
+<p>Believe este unul dintre cele mai frumoase blenduri emoționale Young Living, creat pentru momentele în care avem nevoie să ne recăpătăm încrederea în noi și în propriul potențial.</p>
+<p><strong>Beneficii emoționale:</strong></p>
+<ul>
+<li>Inspiră încredere în sine, curaj și optimism.</li>
+<li>Încurajează depășirea îndoielilor și a blocajelor emoționale.</li>
+<li>Favorizează liniștea interioară și claritatea mentală.</li>
+<li>Creează o atmosferă de stabilitate și echilibru.</li>
+<li>Susține relaxarea și reconectarea cu propriile obiective.</li>
+<li>Ideal pentru meditație, afirmații pozitive și dezvoltare personală.</li>
+</ul>`, image: img('believe') },
+  { id: 'comfortone', name: 'ComfortTone', size: '120 capsule', cod: '320408D', price: '173 lei', priceOriginal: '246,91 lei', tier: '30', description: `<p class="bf-desc-tag">Tranzit intestinal și confort digestiv</p>
+<p><strong>Conține:</strong> Fenicul, Psyllium, Brusture, Usturoi, Echinacea, Rubarbă, Dracilă, Pectină de mere, Cascara Sagrada și 7 uleiuri esențiale: Copaiba, Ghimbir, Tangerine, Anason, Mentă, Rozmarin și Mușețel German.</p>
+<p>ComforTone este un supliment complex din plante, conceput pentru susținerea digestiei și a tranzitului intestinal, în special în perioadele în care intestinul funcționează mai lent.</p>
+<p><strong>Beneficii și utilizări:</strong></p>
+<ul>
+<li>Susține tranzitul intestinal și eliminarea regulată a scaunului.</li>
+<li>Psylliumul contribuie la formarea și hidratarea scaunului.</li>
+<li>Feniculul favorizează confortul digestiv.</li>
+<li>Cascara Sagrada stimulează motilitatea intestinală, având efect laxativ.</li>
+<li>Poate fi util în episoadele ocazionale de constipație.</li>
+<li>Contribuie la reducerea senzației de disconfort asociate tranzitului lent.</li>
+</ul>
+<p><strong>Administrare:</strong> 1 capsulă de 4 ori pe zi, cu minimum 2 litri de apă zilnic.</p>`, image: img('comfortone') },
+  { id: 'kidscents-mightypro', name: 'KidScents MightyPro', cod: '30454D', price: '161 lei', tier: '30', description: `<p class="bf-desc-tag">Probiotice pentru copii și sănătatea intestinală</p>
+<p><strong>Conține:</strong> Peste 8 miliarde de bacterii benefice vii din 6 specii, printre care Lactobacillus acidophilus, L. rhamnosus și Bifidobacterium infantis, alături de prebiotice (fructooligozaharide) și pudră din fructe goji NingXia.</p>
+<p>MightyPro este un supliment cu probiotice și prebiotice, special formulat pentru copiii de peste 2 ani. O floră intestinală echilibrată este esențială pentru digestie și funcționarea normală a sistemului imunitar.</p>
+<p><strong>Beneficii:</strong></p>
+<ul>
+<li>Susține echilibrul microbiomului intestinal.</li>
+<li>Contribuie la menținerea unei digestii sănătoase.</li>
+<li>Minunat pentru alergii alimentare și chiar respiratorii.</li>
+<li>Poate favoriza confortul digestiv și tranzitul regulat.</li>
+<li>Prebioticele hrănesc bacteriile intestinale benefice.</li>
+<li>Poate fi util în perioadele de dezechilibru al florei intestinale, inclusiv după antibiotice, la recomandarea medicului.</li>
+</ul>
+<p><strong>Administrare:</strong> 1 plic zilnic, în timpul mesei, pentru copii de peste 2 ani. Se dizolvă direct în gură sau se amestecă în alimente și băuturi reci.</p>`, image: img('kidscents-mightypro') },
+  { id: 'illumineyes', name: 'IlluminEyes', size: '30 capsule', cod: '36711D', price: '163 lei', tier: '30', description: `<p class="bf-desc-tag">Sănătatea ochilor și protecție antioxidantă</p>
+<p><strong>Conține:</strong> Luteină (20 mg), Zeaxantină (4 mg), Vitamina A (betacaroten), Vitamina C din Acerola, Vitamina E, extract de gălbenele și pudră din fructe Goji NingXia.</p>
+<p>IlluminEyes este un supliment complex Young Living, creat special pentru susținerea sănătății ochilor și menținerea unei vederi normale.</p>
+<p><strong>Beneficii:</strong></p>
+<ul>
+<li>Vitamina A contribuie la menținerea vederii normale.</li>
+<li>Luteina și zeaxantina sunt pigmenți care se acumulează în maculă, zona retinei responsabilă de vederea centrală.</li>
+<li>Vitamina E contribuie la protejarea celulelor împotriva stresului oxidativ.</li>
+<li>Vitamina C susține formarea normală a colagenului pentru funcționarea vaselor de sânge.</li>
+<li>Oferă nutrienți importanți pentru sănătatea ochilor pe termen lung.</li>
+<li>Ideal pentru completarea alimentației persoanelor care petrec multe ore în fața ecranelor.</li>
+</ul>
+<p><strong>Administrare:</strong> 1 capsulă zilnic, în timpul mesei.</p>`, image: img('illumineyes') },
+  { id: 'the-essentials-kit', name: 'The Essentials Kit', cod: '51495D', price: '533 lei', tier: '30', description: `<p class="bf-desc-tag">Imunitate, digestie, energie și echilibru</p>
+<ul>
+<li><strong>Inner Defense – 30 capsule moi:</strong> Complex de uleiuri esențiale, printre care Oregano, Cimbru, Thieves și Lemongrass, cu compuși vegetali studiați pentru proprietățile lor antimicrobiene în laborator.</li>
+<li><strong>Super C – 120 comprimate:</strong> Complex cu vitamina C și ingrediente botanice. Contribuie la funcționarea normală a sistemului imunitar, protecția celulelor împotriva stresului oxidativ și reducerea oboselii.</li>
+<li><strong>Super Magnesium – 90 capsule:</strong> Susține sistemul nervos, relaxarea musculară, metabolismul energetic și funcționarea normală a mușchilor.</li>
+<li><strong>Life 9 – 30 capsule:</strong> Probiotic cu 17 miliarde de culturi bacteriene vii din 9 tulpini, conceput pentru susținerea echilibrului florei intestinale și a confortului digestiv.</li>
+</ul>
+<p><strong>De ce să alegi kitul?</strong> Patru suplimente complementare pentru o rutină zilnică de îngrijire a organismului, de la sănătatea digestivă până la susținerea imunității și a sistemului nervos.</p>`, image: img('the-essentials-kit') },
+  { id: 'body-butter-cozy-chai', name: 'Body Butter Cozy Chai', size: '62 g', cod: '53629D', price: '134 lei', tier: '30', description: `<p><strong>Conține:</strong> Unt de mango, unt de cupuaçu, ulei de jojoba, cocos, măceșe, floarea-soarelui, aloe vera, vitamina E și un amestec delicios de uleiuri esențiale: Scorțișoară, Cuișoare, Cardamom, Nucșoară, Cassia, Ghimbir, Piper Negru și Vanilie.</p>
+<p>Un unt de corp extraordinar de bogat și hrănitor, cu o aromă caldă, dulce și condimentată, care amintește de un ceai chai savurat lângă șemineu, într-o zi friguroasă de iarnă!</p>
+<p><strong>Beneficii:</strong></p>
+<ul>
+<li>Hidratează intens și de lungă durată.</li>
+<li>Catifelează pielea uscată și aspră.</li>
+<li>Ajută la menținerea elasticității și supleței pielii.</li>
+<li>Oferă protecție antioxidantă prin ingredientele vegetale.</li>
+<li>Lasă pielea mătăsoasă și delicat parfumată.</li>
+<li>Fără parfumuri sintetice, parabeni sau coloranți artificiali.</li>
+</ul>
+<p><strong>Utilizare:</strong> Masează pe pielea curată, insistând pe zonele uscate.</p>`, image: img('body-butter-cozy-chai') },
+  { id: 'thieves', name: 'Thieves', size: '15 ml', cod: '32146D', price: '191 lei', tier: '30', description: `<p class="bf-desc-tag">Protecție, prospețime și susținerea stării de bine</p>
+<p><strong>Conține:</strong> 5 uleiuri esențiale puternice – Cuișoare, Lămâie, Scorțișoară (scoarță), Eucalyptus Radiata și Rozmarin.</p>
+<p>Thieves este unul dintre cele mai cunoscute și iubite blenduri Young Living, apreciat pentru aroma sa intensă, caldă și condimentată. Un adevărat aliat în rutina de îngrijire a familiei, mai ales în sezonul rece!</p>
+<p><strong>Beneficii și utilizări:</strong></p>
+<ul>
+<li>Conține eugenol și cinamaldehidă, compuși studiați pentru activitatea antimicrobiană în laborator.</li>
+<li>Împrospătează aerul și neutralizează mirosurile neplăcute.</li>
+<li>Creează o atmosferă reconfortantă în sezonul rece.</li>
+<li>Ideal pentru soluții naturale de curățenie și parfumarea locuinței.</li>
+<li>Poate fi inclus, foarte bine diluat, în ritualurile de masaj.</li>
+<li>Aroma sa caldă și condimentată oferă o senzație de confort și revitalizare.</li>
+</ul>
+<p class="bf-desc-callout">🔬 Știai că? Studiile de laborator au evidențiat activitatea antibacteriană a unor ingrediente din Thieves, în special a uleiurilor de cuișoare și scorțișoară.</p>`, image: img('thieves') },
 
   // -20%
-  { id: 'one-purpose', name: 'One Purpose', size: '5 ml', cod: '41695D', price: '283 lei', priceOriginal: '353,32 lei', tier: '20', image: img('one-purpose') },
-  { id: 'progressence-phyto-plus', name: 'Progressence Phyto Plus', size: '15 ml', cod: '32157D', price: '242 lei', tier: '20', image: img('progressence-phyto-plus') },
-  { id: 'warm-pumpkin-spice', name: 'Simplified Warm Pumpkin Spice', cod: '53118D', price: '193 lei', tier: '20', image: img('warm-pumpkin-spice') },
-  { id: 'citrus-fresh', name: 'Citrus Fresh', size: '15 ml', cod: '32058D', price: '107 lei', tier: '20', image: img('citrus-fresh') },
-  { id: 'icp', name: 'ICP', size: '227 g', cod: '320808D', price: '160 lei', tier: '20', image: img('icp') },
-  { id: 'ravintsara', name: 'Ravintsara', size: '5 ml', cod: '33331D', price: '185 lei', priceOriginal: '230,36 lei', tier: '20', image: img('ravintsara') },
-  { id: 'balance-complete', name: 'Balance Complete', size: '756 g', cod: '329208D', price: '337 lei', tier: '20', image: img('balance-complete') },
+  { id: 'one-purpose', name: 'One Purpose', size: '5 ml', cod: '41695D', price: '283 lei', priceOriginal: '353,32 lei', tier: '20', description: `<p class="bf-desc-tag">Curaj, determinare și descoperirea propriului scop</p>
+<p><strong>Conține:</strong> 10 uleiuri esențiale prețioase – Lime, Tămâie Sacră, Ylang Ylang din Ecuador, Ocotea, Molid Negru, Camfor, Trandafir, Blue Tansy, Tămâie și Mușcată, într-o bază de ulei de cocos fracționat.</p>
+<p>One Purpose este un blend emoțional deosebit, creat pentru a inspira curajul, încrederea și determinarea de a ne urma visurile. Aroma sa florală, proaspătă și lemnoasă invită la introspecție și reconectare cu propriile valori.</p>
+<p><strong>Beneficii emoționale:</strong></p>
+<ul>
+<li>Inspiră curaj și încredere în propriile forțe.</li>
+<li>Încurajează motivația și perseverența.</li>
+<li>Favorizează claritatea mentală și concentrarea asupra obiectivelor.</li>
+<li>Susține introspecția și descoperirea propriului scop.</li>
+<li>Creează o atmosferă de optimism, armonie și echilibru.</li>
+</ul>
+<p class="bf-desc-callout">❤️ Un ulei cu o misiune specială! 35% din încasările din achizițiile eligibile ale partenerilor sunt donate Fundației Young Living, pentru proiecte de sprijinire a femeilor și copiilor.</p>`, image: img('one-purpose') },
+  { id: 'progressence-phyto-plus', name: 'Progressence Phyto Plus', size: '15 ml', cod: '32157D', price: '242 lei', tier: '20', description: `<p class="bf-desc-tag">Îngrijire feminină și echilibru</p>
+<p><strong>Conține:</strong> Extract de Yam sălbatic (Dioscorea villosa), Vitex agnus-castus (Mielărea), vitamina E și 6 uleiuri esențiale: Copaiba, Tămâie, Cedru, Bergamotă, Mentă și Cuișoare.</p>
+<p>Progessence Phyto Plus este un blend special creat pentru femei, care combină extracte botanice și uleiuri esențiale într-o formulă delicată, cu absorbție rapidă.</p>
+<p><strong>Beneficii și utilizări:</strong></p>
+<ul>
+<li>Favorizează relaxarea și starea de bine.</li>
+<li>Oferă o experiență aromatică reconfortantă în perioadele solicitante.</li>
+<li>Susține ritualurile de îngrijire feminină.</li>
+<li>Hidratează și hrănește pielea.</li>
+<li>Contribuie la menținerea aspectului luminos și sănătos al pielii.</li>
+<li>Ideal pentru masaj și momente de relaxare.</li>
+</ul>`, image: img('progressence-phyto-plus') },
+  { id: 'warm-pumpkin-spice', name: 'Simplified Warm Pumpkin Spice', cod: '53118D', price: '193 lei', tier: '20', description: `<p class="bf-desc-tag">Aroma iernii, a sărbătorilor și a căminului primitor</p>
+<p><strong>Conține:</strong> 4 uleiuri esențiale – Cassia, Nucșoară, Cardamom și Ghimbir, alături de extract natural de Vanilie, într-o bază cu ulei de cocos fracționat.</p>
+<p>Imaginează-ți aroma unei plăcinte cu dovleac proaspăt scoase din cuptor, cu vanilie dulce și condimente calde! Exact această atmosferă o aduce Warm Pumpkin Spice în casa ta.</p>
+<p><strong>Beneficii și utilizări:</strong></p>
+<ul>
+<li>Creează o atmosferă caldă, confortabilă și primitoare.</li>
+<li>Inspiră relaxare și o stare de bine prin aroma sa reconfortantă.</li>
+<li>Parfumează natural locuința, fără parfumuri sintetice.</li>
+<li>Ideal pentru serile friguroase, întâlnirile în familie și sărbătorile de iarnă.</li>
+<li>Perfect pentru difuzor, spray-uri ambientale și amestecuri aromatice festive.</li>
+<li>O alternativă minunată la odorizantele sintetice.</li>
+</ul>`, image: img('warm-pumpkin-spice') },
+  { id: 'citrus-fresh', name: 'Citrus Fresh', size: '15 ml', cod: '32058D', price: '107 lei', tier: '20', description: `<p class="bf-desc-tag">Energie, optimism și bună dispoziție</p>
+<p><strong>Conține:</strong> 6 uleiuri esențiale – Orange (Portocală), Tangerine (Mandarină), Grapefruit, Lemon (Lămâie), Mandarin (Mandarină verde) și Spearmint (Mentă creață).</p>
+<p>Citrus Fresh este unul dintre cele mai vesele și revigorante blenduri Young Living! O combinație minunată de citrice bogate în limonen, un compus aromatic studiat pentru proprietățile sale antioxidante și antiinflamatoare în cercetări experimentale.</p>
+<p><strong>Beneficii și utilizări:</strong></p>
+<ul>
+<li>Favorizează buna dispoziție și optimismul.</li>
+<li>Creează o atmosferă energizantă și revigorantă.</li>
+<li>Ajută la reducerea senzației de stres prin aroma sa proaspătă.</li>
+<li>Susține concentrarea și claritatea mentală.</li>
+<li>Împrospătează aerul și neutralizează mirosurile neplăcute.</li>
+<li>Ideal pentru curățenia naturală a locuinței.</li>
+<li>Poate fi adăugat, diluat, în produsele cosmetice pentru o experiență revigorantă.</li>
+</ul>`, image: img('citrus-fresh') },
+  { id: 'icp', name: 'ICP', size: '227 g', cod: '320808D', price: '160 lei', tier: '20', description: `<p class="bf-desc-tag">Curățare intestinală, fibre și digestie sănătoasă</p>
+<p><strong>Conține:</strong> Fibre vegetale din Psyllium, tărâțe de ovăz și orez, semințe de in, fenicul, gumă guar, rădăcină de Yucca, Aloe Vera, un complex de enzime digestive (protează, lipază, fitază, peptidază) și 6 uleiuri esențiale: Anason, Tarhon, Ghimbir, Lemongrass, Fenicul și Rozmarin.</p>
+<p>ICP (Inner Cleanse Program) este un supliment complex pentru susținerea tranzitului intestinal și a digestiei, combinând fibre, enzime și ingrediente botanice.</p>
+<p><strong>Beneficii:</strong></p>
+<ul>
+<li>Susține curățarea naturală a intestinului prin eliminarea regulată a scaunului.</li>
+<li>Fibrele de Psyllium absorb apa și contribuie la un tranzit intestinal regulat.</li>
+<li>Ajută la creșterea volumului și înmuierea scaunului.</li>
+<li>Enzimele digestive participă la descompunerea nutrienților.</li>
+<li>Feniculul este apreciat pentru confortul digestiv.</li>
+<li>Completează aportul zilnic de fibre alimentare.</li>
+<li>Poate fi util în perioadele de constipație ocazională.</li>
+</ul>
+<p><strong>Administrare:</strong> Amestecă 6 g în minimum 250 ml apă sau suc, o dată pe zi. Consumă imediat și asigură o hidratare corespunzătoare.</p>`, image: img('icp') },
+  { id: 'ravintsara', name: 'Ravintsara', size: '5 ml', cod: '33331D', price: '185 lei', priceOriginal: '230,36 lei', tier: '20', description: `<p class="bf-desc-tag">Respirație, prospețime și vitalitate</p>
+<p><strong>Conține:</strong> 100% ulei esențial de Cinnamomum camphora, chemotip 1,8-cineol, obținut prin distilarea frunzelor și crenguțelor. Bogat în 1,8-cineol (eucaliptol), alfa-pinen și alfa-terpineol.</p>
+<p>Ravintsara este un ulei esențial originar din Madagascar, apreciat în aromaterapie mai ales în sezonul rece, pentru aroma sa proaspătă, camforată, asemănătoare eucaliptului.</p>
+<p><strong>Beneficii și utilizări:</strong></p>
+<ul>
+<li>Oferă senzația de respirație proaspătă și ușoară.</li>
+<li>Ideal pentru difuzare în sezonul virozelor.</li>
+<li>Conține compuși studiați pentru activitatea antimicrobiană în laborator.</li>
+<li>Creează o atmosferă revigorantă și reconfortantă.</li>
+<li>Favorizează concentrarea și claritatea mentală.</li>
+<li>Ideal pentru masajul relaxant al pieptului și spatelui, bine diluat.</li>
+<li>Contribuie la îngrijirea și purificarea tenului.</li>
+</ul>`, image: img('ravintsara') },
+  { id: 'balance-complete', name: 'Balance Complete', size: '756 g', cod: '329208D', price: '337 lei', tier: '20', description: `<p class="bf-desc-tag">Proteine, fibre, vitamine și energie</p>
+<p><strong>Conține:</strong> Proteine din zer, peste 10 g de fibre per porție (fibre din larice, guar, konjac și cicoare), fructe Goji NingXia, orz verde, aloe vera, cocos, scorțișoară, enzime digestive și un complex de vitamine și minerale.</p>
+<p>Balance Complete este un shake nutritiv cu aromă delicioasă de vanilie, ideal pentru completarea alimentației zilnice.</p>
+<p><strong>Beneficii:</strong></p>
+<ul>
+<li>Proteinele susțin creșterea și menținerea masei musculare.</li>
+<li>Fibrele contribuie la un tranzit intestinal regulat.</li>
+<li>Favorizează sațietatea și controlul apetitului.</li>
+<li>Vitaminele B și magneziul susțin metabolismul energetic.</li>
+<li>Vitamina C și zincul contribuie la funcționarea normală a imunității.</li>
+<li>Calciul și vitamina D susțin sănătatea oaselor.</li>
+<li>Oferă nutrienți valoroși într-un shake rapid și delicios.</li>
+</ul>
+<p><strong>Administrare:</strong> 2 cupe în 250 ml apă sau lapte rece.</p>`, image: img('balance-complete') },
 
   // Bundle-uri
-  { id: 'bundle-1', name: 'Red Shot + Orange + Peppermint', cod: '53537', price: '144 lei', tier: 'bundle', note: '40% reducere la achiziția împreună', image: img('bundle-1') },
-  { id: 'bundle-2', name: 'Cinnamon Bark + Cardamom + Ginger', cod: '53539', price: '290 lei', tier: 'bundle', note: '40% reducere la achiziția împreună', image: img('bundle-2') },
-  { id: 'bundle-3', name: 'DiGize + V-6', cod: '53527', price: '106 lei', tier: 'bundle', note: 'Cadou inclus: sticluță roll-on cu bilă · 40% reducere la achiziția împreună', image: img('bundle-3') },
+  { id: 'bundle-1', name: 'Red Shot + Orange + Peppermint', cod: '53537', price: '144 lei', tier: 'bundle', note: '40% reducere la achiziția împreună', description: `<p class="bf-desc-tag">Energie, vitalitate și bună dispoziție</p>
+<p><strong>Conține:</strong> NingXia Red Shot, Peppermint (Mentă) 5 ml și Orange (Portocală) 5 ml.</p>
+<p>Un trio minunat pentru zilele în care ai nevoie de un plus de energie, prospețime și optimism!</p>
+<ul>
+<li><strong>Red Shot</strong> – blend de uleiuri esențiale cu citrice, mentă și scorțișoară pentru aromatizarea băuturii vedetă NingXia Red.</li>
+<li><strong>Peppermint</strong> – Ulei esențial răcoritor și revigorant, cu aromă bogată în mentol. Favorizează concentrarea, claritatea mentală și oferă o senzație imediată de prospețime.</li>
+<li><strong>Orange</strong> – Bogat în limonen, este uleiul bunei dispoziții! Aroma sa dulce, citrică, creează o atmosferă optimistă, veselă și energizantă.</li>
+</ul>
+<p><strong>De ce să alegi pachetul?</strong> Combini un blend condimentat cu două uleiuri aromatice perfecte pentru un început de zi plin de prospețime. Trei produse, un singur obiectiv: să începi ziua cu energie și zâmbetul pe buze!</p>`, image: img('bundle-1') },
+  { id: 'bundle-2', name: 'Cinnamon Bark + Cardamom + Ginger', cod: '53539', price: '290 lei', tier: 'bundle', note: '40% reducere la achiziția împreună', description: `<p class="bf-desc-tag">Digestie, vitalitate și confort</p>
+<p><strong>Conține:</strong> 3 uleiuri esențiale 100% pure – Cinnamon Bark (Scoarță de scorțișoară), Cardamom și Ginger (Ghimbir).</p>
+<p>Un trio aromatic intens, cald și condimentat, inspirat de plante folosite de secole pentru confortul digestiv și starea de bine.</p>
+<p><strong>Beneficii și utilizări:</strong></p>
+<ul>
+<li><strong>Cinnamon Bark</strong> – Bogat în cinamaldehidă, compus studiat pentru proprietățile antioxidante și antimicrobiene în laborator. Aroma sa caldă este energizantă și reconfortantă.</li>
+<li><strong>Cardamom</strong> – Folosit tradițional pentru digestie, balonare și disconfort abdominal. Aroma sa dulce-condimentată favorizează relaxarea.</li>
+<li><strong>Ginger</strong> – Bogat în gingeroli și alți compuși aromatici, apreciat tradițional pentru confortul digestiv și senzația de încălzire.</li>
+</ul>
+<p><strong>Utilizare:</strong> În difuzor, pentru o atmosferă caldă, sau în ulei vegetal pentru masaj relaxant. Un pachet ideal pentru iubitorii aromelor condimentate și ai aromaterapiei!</p>`, image: img('bundle-2') },
+  { id: 'bundle-3', name: 'DiGize + V-6', cod: '53527', price: '106 lei', tier: 'bundle', note: 'Cadou inclus: sticluță roll-on cu bilă · 40% reducere la achiziția împreună', description: `<p><strong>Conține:</strong> Di-Gize, un blend de 8 uleiuri esențiale – Tarhon, Ghimbir, Mentă, Ienupăr, Fenicul, Lemongrass, Anason și Patchouli – și V-6, un ulei vegetal pentru diluare și masaj.</p>
+<p>Un pachet ideal pentru cei care își doresc să integreze aromaterapia în rutina de îngrijire digestivă!</p>
+<p><strong>Beneficii și utilizări:</strong></p>
+<ul>
+<li><strong>Di-Gize</strong> – Conține plante aromatice folosite tradițional pentru confortul digestiv, în special în perioadele de balonare, senzație de prea plin sau disconfort abdominal. Aroma sa intensă oferă o experiență reconfortantă.</li>
+<li><strong>V-6</strong> – Un amestec de uleiuri vegetale care facilitează diluarea uleiurilor esențiale, hidratează pielea și permite un masaj abdominal delicat.</li>
+</ul>
+<p><strong>Utilizare:</strong> Diluează Di-Gize în V-6 și masează ușor abdomenul, cu mișcări circulare, în sensul acelor de ceasornic.</p>
+<p><strong>Cadou inclus:</strong> Sticluță roll-on cu bilă, perfectă pentru pregătirea propriului amestec.</p>`, image: img('bundle-3') },
 
   // Starter Kit-uri
-  { id: 'starter-dewdrop', name: 'Set Starter Premium cu Dewdrop', cod: '37648D', price: '886 lei', tier: 'starter', note: '-15%', image: img('starter-dewdrop') },
-  { id: 'starter-macaron', name: 'Set Starter Premium cu Macaron', cod: '47973D', price: '956 lei', tier: 'starter', note: '-10%', image: img('starter-macaron') },
+  { id: 'starter-dewdrop', name: 'Set Starter Premium cu Dewdrop', cod: '37648D', price: '886 lei', tier: 'starter', note: '-15%', description: `<p class="bf-desc-tag">Cel mai complet mod de a descoperi lumea uleiurilor esențiale Young Living!</p>
+<p>Un set ideal pentru întreaga familie, cu produse pentru relaxare, somn, îngrijire și prospețimea locuinței.</p>
+<p><strong>Conține 12 uleiuri esențiale de 5 ml:</strong></p>
+<ul>
+<li><strong>Lavender:</strong> relaxare și somn odihnitor.</li>
+<li><strong>Peppermint:</strong> prospețime și concentrare.</li>
+<li><strong>Lemon:</strong> energie și curățenie naturală.</li>
+<li><strong>Frankincense:</strong> îngrijirea pielii și meditație.</li>
+<li><strong>Thieves:</strong> aromă reconfortantă și curățenie.</li>
+<li><strong>Di-Gize:</strong> masaj abdominal și confort.</li>
+<li><strong>Purification:</strong> neutralizarea mirosurilor.</li>
+<li><strong>R.C.:</strong> prospețime și confort respirator.</li>
+<li><strong>Copaiba:</strong> relaxare și îngrijirea pielii.</li>
+<li><strong>Blue Relief:</strong> masaj muscular.</li>
+<li><strong>Stress Away:</strong> relaxare și destindere.</li>
+<li><strong>Orange+:</strong> optimism și aromă citrică.</li>
+</ul>
+
+<p><strong>În plus:</strong> difuzor Dewdrop, V-6 58 ml, accesorii roll-on, sticluțe pentru mostre, NingXia Red 60 ml și materiale informative.</p>
+<p>Un singur set, zeci de posibilități de utilizare!</p>`, image: img('starter-dewdrop') },
+  { id: 'starter-macaron', name: 'Set Starter Premium cu Macaron', cod: '47973D', price: '956 lei', tier: 'starter', note: '-10%', description: `<p class="bf-desc-tag">Cel mai complet mod de a descoperi lumea uleiurilor esențiale Young Living!</p>
+<p>Un set ideal pentru întreaga familie, cu produse pentru relaxare, somn, îngrijire și prospețimea locuinței.</p>
+<p><strong>Conține 12 uleiuri esențiale de 5 ml:</strong></p>
+<ul>
+<li><strong>Lavender:</strong> relaxare și somn odihnitor.</li>
+<li><strong>Peppermint:</strong> prospețime și concentrare.</li>
+<li><strong>Lemon:</strong> energie și curățenie naturală.</li>
+<li><strong>Frankincense:</strong> îngrijirea pielii și meditație.</li>
+<li><strong>Thieves:</strong> aromă reconfortantă și curățenie.</li>
+<li><strong>Di-Gize:</strong> masaj abdominal și confort.</li>
+<li><strong>Purification:</strong> neutralizarea mirosurilor.</li>
+<li><strong>R.C.:</strong> prospețime și confort respirator.</li>
+<li><strong>Copaiba:</strong> relaxare și îngrijirea pielii.</li>
+<li><strong>Blue Relief:</strong> masaj muscular.</li>
+<li><strong>Stress Away:</strong> relaxare și destindere.</li>
+<li><strong>Orange+:</strong> optimism și aromă citrică.</li>
+</ul>
+
+<p><strong>În plus:</strong> difuzor Macaron, V-6 58 ml, accesorii roll-on, sticluțe pentru mostre, NingXia Red 60 ml și materiale informative.</p>
+<p>Un singur set, zeci de posibilități de utilizare!</p>`, image: img('starter-macaron') },
 
   // 1+1 Gratis — a doua sticluță e deja inclusă ca "FREE" în poza oficială,
   // nu mai adăugăm reducere separat. 3 combo-uri nu au cod pe grafic (vezi
   // nota din chat) — rămân fără Cod afișat până le confirmă Alexandra.
-  { id: 'bogo-redu-ritmul', name: 'Redu ritmul', cod: '53511', price: '111 lei', tier: 'bogo', note: 'Lavender 5 ml + Stress Away 5 ml', image: img('bogo-redu-ritmul') },
-  { id: 'bogo-confort-citrice', name: 'Confort cu citrice', cod: '53524', price: '179 lei', tier: 'bogo', note: 'Copaiba 5 ml + Tangerine 15 ml', image: img('bogo-confort-citrice') },
-  { id: 'bogo-tratament-facial', name: 'Tratament facial', cod: '53647', price: '101 lei', tier: 'bogo', note: 'Charcoal Mask + dispozitiv facial', image: img('bogo-tratament-facial') },
-  { id: 'bogo-gata-de-iarna', name: 'Gata de iarnă', cod: '53529', price: '204 lei', tier: 'bogo', note: 'Thieves Vapour Rub + R.C. 5 ml', image: img('bogo-gata-de-iarna') },
-  { id: 'bogo-escapada-verde', name: 'Escapada verde', cod: '53530', price: '240 lei', tier: 'bogo', note: 'Idaho Blue Spruce 5 ml + Idaho Grand Fir 5 ml', image: img('bogo-escapada-verde') },
+  { id: 'bogo-redu-ritmul', name: 'Redu ritmul', cod: '53511', price: '111 lei', tier: 'bogo', note: 'Lavender 5 ml + Stress Away 5 ml', image: img('bogo-redu-ritmul'), description: `<p><strong>Conține:</strong> Lavender 5 ml + Stress Away 5 ml</p>
+<p>Două uleiuri esențiale, un singur obiectiv: mai multă liniște în ritmul agitat al zilei. Lavender este apreciat pentru aroma sa calmantă și relaxantă, iar Stress Away aduce un parfum reconfortant, cu note de vanilie și lime. Un duo potrivit pentru persoanele care au nevoie de momente de respiro, relaxare după o zi solicitantă și o atmosferă mai liniștită acasă.</p>
+<p><strong>Cum se utilizează?</strong></p>
+<ul>
+<li><strong>În difuzor:</strong> câteva picături din fiecare ulei pentru o atmosferă relaxantă.</li>
+<li><strong>La finalul zilei:</strong> Lavender în rutina de seară, pentru un moment de liniște.</li>
+<li><strong>În pauzele de lucru:</strong> inhalează aroma de Stress Away pentru un moment de reconectare.</li>
+<li><strong>Masaj relaxant:</strong> diluează uleiurile într-un ulei vegetal și folosește-le pentru un masaj reconfortant al umerilor și cefei.</li>
+</ul>
+<p>Aceste uleiuri nu se folosesc doar pentru momentele în care ești deja epuizat(ă). Se folosesc ca parte din rutina zilnică. Relaxarea nu trebuie să fie doar o reacție la stres, ci și un obicei pe care alegi să-l cultivi.</p>
+<p class="bf-desc-callout">🔬 Știai că? Un studiu clinic randomizat publicat în 2025, pe 58 de adulți, a constatat că inhalarea uleiului esențial de Lavender timp de 15 minute a fost asociată cu reducerea anxietății, iar utilizarea zilnică timp de șapte zile a îmbunătățit și indicatorii de oboseală și calitate a somnului. (Sursa: Wang et al., 2025, Complementary Therapies in Medicine.)</p>
+<p>Stress Away și Lavender fac echipă foarte frumoasă în produsele DIY pentru îngrijirea corpului. Nu te limita la difuzor!</p>` },
+  { id: 'bogo-confort-citrice', name: 'Confort cu citrice', cod: '53524', price: '179 lei', tier: 'bogo', note: 'Copaiba 5 ml + Tangerine 15 ml', image: img('bogo-confort-citrice'), description: `<p><strong>Conține:</strong> Copaiba 5 ml + Tangerine 15 ml</p>
+<p>Un duo cu personalități diferite, dar care se completează minunat! Copaiba este apreciată pentru proprietățile sale calmante și pentru compușii săi aromatici, în timp ce Tangerine aduce prospețime, optimism și o atmosferă energizantă. Un set potrivit pentru cei care iubesc aromele citrice, ritualurile de îngrijire și momentele de răsfăț în familie.</p>
+<p><strong>Cum se utilizează?</strong></p>
+<ul>
+<li><strong>În difuzor:</strong> Tangerine pentru o atmosferă proaspătă, veselă și primitoare.</li>
+<li><strong>Masaj corporal:</strong> Copaiba diluată într-un ulei vegetal, pentru un masaj reconfortant.</li>
+<li><strong>Ritual de îngrijire:</strong> Copaiba adăugată într-o porție de cremă neutră, pentru un plus de răsfăț.</li>
+<li><strong>Intern:</strong> Copaiba pentru afte bucale, erupții dentare, dureri de cap.</li>
+<li><strong>În momentele de relaxare:</strong> combină aromele celor două uleiuri în difuzor pentru un parfum citric, cald și echilibrat.</li>
+</ul>
+<p class="bf-desc-callout">🔬 Știai că? Un studiu publicat în 2026 în Scientific Reports a analizat uleiul esențial din coaja de mandarină (Citrus tangerina) și a identificat activitate antioxidantă și antibacteriană în testele de laborator.</p>` },
+  { id: 'bogo-tratament-facial', name: 'Tratament facial', cod: '53647', price: '101 lei', tier: 'bogo', note: 'Charcoal Mask + dispozitiv facial', image: img('bogo-tratament-facial'), description: `<p><strong>Conține:</strong> Charcoal Mask + Dispozitiv facial</p>
+<p>Un duo dedicat îngrijirii tenului și transformării rutinei de curățare într-un adevărat ritual de înfrumusețare.</p>
+<p>Charcoal Mask combină cărbunele activ, argila, acizii exfolianți din fructe și uleiurile esențiale pentru a îndepărta impuritățile, a controla excesul de sebum și a reda pielii un aspect mai curat și luminos.</p>
+<p>Dispozitivul facial completează experiența, pentru o rutină de îngrijire mai atentă și mai plăcută.</p>
+<p><strong>Cum se utilizează?</strong></p>
+<ul>
+<li><strong>Curățare:</strong> aplică masca într-un strat subțire pe tenul curat și las-o să acționeze 5–20 de minute, apoi clătește cu apă călduță.</li>
+<li><strong>Exfoliere:</strong> ingredientele exfoliante din mască ajută la îndepărtarea celulelor moarte și la obținerea unui ten cu aspect mai neted.</li>
+<li><strong>Rutină facială:</strong> integrează dispozitivul facial în rutina de curățare, respectând instrucțiunile producătorului.</li>
+<li><strong>Finalizare:</strong> aplică serul și crema hidratantă preferată pentru a completa ritualul.</li>
+</ul>
+<p class="bf-desc-callout">🔬 Știai că? Cărbunele activ este apreciat în cosmetică pentru capacitatea sa de adsorbție, iar în combinație cu argila și ingredientele exfoliante poate contribui la îndepărtarea impurităților de la suprafața pielii. (Sursă: Young Living, Product Information Page – Charcoal Mask.)</p>
+<p>Charcoal Mask conține nu doar cărbune activ, ci și un amestec de acizi AHA proveniți din extracte de afine, portocale, lămâi, trestie de zahăr și arțar, alături de acid salicilic.</p>
+<p>Nu trata masca drept un produs pe care îl folosești doar când tenul are nevoie de o curățare suplimentară. Transform-o într-un ritual de îngrijire periodică, urmat întotdeauna de hidratare.</p>
+<p><strong>Un mic pont:</strong> Poți folosi masca și doar pe zona T (frunte, nas și bărbie), dacă acolo ai tendința de a acumula mai mult sebum și impurități.</p>` },
+  { id: 'bogo-gata-de-iarna', name: 'Gata de iarnă', cod: '53529', price: '204 lei', tier: 'bogo', note: 'Thieves Vapour Rub + R.C. 5 ml', image: img('bogo-gata-de-iarna'), description: `<p><strong>Conține:</strong> Thieves Vapour Rub + R.C. 5 ml</p>
+<p>Un duo creat pentru ritualurile de îngrijire și confort din sezonul rece.</p>
+<p>Thieves Vapour Rub oferă o senzație plăcută de răcoare și o aromă intensă de mentol și eucalipt, în timp ce R.C. aduce un amestec aromatic proaspăt, cu note de eucalipt, molid și alte plante.</p>
+<p>Un set practic pentru cei care iubesc aromaterapia și vor să integreze aromele naturale în rutina de iarnă — un ajutor de nădejde în clipele de crize de tuse sau secreții abundente, un adevărat susținător al aparatului respirator.</p>
+<p><strong>Cum se utilizează?</strong></p>
+<ul>
+<li><strong>Masaj pe piept sau pe spate:</strong> aplică Thieves Vapour Rub conform instrucțiunilor de pe ambalaj.</li>
+<li><strong>În difuzor:</strong> folosește R.C. pentru o atmosferă proaspătă, cu note aromatice de eucalipt, ajută la calmarea crizelor de tuse.</li>
+<li><strong>Ritual de seară:</strong> integrează R.C. într-un moment de relaxare, cu sare epsom pentru o baie la picioare, sau picură în apa caldă pentru inhalații.</li>
+<li><strong>Masaj corporal:</strong> folosește R.C. diluat într-un ulei vegetal.</li>
+</ul>
+<p class="bf-desc-callout">🔬 Știai că? Eucaliptolul (1,8-cineol), un constituent aromatic prezent în anumite specii de eucalipt, este studiat pentru proprietățile sale antiinflamatoare și efectele asupra căilor respiratorii, inclusiv într-o cercetare clinică publicată în 2025. (Sursă: documentație științifică despre 1,8-cineol și sănătatea respiratorie, PubMed.)</p>
+<p>Thieves Vapour Rub nu este doar un produs cu mentol și eucalipt. Formula sa conține și uleiuri esențiale de cuișoare, lămâie, scorțișoară și rozmarin.</p>` },
+  { id: 'bogo-escapada-verde', name: 'Escapada verde', cod: '53530', price: '240 lei', tier: 'bogo', note: 'Idaho Blue Spruce 5 ml + Idaho Grand Fir 5 ml', image: img('bogo-escapada-verde'), description: `<p><strong>Conține:</strong> Idaho Blue Spruce 5 ml + Idaho Grand Fir 5 ml</p>
+<p>Două esențe de conifere care aduc parfumul pădurii în propria casă! Idaho Blue Spruce și Idaho Grand Fir au arome lemnoase, proaspete și reconfortante, potrivite pentru cei care iubesc natura, aromele verzi și momentele de liniște. Un duo ideal pentru aromaterapie, relaxare și ritualuri de reconectare.</p>
+<p><strong>Cum se utilizează?</strong></p>
+<ul>
+<li><strong>În difuzor:</strong> combină câteva picături din cele două uleiuri pentru o atmosferă cu parfum de pădure.</li>
+<li><strong>Masaj relaxant:</strong> diluează uleiurile într-un ulei vegetal și folosește-le pentru masajul umerilor și spatelui.</li>
+<li><strong>Baie aromată:</strong> integrează aromele într-un ritual de baie, folosind un dispersant adecvat pentru uleiurile esențiale.</li>
+<li><strong>Parfum natural:</strong> creează un roll-on cu cele două uleiuri și ulei de jojoba, pentru o aromă lemnoasă, discretă.</li>
+</ul>
+<p class="bf-desc-callout">🔬 Știai că? Idaho Blue Spruce (Picea pungens) conține în mod natural alfa-pinen și limonen, doi compuși aromatici întâlniți și în alte plante aromatice, analizați pentru proprietățile lor biologice. (Sursă: Swor et al., 2021, „Chemical composition and enantiomeric distribution of Picea pungens essential oil".)</p>
+<p>Idaho Blue Spruce este obținut din molidul albastru (Picea pungens), un arbore veșnic verde originar din Munții Stâncoși din America de Nord.</p>
+<p>Nu le-ai păstra doar pentru difuzor! Le poți integra și în ritualurile de îngrijire corporală, în special în uleiurile de masaj sau în produsele DIY cu note lemnoase.</p>
+<p>Un lucru fascinant este că, atunci când ne plimbăm printr-o pădure de conifere, beneficiem deja de o formă naturală de aromaterapie: rășinile eliberează compuși volatili, precum pinenul, care contribuie la parfumul specific al pădurii și sunt studiați pentru efectele lor asupra stării de bine — iar noi putem beneficia de asta și acasă.</p>` },
   { id: 'bogo-confort-racoritor', name: 'Confort răcoritor', cod: '53510', price: '211 lei', tier: 'bogo', note: 'Blue Relief 5 ml + Wintergreen 15 ml', image: img('bogo-confort-racoritor') },
-  { id: 'bogo-nopti-linistite', name: 'Nopți liniștite', cod: '53513', price: '172 lei', tier: 'bogo', note: 'Peace & Calming II 5 ml + KidScents Dreamease 5 ml', image: img('bogo-nopti-linistite') },
-  { id: 'bogo-perspective-revigorare', name: 'Prespective și revigorare', cod: '53515', price: '101 lei', tier: 'bogo', note: 'Oregano 5 ml + Lemon 5 ml', image: img('bogo-perspective-revigorare') },
-  { id: 'bogo-dus-cu-eucalipt', name: 'Dup cu eucalipt', cod: '53517', price: '124 lei', tier: 'bogo', note: 'Eucalyptus Blue 5 ml + Eucalyptus Radiata 5 ml', image: img('bogo-dus-cu-eucalipt') },
-  { id: 'bogo-armonie-florala', name: 'Armonie florală', cod: '53534', price: '237 lei', tier: 'bogo', note: 'White Angelica 5 ml + Palmarosa 15 ml', image: img('bogo-armonie-florala') },
-  { id: 'bogo-caldura-confort', name: 'Căldură și confort', cod: '53536', price: '146 lei', tier: 'bogo', note: 'Fennel 15 ml + Nutmeg 5 ml', image: img('bogo-caldura-confort') },
+  { id: 'bogo-nopti-linistite', name: 'Nopți liniștite', cod: '53513', price: '172 lei', tier: 'bogo', note: 'Peace & Calming II 5 ml + KidScents Dreamease 5 ml', image: img('bogo-nopti-linistite'), description: `<p><strong>Conține:</strong> Peace &amp; Calming II 5 ml + KidScents DreamEase 5 ml</p>
+<ul>
+<li><strong>Peace &amp; Calming II:</strong> mandarină, portocală, Ylang Ylang, paciuli, molid negru Northern Lights, mușețel german, vetiver, cistus, bergamotă, cassia și davana.</li>
+<li><strong>KidScents DreamEase:</strong> lavandă, mușcată (geranium), mușețel roman, bergamotă, mandarină, tămâie sacră, valeriană și rută.</li>
+</ul>
+<p>Un duo creat pentru momentele de relaxare de la finalul zilei, când întreaga familie are nevoie de puțină liniște și răsfăț. Peace &amp; Calming II completează atmosfera serii cu aroma sa reconfortantă, iar KidScents DreamEase este special conceput pentru rutina de relaxare a celor mici, înainte de culcare. Potrivit familiilor care își doresc să transforme pregătirea pentru somn într-un ritual plăcut și liniștitor.</p>
+<p><strong>Cum se utilizează:</strong></p>
+<ul>
+<li><strong>Atmosfera de seară:</strong> Adaugă Peace &amp; Calming II în difuzor pentru a crea o atmosferă plăcută și relaxantă.</li>
+<li><strong>Ritualul celor mici:</strong> Aplică DreamEase pe tălpile copilului înainte de culcare, pentru a completa rutina de seară.</li>
+<li><strong>Masaj de relaxare:</strong> Diluează 5 picături de Peace &amp; Calming II în 10 ml de V-6 și folosește amestecul pentru un masaj relaxant.</li>
+<li><strong>Momente de răsfăț:</strong> Aplică DreamEase pe pielea copilului, în zona dorită — spate, tălpi — ca parte din rutina de seară pentru a promova un somn liniștit și odihnitor.</li>
+</ul>
+<p class="bf-desc-callout">🔬 Știai că? Un studiu clinic randomizat publicat în 2025, pe 58 de adulți cu hipertensiune, a arătat că inhalarea aromei de lavandă timp de 15 minute zilnic, timp de 7 zile, a fost asociată cu îmbunătățirea semnificativă a calității somnului și reducerea anxietății. (Sursa: Wang et al., 2025, Complementary Therapies in Medicine.)</p>` },
+  { id: 'bogo-perspective-revigorare', name: 'Prospețime și revigorare', cod: '53515', price: '101 lei', tier: 'bogo', note: 'Oregano 5 ml + Lemon 5 ml', image: img('bogo-perspective-revigorare'), description: `<p><strong>Conține:</strong> Oregano – 5 ml, Lemon – 5 ml</p>
+<p>Un duo aromatic care îmbină aroma intensă, condimentată a oregano-ului cu prospețimea luminoasă și energizantă a lămâii. O combinație potrivită celor care iubesc aromele naturale și își doresc să aducă un plus de prospețime în locuință, în rutina de îngrijire și în activitățile de zi cu zi.</p>
+<p><strong>Cum se utilizează:</strong></p>
+<ul>
+<li><strong>În difuzor:</strong> combină 1 picătură de Oregano cu 3 picături de Lemon pentru un parfum proaspăt, cu note aromatice intense.</li>
+<li><strong>Pentru curățenie:</strong> adaugă Lemon în preparatele tale DIY pentru curățarea suprafețelor sau împreună cu Thieves Household Cleaner.</li>
+<li><strong>Masaj aromatic:</strong> Oregano poate fi utilizat topic, pe talpă sau pe spate, foarte bine diluat cu ulei vegetal, fiind un ulei din gama celor fierbinți. Must have în sezonul rece, folosit în caz de gripă sau răceală, având proprietăți antimicrobiene.</li>
+<li><strong>Pentru prospețimea locuinței:</strong> folosește Lemon în difuzor, singur sau în combinație cu alte uleiuri citrice.</li>
+</ul>
+<p class="bf-desc-callout">🔬 Știai că? Un studiu publicat în 2026 în revista ACS Omega a analizat compoziția uleiului esențial de oregano și a identificat activitate antimicrobiană în testele de laborator, inclusiv împotriva unor bacterii și fungi; rezultatele sunt promițătoare. (Studiu științific, 2026: „Phytochemical Profiling, Antioxidant, and Broad-Spectrum Antimicrobial Activities of Origanum vulgare Essential Oil".)</p>` },
+  { id: 'bogo-dus-cu-eucalipt', name: 'Duo cu eucalipt', cod: '53517', price: '124 lei', tier: 'bogo', note: 'Eucalyptus Blue 5 ml + Eucalyptus Radiata 5 ml', image: img('bogo-dus-cu-eucalipt'), description: `<p><strong>Conține:</strong> Eucalyptus Blue 5 ml + Eucalyptus Radiata 5 ml.</p>
+<p>Un duo revigorant, cu aromă proaspătă, verde și reconfortantă, ideal pentru iubitorii de uleiuri esențiale și pentru cei care preferă un stil de viață natural. Cele două uleiuri completează perfect rutina de aromaterapie, fiind potrivite pentru momentele în care îți dorești o atmosferă proaspătă, o senzație de respirație ușoară și un plus de prospețime în locuință.</p>
+<p><strong>Cum se utilizează:</strong></p>
+<ul>
+<li><strong>În difuzor:</strong> Adaugă câteva picături pentru o aromă proaspătă și revigorantă în încăpere.</li>
+<li><strong>Masaj:</strong> Aplică topic, diluat într-un ulei purtător, pe piept sau spate pentru decongestionarea căilor respiratorii, perfect când ești răcit sau congestionat.</li>
+<li><strong>După activități fizice:</strong> Folosește-l diluat pentru un masaj reconfortant al musculaturii.</li>
+<li><strong>În rutina de îngrijire:</strong> Adaugă câteva picături într-un ulei purtător pentru un masaj aromatic relaxant pe coloană, astfel beneficiezi și de efectele sale antibacteriene.</li>
+</ul>
+<p class="bf-desc-callout">🔬 Știai că? Un studiu publicat în 2026 în revista ACS Omega a analizat uleiurile esențiale de Eucalyptus radiata, Eucalyptus globulus și Eucalyptus citriodora, evidențiind activitate antibacteriană și antibiofilm în condiții de laborator, inclusiv prin formulări nanoîncapsulate.</p>` },
+  { id: 'bogo-armonie-florala', name: 'Armonie florală', cod: '53534', price: '237 lei', tier: 'bogo', note: 'White Angelica 5 ml + Palmarosa 15 ml', image: img('bogo-armonie-florala'), description: `<p><strong>Conține:</strong> White Angelica – 5 ml, Palmarosa – 15 ml</p>
+<p>Un duo floral delicat, creat pentru momentele în care vrei să aduci mai multă armonie și răsfăț în rutina ta zilnică. White Angelica îmbină note florale și lemnoase, iar Palmarosa completează experiența cu aroma sa proaspătă, dulce-florală. Ideal pentru iubitoarele aromelor florale, ritualuri de îngrijire personală și momente de relaxare.</p>
+<p><strong>Cum se utilizează:</strong></p>
+<ul>
+<li><strong>În difuzor:</strong> adaugă 2 picături de White Angelica și 2 picături de Palmarosa pentru o atmosferă florală și plăcută.</li>
+<li><strong>Parfum personal:</strong> aplică White Angelica diluată, pe încheieturi sau pe ceafă.</li>
+<li><strong>Ritual de îngrijire:</strong> adaugă Palmarosa într-un ulei purtător sau într-o cremă neutră, pentru un plus de răsfăț în rutina pielii.</li>
+<li><strong>Masaj relaxant:</strong> combină cele două uleiuri, bine diluate într-un ulei purtător, pentru un masaj aromatic.</li>
+</ul>
+<p class="bf-desc-callout">🔬 Știai că? Un studiu publicat în 2026 în revista Pharmaceutics a evidențiat activitatea antibacteriană a uleiului esențial de Palmarosa împotriva mai multor bacterii izolate din probe clinice, în condiții de laborator.</p>` },
+  { id: 'bogo-caldura-confort', name: 'Căldură și confort', cod: '53536', price: '146 lei', tier: 'bogo', note: 'Fennel 15 ml + Nutmeg 5 ml', image: img('bogo-caldura-confort'), description: `<p><strong>Conține:</strong> Fennel (Fenicul) – 5 ml, Nutmeg (Nucșoară) – 5 ml</p>
+<p>Un duo aromatic cu note calde, condimentate și ușor dulci, perfect pentru sezonul rece și pentru momentele în care îți dorești o atmosferă primitoare și reconfortantă. Feniculul aduce o notă dulce-aromatică, iar Nutmeg completează combinația cu parfumul său cald, lemnos-condimentat. Potrivit iubitorilor de arome naturale și celor care apreciază ritualurile de relaxare și îngrijire personală.</p>
+<p><strong>Cum se utilizează:</strong></p>
+<ul>
+<li><strong>În difuzor:</strong> combină 2 picături de Nutmeg cu 2 picături de Fenicul pentru o aromă caldă și condimentată.</li>
+<li><strong>Masaj aromatic:</strong> diluează câteva picături în ulei purtător și folosește amestecul pentru un masaj relaxant. În plus, Feniculul este un sprijin minunat pentru femei – ajută la reglarea ciclului menstrual, reduce durerile menstruale și aduce echilibru în perioadele de disconfort hormonal.</li>
+<li><strong>Susține sistemul digestiv:</strong> calmează balonarea, crampele abdominale și colicile, inclusiv la copii (când este difuzat sau masat pe burtică). Reduce senzația de greață și prea plin după mese, ușurând digestia și eliminarea gazelor intestinale. Poate fi folosit cu mare succes pentru retenția de apă — aplicat diluat, prin masaj ușor pe picioare și glezne, ajută vizibil la drenaj și la senzația de ușurință. Se pot administra și intern 2-3 picături într-o sticlă de 500 ml apă, opțional cu câteva felii de castravete pentru un gust revigorant.</li>
+<li><strong>Atmosferă de sezon:</strong> combină Fenicul și Nutmeg cu Cinnamon sau Clove împreună cu Orange în difuzor pentru un parfum specific zilelor de toamnă și iarnă.</li>
+</ul>
+<p class="bf-desc-callout">🔬 Știai că? Un studiu publicat în 2026 în revista Results in Engineering a arătat că uleiul esențial extras din semințele de nucșoară a prezentat activitate antibacteriană în testele de laborator, cercetătorii analizând totodată metode de extracție mai eficiente.</p>` },
   { id: 'bogo-masaj-endoflex', name: 'Masaj cu EndoFlex', cod: '53526', price: '101 lei', tier: 'bogo', note: 'EndoFlex 5 ml + V-6 58 ml', image: img('bogo-masaj-endoflex') },
 ];
 
@@ -137,6 +606,7 @@ const filters: { key: 'all' | Tier; label: string }[] = [
               data-price={o.price}
               data-size={o.size ?? ''}
               data-note={o.note ?? ''}
+              data-description={o.description ?? ''}
               data-image={o.image ?? ''}
             >
               <figure class:list={['bf-media', { 'photo-ph': !o.image }]} data-note={!o.image ? 'Poză produs/bundle' : undefined}>
@@ -181,6 +651,7 @@ const filters: { key: 'all' | Tier; label: string }[] = [
     <p class="bf-panel-cod" data-bf-panel-cod></p>
     <div class="bf-price-row" data-bf-panel-price></div>
     <p class="bf-panel-note" data-bf-panel-note></p>
+    <div class="bf-panel-desc" data-bf-panel-desc></div>
     <p class="bf-panel-hint">Îl adaugi în lista ta — poți alege oricâte produse și vezi totalul în orice moment.</p>
     <button type="button" class="bf-add" data-bfbag-add data-bf-panel-add>Adaugă în listă</button>
   </aside>
@@ -434,6 +905,34 @@ const filters: { key: 'all' | Tier; label: string }[] = [
     color: var(--text-secondary);
     line-height: 1.6;
   }
+  .bf-panel-desc {
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: var(--text-secondary);
+  }
+  .bf-panel-desc :global(p) {
+    margin: 0 0 0.7rem;
+  }
+  .bf-panel-desc :global(ul) {
+    margin: 0 0 0.9rem;
+    padding-left: 1.15rem;
+  }
+  .bf-panel-desc :global(li) {
+    margin-bottom: 0.35rem;
+  }
+  .bf-panel-desc :global(.bf-desc-tag) {
+    font-style: italic;
+    color: var(--text-muted);
+  }
+  .bf-panel-desc :global(.bf-desc-callout) {
+    font-size: 0.85rem;
+    font-style: italic;
+    color: var(--accent-sage-dark);
+    background-color: var(--tint-sage);
+    padding: 0.6rem 0.8rem;
+    border-radius: var(--radius-sm);
+  }
   .bf-panel-hint {
     margin-top: 0.8rem;
     font-size: 0.85rem;
@@ -480,10 +979,11 @@ const filters: { key: 'all' | Tier; label: string }[] = [
     const codEl = panel.querySelector<HTMLElement>('[data-bf-panel-cod]');
     const priceEl = panel.querySelector<HTMLElement>('[data-bf-panel-price]');
     const noteEl = panel.querySelector<HTMLElement>('[data-bf-panel-note]');
+    const descEl = panel.querySelector<HTMLElement>('[data-bf-panel-desc]');
     const addEl = panel.querySelector<HTMLButtonElement>('[data-bf-panel-add]');
 
     const openPanel = (btn: HTMLElement) => {
-      const { id, name, cod, price, size, note, image } = btn.dataset;
+      const { id, name, cod, price, size, note, description, image } = btn.dataset;
 
       if (imgEl) {
         if (image) {
@@ -509,6 +1009,10 @@ const filters: { key: 'all' | Tier; label: string }[] = [
       if (noteEl) {
         noteEl.textContent = note ?? '';
         noteEl.hidden = !note;
+      }
+      if (descEl) {
+        descEl.innerHTML = description ?? '';
+        descEl.hidden = !description;
       }
       if (addEl) {
         addEl.dataset.id = id ?? '';
