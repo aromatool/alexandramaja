@@ -1,0 +1,539 @@
+---
+// Pagină ASCUNSĂ — nu e în meniu, nu e în sitemap (vezi astro.config.mjs),
+// noindex. Acces doar prin linkul trimis de Alexandra prin email. Campanie
+// de 3 zile (18-20 nov 2026) — date introduse direct aici, nu în Keystatic,
+// ca să nu construim o colecție CMS întreagă pentru o pagină temporară.
+import BaseLayout from '../layouts/BaseLayout.astro';
+import BlackFridayBag from '../components/BlackFridayBag.astro';
+
+type Tier = '50' | '40' | '30' | '20' | 'bundle' | 'starter' | 'bogo';
+
+interface Offer {
+  id: string;
+  name: string;
+  size?: string;
+  cod: string;
+  price: string;
+  priceOriginal?: string;
+  tier: Tier;
+  image?: string;
+  note?: string;
+}
+
+const img = (slug: string) => `/images/black-friday/${slug}/image.png`;
+
+const offers: Offer[] = [
+  // -50%
+  { id: 'claraderm', name: 'ClaraDerm Spray', size: '60 ml', cod: '36711D', price: '231 lei', tier: '50', image: img('claraderm') },
+  { id: 'forgiveness', name: 'Forgiveness', size: '5 ml', cod: '33287D', price: '210 lei', tier: '50', image: img('forgiveness') },
+  { id: 'light-of-hope', name: 'Light of Hope', size: '5 ml', cod: '36711D', price: '227 lei', tier: '50', image: img('light-of-hope') },
+  { id: 'melissa', name: 'Melissa', size: '5 ml', cod: '32232D', price: '532 lei', tier: '50', image: img('melissa') },
+  { id: 'm-grain', name: 'M-Grain', size: '15 ml', cod: '33144D', price: '177 lei', tier: '50', image: img('m-grain') },
+
+  // -40%
+  { id: 'blue-tansy', name: 'Blue Tansy', size: '5 ml', cod: '33041D', price: '418 lei', priceOriginal: '696 lei', tier: '40', image: img('blue-tansy') },
+  { id: 'garys-light', name: "Gary's Light", cod: '36711D', price: '189 lei', priceOriginal: '315 lei', tier: '40', image: img('garys-light') },
+  { id: 'gentle-baby', name: 'Gentle Baby', cod: '33298D', price: '228 lei', priceOriginal: '380 lei', tier: '40', image: img('gentle-baby') },
+  { id: 'helichrysum', name: 'Helichrysum', size: '5 ml', cod: '33103D', price: '372 lei', priceOriginal: '620 lei', tier: '40', image: img('helichrysum') },
+  { id: 'life-9', name: 'Life 9', size: '30 capsule', cod: '18361D', price: '131 lei', tier: '40', image: img('life-9') },
+  { id: 'present-time', name: 'Present Time', size: '5 ml', cod: '33410D', price: '395 lei', tier: '40', image: img('present-time') },
+  { id: 'rise-above', name: 'Rise Above', size: '5 ml', cod: '53449D', price: '195 lei', tier: '40', image: img('rise-above') },
+  { id: 'sage', name: 'Sage', size: '15 ml', cod: '36543D', price: '135 lei', tier: '40', image: img('sage') },
+
+  // -30%
+  { id: 'believe', name: 'Believe', size: '15 ml', cod: '33287D', price: '221 lei', priceOriginal: '314,47 lei', tier: '30', image: img('believe') },
+  { id: 'comfortone', name: 'ComfortTone', size: '120 capsule', cod: '320408D', price: '173 lei', priceOriginal: '246,91 lei', tier: '30', image: img('comfortone') },
+  { id: 'kidscents-mightypro', name: 'KidScents MightyPro', cod: '30454D', price: '161 lei', tier: '30', image: img('kidscents-mightypro') },
+  { id: 'illumineyes', name: 'IlluminEyes', size: '30 capsule', cod: '36711D', price: '163 lei', tier: '30', image: img('illumineyes') },
+  { id: 'the-essentials-kit', name: 'The Essentials Kit', cod: '51495D', price: '533 lei', tier: '30', image: img('the-essentials-kit') },
+  { id: 'body-butter-cozy-chai', name: 'Body Butter Cozy Chai', size: '62 g', cod: '53629D', price: '134 lei', tier: '30', image: img('body-butter-cozy-chai') },
+  { id: 'thieves', name: 'Thieves', size: '15 ml', cod: '32146D', price: '191 lei', tier: '30', image: img('thieves') },
+
+  // -20%
+  { id: 'one-purpose', name: 'One Purpose', size: '5 ml', cod: '41695D', price: '283 lei', priceOriginal: '353,32 lei', tier: '20', image: img('one-purpose') },
+  { id: 'progressence-phyto-plus', name: 'Progressence Phyto Plus', size: '15 ml', cod: '32157D', price: '242 lei', tier: '20', image: img('progressence-phyto-plus') },
+  { id: 'warm-pumpkin-spice', name: 'Simplified Warm Pumpkin Spice', cod: '53118D', price: '193 lei', tier: '20', image: img('warm-pumpkin-spice') },
+  { id: 'citrus-fresh', name: 'Citrus Fresh', size: '15 ml', cod: '32058D', price: '107 lei', tier: '20', image: img('citrus-fresh') },
+  { id: 'icp', name: 'ICP', size: '227 g', cod: '320808D', price: '160 lei', tier: '20', image: img('icp') },
+  { id: 'ravintsara', name: 'Ravintsara', size: '5 ml', cod: '33331D', price: '185 lei', priceOriginal: '230,36 lei', tier: '20', image: img('ravintsara') },
+  { id: 'balance-complete', name: 'Balance Complete', size: '756 g', cod: '329208D', price: '337 lei', tier: '20', image: img('balance-complete') },
+
+  // Bundle-uri
+  { id: 'bundle-1', name: 'Red Shot + Orange + Peppermint', cod: '53537', price: '144 lei', tier: 'bundle', note: '40% reducere la achiziția împreună', image: img('bundle-1') },
+  { id: 'bundle-2', name: 'Cinnamon Bark + Cardamom + Ginger', cod: '53539', price: '290 lei', tier: 'bundle', note: '40% reducere la achiziția împreună', image: img('bundle-2') },
+  { id: 'bundle-3', name: 'DiGize + V-6', cod: '53527', price: '106 lei', tier: 'bundle', note: 'Cadou inclus: sticluță roll-on cu bilă · 40% reducere la achiziția împreună', image: img('bundle-3') },
+
+  // Starter Kit-uri
+  { id: 'starter-dewdrop', name: 'Set Starter Premium cu Dewdrop', cod: '37648D', price: '886 lei', tier: 'starter', note: '-15%', image: img('starter-dewdrop') },
+  { id: 'starter-macaron', name: 'Set Starter Premium cu Macaron', cod: '47973D', price: '956 lei', tier: 'starter', note: '-10%', image: img('starter-macaron') },
+
+  // 1+1 Gratis — a doua sticluță e deja inclusă ca "FREE" în poza oficială,
+  // nu mai adăugăm reducere separat. 3 combo-uri nu au cod pe grafic (vezi
+  // nota din chat) — rămân fără Cod afișat până le confirmă Alexandra.
+  { id: 'bogo-redu-ritmul', name: 'Redu ritmul', cod: '53511', price: '111 lei', tier: 'bogo', note: 'Lavender 5 ml + Stress Away 5 ml', image: img('bogo-redu-ritmul') },
+  { id: 'bogo-confort-citrice', name: 'Confort cu citrice', cod: '53524', price: '179 lei', tier: 'bogo', note: 'Copaiba 5 ml + Tangerine 15 ml', image: img('bogo-confort-citrice') },
+  { id: 'bogo-tratament-facial', name: 'Tratament facial', cod: '53647', price: '101 lei', tier: 'bogo', note: 'Charcoal Mask + dispozitiv facial', image: img('bogo-tratament-facial') },
+  { id: 'bogo-gata-de-iarna', name: 'Gata de iarnă', cod: '53529', price: '204 lei', tier: 'bogo', note: 'Thieves Vapour Rub + R.C. 5 ml', image: img('bogo-gata-de-iarna') },
+  { id: 'bogo-escapada-verde', name: 'Escapada verde', cod: '53530', price: '240 lei', tier: 'bogo', note: 'Idaho Blue Spruce 5 ml + Idaho Grand Fir 5 ml', image: img('bogo-escapada-verde') },
+  { id: 'bogo-confort-racoritor', name: 'Confort răcoritor', cod: '53510', price: '211 lei', tier: 'bogo', note: 'Blue Relief 5 ml + Wintergreen 15 ml', image: img('bogo-confort-racoritor') },
+  { id: 'bogo-nopti-linistite', name: 'Nopți liniștite', cod: '53513', price: '172 lei', tier: 'bogo', note: 'Peace & Calming II 5 ml + KidScents Dreamease 5 ml', image: img('bogo-nopti-linistite') },
+  { id: 'bogo-perspective-revigorare', name: 'Prespective și revigorare', cod: '53515', price: '101 lei', tier: 'bogo', note: 'Oregano 5 ml + Lemon 5 ml', image: img('bogo-perspective-revigorare') },
+  { id: 'bogo-dus-cu-eucalipt', name: 'Dup cu eucalipt', cod: '53517', price: '124 lei', tier: 'bogo', note: 'Eucalyptus Blue 5 ml + Eucalyptus Radiata 5 ml', image: img('bogo-dus-cu-eucalipt') },
+  { id: 'bogo-armonie-florala', name: 'Armonie florală', cod: '53534', price: '237 lei', tier: 'bogo', note: 'White Angelica 5 ml + Palmarosa 15 ml', image: img('bogo-armonie-florala') },
+  { id: 'bogo-caldura-confort', name: 'Căldură și confort', cod: '53536', price: '146 lei', tier: 'bogo', note: 'Fennel 15 ml + Nutmeg 5 ml', image: img('bogo-caldura-confort') },
+  { id: 'bogo-masaj-endoflex', name: 'Masaj cu EndoFlex', cod: '53526', price: '101 lei', tier: 'bogo', note: 'EndoFlex 5 ml + V-6 58 ml', image: img('bogo-masaj-endoflex') },
+];
+
+const filters: { key: 'all' | Tier; label: string }[] = [
+  { key: 'all', label: `Toate produsele (${offers.length})` },
+  { key: '50', label: `-50% (${offers.filter((o) => o.tier === '50').length})` },
+  { key: '40', label: `-40% (${offers.filter((o) => o.tier === '40').length})` },
+  { key: '30', label: `-30% (${offers.filter((o) => o.tier === '30').length})` },
+  { key: '20', label: `-20% (${offers.filter((o) => o.tier === '20').length})` },
+  { key: 'bundle', label: `Bundle-uri (${offers.filter((o) => o.tier === 'bundle').length})` },
+  { key: 'starter', label: `Starter Kit-uri (${offers.filter((o) => o.tier === 'starter').length})` },
+  { key: 'bogo', label: `1+1 Gratis (${offers.filter((o) => o.tier === 'bogo').length})` },
+];
+---
+
+<BaseLayout title="Oferte Black Friday — Team Maja" noindex>
+  <article class="bf">
+    <h1 class="sr-only">Oferte Black Friday Young Living — reduceri până la 50%</h1>
+    <div class="container mx-auto">
+      <img
+        class="bf-hero-full"
+        src="/images/black-friday/hero-full.png"
+        alt="Oferte Black Friday Young Living, 18-20 noiembrie 2026. Reduceri speciale la produsele tale preferate, bundle-uri avantajoase și cadouri exclusive — reduceri până la 50%. Cadou la 550 PV: valiză YL Oil & Go cu difuzor, ulei Vanilla, The Gift și Cassia. Transport gratuit la primele comenzi de 100 PV+, sau la comenzi de 125 PV+ pentru Brand Partners."
+        loading="eager"
+      />
+    </div>
+
+    <div class="container-narrow mx-auto bf-products-title text-center">
+      <span class="eyebrow">Oferte de 3 zile</span>
+      <h2>Produse în promoție</h2>
+    </div>
+
+    <div class="container-narrow mx-auto bf-filters" data-bf-filters>
+      {
+        filters.map((f, i) => (
+          <button type="button" class="bf-filter" data-filter={f.key} aria-pressed={i === 0 ? 'true' : 'false'}>
+            {f.label}
+          </button>
+        ))
+      }
+    </div>
+
+    <div class="container-narrow mx-auto bf-grid" data-bf-grid>
+      {
+        offers.map((o) => (
+          <article class="bf-card" data-tier={o.tier}>
+            <button
+              type="button"
+              class="bf-card-btn"
+              data-bf-details
+              data-id={o.id}
+              data-name={o.name}
+              data-cod={o.cod}
+              data-price={o.price}
+              data-size={o.size ?? ''}
+              data-note={o.note ?? ''}
+              data-image={o.image ?? ''}
+            >
+              <figure class:list={['bf-media', { 'photo-ph': !o.image }]} data-note={!o.image ? 'Poză produs/bundle' : undefined}>
+                {o.image ? (
+                  <img src={o.image} alt={o.name} loading="lazy" decoding="async" />
+                ) : (
+                  <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <path d="M20 33 V16" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" />
+                    <path d="M20 18 c0-3.6 2-6.4 5-7.4 -0.3 3.6-2 6.4-5 7.4Z" fill="currentColor" fill-opacity="0.2" />
+                    <path d="M20 18 c0-3.6 -2-6.4 -5-7.4 0.3 3.6 2 6.4 5 7.4Z" fill="currentColor" fill-opacity="0.2" />
+                  </svg>
+                )}
+              </figure>
+              <div class="bf-body">
+                <h3 class="bf-name">{o.name}{o.size ? ` (${o.size})` : ''}</h3>
+                {o.note && <p class="bf-note">{o.note}</p>}
+                {o.cod && <p class="bf-cod">Cod: {o.cod}</p>}
+                <div class="bf-price-row">
+                  <span class="price-tag">{o.price}</span>
+                </div>
+                <span class="bf-details-link">Vezi detalii →</span>
+              </div>
+            </button>
+          </article>
+        ))
+      }
+    </div>
+
+    <p class="container-narrow mx-auto bf-footnote">
+      Comenzile pot fi plasate doar pe comandă unică, nu pe puncte. Reducerile
+      la bundle-uri se aplică la achiziția produselor împreună.
+    </p>
+  </article>
+
+  <div class="bf-panel-overlay" data-bf-panel-overlay hidden></div>
+  <aside class="bf-panel" data-bf-panel hidden aria-label="Detalii produs" role="dialog" aria-modal="true">
+    <button type="button" class="bf-panel-close" data-bf-panel-close aria-label="Închide">×</button>
+    <figure class:list={['bf-panel-media']} data-bf-panel-media>
+      <img data-bf-panel-img src="" alt="" />
+    </figure>
+    <h2 class="bf-panel-name" data-bf-panel-name></h2>
+    <p class="bf-panel-cod" data-bf-panel-cod></p>
+    <div class="bf-price-row" data-bf-panel-price></div>
+    <p class="bf-panel-note" data-bf-panel-note></p>
+    <p class="bf-panel-hint">Îl adaugi în lista ta — poți alege oricâte produse și vezi totalul în orice moment.</p>
+    <button type="button" class="bf-add" data-bfbag-add data-bf-panel-add>Adaugă în listă</button>
+  </aside>
+
+  <BlackFridayBag />
+</BaseLayout>
+
+<style>
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .bf-hero-full {
+    display: block;
+    width: 100%;
+  }
+
+  .bf-products-title {
+    margin-top: clamp(3rem, 6vw, 4rem);
+  }
+
+  .bf-filters {
+    margin-top: clamp(2rem, 4vw, 2.5rem);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.6rem;
+  }
+  .bf-filter {
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    padding: 0.5rem 1rem;
+    border-radius: 999px;
+    border: 1.5px solid var(--border-soft);
+    background-color: var(--bg-soft);
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: border-color 0.2s ease, color 0.2s ease, background-color 0.2s ease;
+  }
+  .bf-filter:hover {
+    border-color: var(--accent-terracotta);
+  }
+  .bf-filter[aria-pressed='true'] {
+    background-color: var(--accent-terracotta-deep);
+    border-color: var(--accent-terracotta-deep);
+    color: var(--button-text);
+  }
+
+  .bf-grid {
+    margin-top: clamp(2rem, 4vw, 2.5rem);
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(155px, 1fr));
+    gap: 1rem;
+  }
+  .bf-grid[data-filtering] .bf-card[hidden] {
+    display: none;
+  }
+
+  .bf-card {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+
+  .bf-card-btn {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    font: inherit;
+    text-align: left;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    color: inherit;
+  }
+
+  .bf-media {
+    position: relative;
+    aspect-ratio: 1;
+    background-color: var(--bg-card);
+  }
+  .bf-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+  }
+  .bf-media.photo-ph svg {
+    width: 48px;
+    height: 48px;
+    opacity: 0.5;
+  }
+  .bf-body {
+    padding: 1rem 1.1rem 1.2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+    text-align: center;
+  }
+  .bf-name {
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+    color: var(--text-main);
+    margin: 0;
+    line-height: 1.25;
+  }
+  .bf-note {
+    margin: 0.2rem 0 0;
+    font-size: 0.82rem;
+    color: var(--text-secondary);
+    font-style: italic;
+  }
+  .bf-cod {
+    margin: 0.3rem 0 0;
+    font-size: 0.78rem;
+    color: var(--text-muted);
+  }
+  .bf-price-row {
+    margin-top: 0.6rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+  .bf-card .price-tag,
+  .bf-panel :global(.price-tag) {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 1.75rem;
+    /* roșul de pe bulinele „-40%"/„FREE" din pozele oficiale YL, pentru
+       consecvență cu pozele produselor — nu e în paleta calmă a site-ului. */
+    color: #ab3432;
+    background: none;
+    border: none;
+    box-shadow: none;
+    padding: 0;
+    border-radius: 0;
+  }
+  .bf-card .price-tag::before,
+  .bf-panel :global(.price-tag::before) {
+    content: none;
+  }
+  .bf-add {
+    margin-top: 0.8rem;
+    font-family: var(--font-body);
+    font-size: 0.88rem;
+    padding: 0.55rem 0.9rem;
+    border-radius: var(--radius-sm);
+    border: 1.5px solid var(--accent-terracotta-deep);
+    background: none;
+    color: var(--accent-terracotta-deep);
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+  .bf-add:hover {
+    background-color: var(--accent-terracotta-deep);
+    color: var(--button-text);
+  }
+
+  .bf-details-link {
+    margin-top: 0.7rem;
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--accent-terracotta-deep);
+  }
+
+  .bf-panel-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 70;
+    background-color: rgba(49, 45, 29, 0.28);
+    backdrop-filter: blur(1px);
+  }
+  .bf-panel-overlay[hidden] { display: none; }
+
+  .bf-panel {
+    position: fixed;
+    top: 0;
+    right: 0;
+    z-index: 80;
+    width: min(420px, 92vw);
+    height: 100%;
+    background-color: var(--bg-page);
+    border-left: 1px solid var(--border-soft);
+    box-shadow: -16px 0 44px rgba(49, 45, 29, 0.16);
+    padding: clamp(1.5rem, 4vw, 2.25rem);
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+  }
+  .bf-panel[hidden] { display: none; }
+
+  .bf-panel-close {
+    align-self: flex-end;
+    background: none;
+    border: none;
+    font-size: 1.75rem;
+    line-height: 1;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 0.25rem;
+  }
+  .bf-panel-close:hover { color: var(--text-main); }
+
+  .bf-panel-media {
+    position: relative;
+    aspect-ratio: 1;
+    max-width: 260px;
+    margin: 0 auto 1rem;
+    background-color: var(--bg-card);
+    border-radius: var(--radius-lg);
+  }
+  .bf-panel-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+  }
+  .bf-panel-name {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    color: var(--text-main);
+    margin: 0;
+  }
+  .bf-panel-cod {
+    margin: 0.2rem 0 0;
+    font-size: 0.88rem;
+    color: var(--text-muted);
+  }
+  .bf-panel .bf-price-row {
+    margin-top: 0.8rem;
+  }
+  .bf-panel-note {
+    margin-top: 0.8rem;
+    font-size: 0.92rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+  .bf-panel-hint {
+    margin-top: 0.8rem;
+    font-size: 0.85rem;
+    font-style: italic;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+  .bf-panel .bf-add {
+    margin-top: 1.2rem;
+  }
+
+  .bf-footnote {
+    margin: clamp(2.5rem, 5vw, 3.5rem) auto clamp(3rem, 6vw, 4rem);
+    text-align: center;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    max-width: 52ch;
+  }
+</style>
+
+<script>
+  const filtersWrap = document.querySelector<HTMLElement>('[data-bf-filters]');
+  const grid = document.querySelector<HTMLElement>('[data-bf-grid]');
+  if (filtersWrap && grid) {
+    grid.setAttribute('data-filtering', '');
+    const cards = Array.from(grid.querySelectorAll<HTMLElement>('.bf-card'));
+    filtersWrap.addEventListener('click', (e) => {
+      const btn = (e.target as HTMLElement)?.closest<HTMLButtonElement>('[data-filter]');
+      if (!btn) return;
+      const key = btn.dataset.filter ?? 'all';
+      filtersWrap.querySelectorAll('[data-filter]').forEach((b) => b.setAttribute('aria-pressed', 'false'));
+      btn.setAttribute('aria-pressed', 'true');
+      cards.forEach((card) => {
+        card.hidden = key !== 'all' && card.dataset.tier !== key;
+      });
+    });
+  }
+
+  const panelOverlay = document.querySelector<HTMLElement>('[data-bf-panel-overlay]');
+  const panel = document.querySelector<HTMLElement>('[data-bf-panel]');
+  if (panelOverlay && panel) {
+    const imgEl = panel.querySelector<HTMLImageElement>('[data-bf-panel-img]');
+    const nameEl = panel.querySelector<HTMLElement>('[data-bf-panel-name]');
+    const codEl = panel.querySelector<HTMLElement>('[data-bf-panel-cod]');
+    const priceEl = panel.querySelector<HTMLElement>('[data-bf-panel-price]');
+    const noteEl = panel.querySelector<HTMLElement>('[data-bf-panel-note]');
+    const addEl = panel.querySelector<HTMLButtonElement>('[data-bf-panel-add]');
+
+    const openPanel = (btn: HTMLElement) => {
+      const { id, name, cod, price, size, note, image } = btn.dataset;
+
+      if (imgEl) {
+        if (image) {
+          imgEl.src = image;
+          imgEl.alt = name ?? '';
+          imgEl.hidden = false;
+        } else {
+          imgEl.hidden = true;
+        }
+      }
+      if (nameEl) nameEl.textContent = size ? `${name} (${size})` : name ?? '';
+      if (codEl) {
+        codEl.textContent = cod ? `Cod: ${cod}` : '';
+        codEl.hidden = !cod;
+      }
+      if (priceEl) {
+        priceEl.innerHTML = '';
+        const cur = document.createElement('span');
+        cur.className = 'price-tag';
+        cur.textContent = price ?? '';
+        priceEl.appendChild(cur);
+      }
+      if (noteEl) {
+        noteEl.textContent = note ?? '';
+        noteEl.hidden = !note;
+      }
+      if (addEl) {
+        addEl.dataset.id = id ?? '';
+        addEl.dataset.name = name ?? '';
+        addEl.dataset.cod = cod ?? '';
+        addEl.dataset.price = price ?? '';
+      }
+
+      panelOverlay.hidden = false;
+      panel.hidden = false;
+    };
+
+    const closePanel = () => {
+      panelOverlay.hidden = true;
+      panel.hidden = true;
+    };
+
+    document.addEventListener('click', (e) => {
+      const btn = (e.target as HTMLElement)?.closest<HTMLElement>('[data-bf-details]');
+      if (btn) openPanel(btn);
+    });
+    panel.querySelector('[data-bf-panel-close]')?.addEventListener('click', closePanel);
+    panelOverlay.addEventListener('click', closePanel);
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closePanel();
+    });
+  }
+</script>

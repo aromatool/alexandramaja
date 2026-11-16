@@ -1,0 +1,415 @@
+---
+// Săculețul pentru pagina ascunsă de Black Friday — copie simplificată a
+// AtelierBag (fără livrare, cu codul de produs vizibil, mesaj WhatsApp
+// separat). Pagină temporară, 3 zile — nu merită unificat cu AtelierBag.
+import { WHATSAPP_NUMBER } from '../lib/atelier';
+---
+
+<div class="bfbag-root" data-bfbag-root data-wa={WHATSAPP_NUMBER}>
+  <button type="button" class="bfbag-trigger" data-bfbag-open aria-label="Lista ta" hidden>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M9 9 L9 6 C9 4.2 15 4.2 15 6 L15 9" />
+      <path d="M5 9 L19 9 L19 17.4 L16.4 20.6 L7.6 20.6 L5 17.4 Z" />
+      <path d="M5 11 L19 11" />
+    </svg>
+    <span class="bfbag-count" data-bfbag-count>0</span>
+  </button>
+
+  <div class="bfbag-overlay" data-bfbag-overlay hidden></div>
+  <aside class="bfbag-panel" data-bfbag-panel hidden aria-label="Lista ta" role="dialog" aria-modal="true">
+    <div class="bfbag-head">
+      <span class="bfbag-title">Lista ta</span>
+      <button type="button" class="bfbag-close" data-bfbag-close aria-label="Închide">×</button>
+    </div>
+
+    <p class="bfbag-empty" data-bfbag-empty>Nimic ales încă.</p>
+    <ul class="bfbag-list" data-bfbag-list></ul>
+
+    <div class="bfbag-foot" data-bfbag-foot hidden>
+      <p class="bfbag-total"><span>Cam atât</span><span data-bfbag-total></span></p>
+      <p class="bfbag-hint">
+        Dacă vrei să te ajut cu comanda sau ai alte întrebări, completează mai
+        jos și trimite-mi lista — te ajut cu drag, pas cu pas.
+      </p>
+      <div class="bfbag-field">
+        <label for="bfbag-name">Numele tău</label>
+        <input id="bfbag-name" type="text" data-bfbag-name required autocomplete="name" />
+      </div>
+      <div class="bfbag-field">
+        <label for="bfbag-phone">Numărul de telefon</label>
+        <input id="bfbag-phone" type="tel" data-bfbag-phone required autocomplete="tel" />
+      </div>
+
+      <button type="button" class="bfbag-send" data-bfbag-send>Trimite lista Alexandrei</button>
+      <p class="bfbag-note">
+        Se deschide WhatsApp cu lista deja scrisă, cu coduri cu tot. Îți
+        răspund personal — confirm disponibilitatea și plasez comanda.
+      </p>
+      <p class="bfbag-error" data-bfbag-error hidden>
+        Ceva n-a mers. Mai încearcă o dată sau scrie-mi direct pe WhatsApp.
+      </p>
+    </div>
+  </aside>
+</div>
+
+<style>
+  .bfbag-trigger {
+    position: fixed;
+    right: clamp(1rem, 3vw, 2rem);
+    bottom: clamp(1rem, 3vw, 2rem);
+    z-index: 60;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.7rem 0.95rem;
+    background-color: var(--bg-soft);
+    border: 1.5px solid var(--border-soft);
+    border-radius: 999px;
+    box-shadow: var(--shadow-soft);
+    color: var(--accent-terracotta-deep);
+    cursor: pointer;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+  }
+  .bfbag-trigger[hidden] { display: none; }
+  .bfbag-trigger:hover { transform: translateY(-2px); border-color: var(--accent-terracotta); }
+  .bfbag-trigger svg { width: 26px; height: 26px; }
+  .bfbag-count {
+    min-width: 1.35rem;
+    height: 1.35rem;
+    padding: 0 0.35rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--button-text);
+    background-color: var(--accent-terracotta-deep);
+    border-radius: 999px;
+  }
+
+  .bfbag-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 70;
+    background-color: rgba(49, 45, 29, 0.28);
+    backdrop-filter: blur(1px);
+  }
+  .bfbag-overlay[hidden] { display: none; }
+
+  .bfbag-panel {
+    position: fixed;
+    top: 0;
+    right: 0;
+    z-index: 80;
+    width: min(400px, 92vw);
+    height: 100%;
+    background-color: var(--bg-page);
+    border-left: 1px solid var(--border-soft);
+    box-shadow: -16px 0 44px rgba(49, 45, 29, 0.16);
+    padding: clamp(1.5rem, 4vw, 2.25rem);
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+  }
+  .bfbag-panel[hidden] { display: none; }
+
+  .bfbag-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+  }
+  .bfbag-title { font-family: var(--font-display); font-size: 1.6rem; color: var(--text-main); }
+  .bfbag-close {
+    background: none;
+    border: none;
+    font-size: 1.75rem;
+    line-height: 1;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 0.25rem;
+  }
+  .bfbag-close:hover { color: var(--text-main); }
+
+  .bfbag-empty { color: var(--text-muted); font-style: italic; }
+
+  .bfbag-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; }
+  .bfbag-list :global(.bfbag-item) {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 0.35rem 1rem;
+    padding-block: 1rem;
+    border-top: 1px solid var(--border-soft);
+  }
+  .bfbag-list :global(.bfbag-item:first-child) { border-top: none; }
+  .bfbag-list :global(.bfbag-item-name) { font-family: var(--font-display); font-size: 1.1rem; line-height: 1.25; color: var(--text-main); }
+  .bfbag-list :global(.bfbag-item-cod) { display: block; font-size: 0.78rem; color: var(--text-muted); }
+  .bfbag-list :global(.bfbag-item-price) { color: var(--text-muted); font-size: 0.9rem; white-space: nowrap; }
+  .bfbag-list :global(.bfbag-qty) { display: inline-flex; align-items: center; gap: 0.6rem; grid-column: 1; margin-top: 0.25rem; }
+  .bfbag-list :global(.bfbag-qty button) {
+    width: 1.6rem;
+    height: 1.6rem;
+    border: 1px solid var(--border-soft);
+    background-color: var(--bg-soft);
+    border-radius: 50%;
+    color: var(--accent-terracotta-deep);
+    cursor: pointer;
+    line-height: 1;
+    font-size: 1rem;
+  }
+  .bfbag-list :global(.bfbag-qty button:hover) { border-color: var(--accent-terracotta); }
+  .bfbag-list :global(.bfbag-qty span) { min-width: 1.2rem; text-align: center; font-size: 0.95rem; }
+  .bfbag-list :global(.bfbag-remove) {
+    grid-column: 2;
+    align-self: center;
+    justify-self: end;
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: 0.82rem;
+    cursor: pointer;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .bfbag-list :global(.bfbag-remove:hover) { color: var(--accent-terracotta-deep); }
+
+  .bfbag-foot { margin-top: auto; padding-top: 1.5rem; border-top: 1px solid var(--border-soft); }
+  .bfbag-foot[hidden] { display: none; }
+  .bfbag-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    color: var(--text-main);
+    margin-bottom: 1rem;
+  }
+  .bfbag-hint {
+    font-size: 0.88rem;
+    font-style: italic;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: 1.1rem;
+  }
+  .bfbag-field { margin-bottom: 0.85rem; }
+  .bfbag-field label { display: block; font-size: 0.85rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 0.35rem; }
+  .bfbag-field input {
+    width: 100%;
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    padding: 0.7rem 0.9rem;
+    border-radius: var(--radius);
+    border: 1.5px solid var(--border-soft);
+    background-color: var(--bg-soft);
+    color: var(--text-main);
+  }
+  .bfbag-field input:focus { outline: none; border-color: var(--accent-terracotta); }
+
+  .bfbag-send {
+    display: block;
+    width: 100%;
+    text-align: center;
+    font-family: var(--font-body);
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--button-text);
+    background-color: var(--accent-terracotta-deep);
+    padding: 0.9rem 1.5rem;
+    border: none;
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    cursor: pointer;
+    margin-top: 0.5rem;
+    transition: opacity 0.2s ease;
+  }
+  .bfbag-send:hover { opacity: 0.9; }
+  .bfbag-send:disabled { opacity: 0.7; cursor: default; }
+  .bfbag-note { margin-top: 0.9rem; font-size: 0.82rem; font-style: italic; color: var(--text-muted); line-height: 1.6; }
+  .bfbag-error { margin-top: 0.75rem; font-size: 0.85rem; color: var(--accent-terracotta-deep); text-align: center; }
+</style>
+
+<script>
+  type BagItem = { id: string; name: string; cod: string; price: string; qty: number };
+  const KEY = 'black-friday-lista-v1';
+
+  const root = document.querySelector<HTMLElement>('[data-bfbag-root]');
+  if (root) {
+    const wa = root.dataset.wa ?? '';
+    const trigger = root.querySelector<HTMLElement>('[data-bfbag-open]');
+    const overlay = root.querySelector<HTMLElement>('[data-bfbag-overlay]');
+    const panel = root.querySelector<HTMLElement>('[data-bfbag-panel]');
+    const listEl = root.querySelector<HTMLElement>('[data-bfbag-list]');
+    const emptyEl = root.querySelector<HTMLElement>('[data-bfbag-empty]');
+    const footEl = root.querySelector<HTMLElement>('[data-bfbag-foot]');
+    const totalEl = root.querySelector<HTMLElement>('[data-bfbag-total]');
+    const countEl = root.querySelector<HTMLElement>('[data-bfbag-count]');
+    const sendEl = root.querySelector<HTMLButtonElement>('[data-bfbag-send]');
+    const nameEl = root.querySelector<HTMLInputElement>('[data-bfbag-name]');
+    const phoneEl = root.querySelector<HTMLInputElement>('[data-bfbag-phone]');
+    const errorEl = root.querySelector<HTMLElement>('[data-bfbag-error]');
+
+    const read = (): BagItem[] => {
+      try {
+        const raw = localStorage.getItem(KEY);
+        return raw ? (JSON.parse(raw) as BagItem[]) : [];
+      } catch {
+        return [];
+      }
+    };
+    let items = read();
+
+    const save = () => localStorage.setItem(KEY, JSON.stringify(items));
+    // Prețurile RO folosesc virgula ca separator zecimal (ex: „230,13 lei"),
+    // nu punctul — un parseInt direct ar citi „23013".
+    const priceNum = (p: string) => {
+      const m = (p || '').match(/[\d.,]+/);
+      if (!m) return 0;
+      return parseFloat(m[0].replace(/\./g, '').replace(',', '.')) || 0;
+    };
+
+    const itemLines = () =>
+      items.map((i) => `${i.name}${i.cod ? ' (cod ' + i.cod + ')' : ''}${i.price ? ' — ' + i.price : ''}${i.qty > 1 ? ' ×' + i.qty : ''}`);
+
+    const totalLei = () => Math.round(items.reduce((s, i) => s + priceNum(i.price) * i.qty, 0));
+
+    const buildMessage = (name: string) => {
+      const total = totalLei();
+      const totalLine = total > 0 ? `\n(cam ${total} lei)` : '';
+      const nameLine = name
+        ? `Bună, Alexandra! Sunt ${name}. Aș vrea pentru Black Friday:\n`
+        : `Bună, Alexandra! Aș vrea pentru Black Friday:\n`;
+      return `${nameLine}${itemLines().map((l) => `• ${l}`).join('\n')}${totalLine}\nMai e disponibil?`;
+    };
+
+    const render = () => {
+      const count = items.reduce((s, i) => s + i.qty, 0);
+      if (countEl) countEl.textContent = String(count);
+      if (trigger) trigger.hidden = count === 0;
+
+      if (listEl) listEl.innerHTML = '';
+      if (items.length === 0) {
+        if (emptyEl) emptyEl.hidden = false;
+        if (footEl) footEl.hidden = true;
+      } else {
+        if (emptyEl) emptyEl.hidden = true;
+        if (footEl) footEl.hidden = false;
+        items.forEach((it) => {
+          const li = document.createElement('li');
+          li.className = 'bfbag-item';
+          li.innerHTML =
+            `<span><span class="bfbag-item-name">${it.name}</span>${it.cod ? `<span class="bfbag-item-cod">cod ${it.cod}</span>` : ''}</span>` +
+            `<span class="bfbag-item-price">${it.price || ''}</span>` +
+            `<span class="bfbag-qty">` +
+            `<button type="button" data-dec aria-label="Mai puțin">−</button>` +
+            `<span>${it.qty}</span>` +
+            `<button type="button" data-inc aria-label="Mai mult">+</button>` +
+            `</span>` +
+            `<button type="button" class="bfbag-remove" data-rm>scoate</button>`;
+          li.querySelector('[data-inc]')?.addEventListener('click', () => {
+            it.qty += 1;
+            save();
+            render();
+          });
+          li.querySelector('[data-dec]')?.addEventListener('click', () => {
+            it.qty -= 1;
+            if (it.qty <= 0) items = items.filter((x) => x.id !== it.id);
+            save();
+            render();
+          });
+          li.querySelector('[data-rm]')?.addEventListener('click', () => {
+            items = items.filter((x) => x.id !== it.id);
+            save();
+            render();
+          });
+          listEl?.appendChild(li);
+        });
+
+        const total = totalLei();
+        if (totalEl) totalEl.textContent = total > 0 ? `${total} lei` : '—';
+      }
+    };
+
+    const open = () => {
+      if (overlay) overlay.hidden = false;
+      if (panel) panel.hidden = false;
+    };
+    const close = () => {
+      if (overlay) overlay.hidden = true;
+      if (panel) panel.hidden = true;
+    };
+
+    document.addEventListener('click', (e) => {
+      const btn = (e.target as HTMLElement)?.closest<HTMLElement>('[data-bfbag-add]');
+      if (!btn) return;
+      const id = btn.dataset.id ?? '';
+      if (!id) return;
+      const existing = items.find((x) => x.id === id);
+      if (existing) {
+        existing.qty += 1;
+      } else {
+        items.push({
+          id,
+          name: btn.dataset.name ?? 'Produs',
+          cod: btn.dataset.cod ?? '',
+          price: btn.dataset.price ?? '',
+          qty: 1,
+        });
+      }
+      save();
+      render();
+      open();
+    });
+
+    sendEl?.addEventListener('click', async () => {
+      const name = nameEl?.value.trim() ?? '';
+      const phone = phoneEl?.value.trim() ?? '';
+      if (errorEl) errorEl.hidden = true;
+
+      if (!name || !phone) {
+        if (errorEl) {
+          errorEl.textContent = 'Completează numele și telefonul, ca să pot ține evidența.';
+          errorEl.hidden = false;
+        }
+        return;
+      }
+
+      const waUrl = `https://wa.me/${wa}?text=${encodeURIComponent(buildMessage(name))}`;
+      const originalLabel = sendEl.textContent;
+      sendEl.disabled = true;
+      sendEl.textContent = 'Se trimite…';
+
+      try {
+        await fetch('/api/request', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            source: 'black-friday',
+            fields: {
+              name,
+              phone,
+              items: itemLines().join('; '),
+              total: totalLei() > 0 ? `${totalLei()} lei` : '',
+            },
+          }),
+        });
+      } catch {
+        // ignorăm — lista continuă pe WhatsApp indiferent
+      }
+
+      sendEl.disabled = false;
+      sendEl.textContent = originalLabel;
+      window.location.href = waUrl;
+    });
+
+    trigger?.addEventListener('click', open);
+    root.querySelector('[data-bfbag-close]')?.addEventListener('click', close);
+    overlay?.addEventListener('click', close);
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') close();
+    });
+
+    render();
+  }
+</script>

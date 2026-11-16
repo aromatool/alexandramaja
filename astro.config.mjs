@@ -26,7 +26,9 @@ export default defineConfig({
     react(),
     markdoc(),
     keystatic(),
-    sitemap(),
+    // Paginile ascunse (ex: campanii trimise doar prin email) nu intră în
+    // sitemap — adaugă-le aici pe măsură ce apar.
+    sitemap({ filter: (page) => !page.includes('/oferte-black-friday') }),
   ],
   adapter: cloudflare(),
   vite: import.meta.env.PROD
