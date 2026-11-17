@@ -407,6 +407,12 @@ import { WHATSAPP_NUMBER } from '../lib/atelier';
 
       sendEl.disabled = false;
       sendEl.textContent = originalLabel;
+
+      items = [];
+      save();
+      render();
+      close();
+
       window.location.href = waUrl;
     });
 
