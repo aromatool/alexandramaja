@@ -24,6 +24,7 @@ import { WHATSAPP_NUMBER } from '../lib/atelier';
 
     <p class="bfbag-empty" data-bfbag-empty>Nimic ales încă.</p>
     <ul class="bfbag-list" data-bfbag-list></ul>
+    <button type="button" class="bfbag-clear" data-bfbag-clear hidden>Golește lista</button>
 
     <div class="bfbag-foot" data-bfbag-foot hidden>
       <p class="bfbag-total"><span>Cam atât</span><span data-bfbag-total></span></p>
@@ -179,6 +180,21 @@ import { WHATSAPP_NUMBER } from '../lib/atelier';
   }
   .bfbag-list :global(.bfbag-remove:hover) { color: var(--accent-terracotta-deep); }
 
+  .bfbag-clear {
+    display: block;
+    margin: 0.75rem 0 0 auto;
+    background: none;
+    border: none;
+    font-family: var(--font-body);
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    cursor: pointer;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .bfbag-clear[hidden] { display: none; }
+  .bfbag-clear:hover { color: var(--accent-terracotta-deep); }
+
   .bfbag-foot { margin-top: auto; padding-top: 1.5rem; border-top: 1px solid var(--border-soft); }
   .bfbag-foot[hidden] { display: none; }
   .bfbag-total {
@@ -247,6 +263,7 @@ import { WHATSAPP_NUMBER } from '../lib/atelier';
     const listEl = root.querySelector<HTMLElement>('[data-bfbag-list]');
     const emptyEl = root.querySelector<HTMLElement>('[data-bfbag-empty]');
     const footEl = root.querySelector<HTMLElement>('[data-bfbag-foot]');
+    const clearEl = root.querySelector<HTMLButtonElement>('[data-bfbag-clear]');
     const totalEl = root.querySelector<HTMLElement>('[data-bfbag-total]');
     const countEl = root.querySelector<HTMLElement>('[data-bfbag-count]');
     const sendEl = root.querySelector<HTMLButtonElement>('[data-bfbag-send]');
@@ -297,9 +314,11 @@ import { WHATSAPP_NUMBER } from '../lib/atelier';
       if (items.length === 0) {
         if (emptyEl) emptyEl.hidden = false;
         if (footEl) footEl.hidden = true;
+        if (clearEl) clearEl.hidden = true;
       } else {
         if (emptyEl) emptyEl.hidden = true;
         if (footEl) footEl.hidden = false;
+        if (clearEl) clearEl.hidden = false;
         items.forEach((it) => {
           const li = document.createElement('li');
           li.className = 'bfbag-item';
@@ -414,6 +433,12 @@ import { WHATSAPP_NUMBER } from '../lib/atelier';
       close();
 
       window.location.href = waUrl;
+    });
+
+    clearEl?.addEventListener('click', () => {
+      items = [];
+      save();
+      render();
     });
 
     trigger?.addEventListener('click', open);
