@@ -19,6 +19,7 @@ interface Offer {
   image?: string;
   note?: string;
   description?: string;
+  outOfStock?: boolean;
 }
 
 const img = (slug: string) => `/images/black-friday/${slug}/image.png`;
@@ -116,7 +117,7 @@ const offers: Offer[] = [
 <li>Poate fi integrat în ritualurile de îngrijire după naștere.</li>
 <li>Aroma sa florală încurajează momentele de calm și conectare.</li>
 </ul>` },
-  { id: 'helichrysum', name: 'Helichrysum', size: '5 ml', cod: '33103D', price: '372 lei', priceOriginal: '620 lei', tier: '40', description: `<p class="bf-desc-tag">Regenerare și îngrijirea pielii</p>
+  { id: 'helichrysum', name: 'Helichrysum', size: '5 ml', cod: '33103D', price: '372 lei', priceOriginal: '620 lei', tier: '40', outOfStock: true, description: `<p class="bf-desc-tag">Regenerare și îngrijirea pielii</p>
 <p><strong>Conține:</strong> 100% ulei esențial de Helichrysum italicum, obținut din flori prin distilare cu aburi. Bogat în acetat de neril, gama-curcumen și alfa-pinen.</p>
 <p>Unul dintre cele mai puternice uleiuri pentru vindecarea pielii!</p>
 <p><strong>Beneficii și utilizări:</strong></p>
@@ -204,7 +205,7 @@ const offers: Offer[] = [
 <li>Contribuie la reducerea senzației de disconfort asociate tranzitului lent.</li>
 </ul>
 <p><strong>Administrare:</strong> 1 capsulă de 4 ori pe zi, cu minimum 2 litri de apă zilnic.</p>`, image: img('comfortone') },
-  { id: 'kidscents-mightypro', name: 'KidScents MightyPro', cod: '30454D', price: '161 lei', tier: '30', description: `<p class="bf-desc-tag">Probiotice pentru copii și sănătatea intestinală</p>
+  { id: 'kidscents-mightypro', name: 'KidScents MightyPro', cod: '30454D', price: '161 lei', tier: '30', outOfStock: true, description: `<p class="bf-desc-tag">Probiotice pentru copii și sănătatea intestinală</p>
 <p><strong>Conține:</strong> Peste 8 miliarde de bacterii benefice vii din 6 specii, printre care Lactobacillus acidophilus, L. rhamnosus și Bifidobacterium infantis, alături de prebiotice (fructooligozaharide) și pudră din fructe goji NingXia.</p>
 <p>MightyPro este un supliment cu probiotice și prebiotice, special formulat pentru copiii de peste 2 ani. O floră intestinală echilibrată este esențială pentru digestie și funcționarea normală a sistemului imunitar.</p>
 <p><strong>Beneficii:</strong></p>
@@ -613,7 +614,7 @@ const filters: { key: 'all' | Tier; label: string }[] = [
     <div class="container-narrow mx-auto bf-grid" data-bf-grid>
       {
         offers.map((o) => (
-          <article class="bf-card" data-tier={o.tier}>
+          <article class:list={['bf-card', { 'bf-card-oos': o.outOfStock }]} data-tier={o.tier}>
             <button
               type="button"
               class="bf-card-btn"
@@ -626,7 +627,9 @@ const filters: { key: 'all' | Tier; label: string }[] = [
               data-note={o.note ?? ''}
               data-description={o.description ?? ''}
               data-image={o.image ?? ''}
+              data-out-of-stock={o.outOfStock ? 'true' : 'false'}
             >
+              {o.outOfStock && <span class="bf-oos-ribbon">Stoc epuizat</span>}
               <figure class:list={['bf-media', { 'photo-ph': !o.image }]} data-note={!o.image ? 'Poză produs/bundle' : undefined}>
                 {o.image ? (
                   <img src={o.image} alt={o.name} loading="lazy" decoding="async" />
@@ -737,6 +740,7 @@ const filters: { key: 'all' | Tier; label: string }[] = [
   }
 
   .bf-card {
+    position: relative;
     display: flex;
     flex-direction: column;
     background-color: var(--bg-card);
@@ -758,6 +762,29 @@ const filters: { key: 'all' | Tier; label: string }[] = [
     color: inherit;
   }
 
+  .bf-card-oos .bf-media img,
+  .bf-card-oos .bf-media svg {
+    opacity: 0.45;
+    filter: grayscale(0.4);
+  }
+  .bf-oos-ribbon {
+    position: absolute;
+    top: 14px;
+    left: -34px;
+    z-index: 2;
+    width: 140px;
+    padding: 0.3rem 0;
+    text-align: center;
+    transform: rotate(-40deg);
+    background: var(--accent-terracotta-deep);
+    color: #fff;
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: 0.72rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+  }
   .bf-media {
     position: relative;
     aspect-ratio: 1;
@@ -841,6 +868,17 @@ const filters: { key: 'all' | Tier; label: string }[] = [
   .bf-add:hover {
     background-color: var(--accent-terracotta-deep);
     color: var(--button-text);
+  }
+  .bf-add:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+    border-color: var(--text-muted);
+    color: var(--text-muted);
+    background: none;
+  }
+  .bf-add:disabled:hover {
+    background: none;
+    color: var(--text-muted);
   }
 
   .bf-details-link {
@@ -1001,7 +1039,7 @@ const filters: { key: 'all' | Tier; label: string }[] = [
     const addEl = panel.querySelector<HTMLButtonElement>('[data-bf-panel-add]');
 
     const openPanel = (btn: HTMLElement) => {
-      const { id, name, cod, price, size, note, description, image } = btn.dataset;
+      const { id, name, cod, price, size, note, description, image, outOfStock } = btn.dataset;
 
       if (imgEl) {
         if (image) {
@@ -1037,6 +1075,8 @@ const filters: { key: 'all' | Tier; label: string }[] = [
         addEl.dataset.name = name ?? '';
         addEl.dataset.cod = cod ?? '';
         addEl.dataset.price = price ?? '';
+        addEl.disabled = outOfStock === 'true';
+        addEl.textContent = outOfStock === 'true' ? 'Stoc epuizat' : 'Adaugă în listă';
       }
 
       panelOverlay.hidden = false;
