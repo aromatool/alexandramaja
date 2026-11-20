@@ -144,14 +144,15 @@ const filters: { key: 'all' | Tier; label: string }[] = [
 
 <BaseLayout title="Oferte Cyber Monday — Team Maja" noindex>
   <article class="bf">
+    <h1 class="sr-only">Oferte Cyber Monday Young Living — reduceri până la 50%</h1>
     {CAMPAIGN_OPEN && (
-    <div class="container-narrow mx-auto bf-hero-text text-center">
-      <span class="eyebrow">Cyber Monday 2026</span>
-      <h1>Oferte Cyber Monday Young Living</h1>
-      <p>
-        Reduceri speciale la produsele tale preferate, bundle-uri avantajoase și cadouri exclusive.
-        Oferta se încheie pe <strong>25 noiembrie, ora 21:00</strong>, sau în limita stocurilor.
-      </p>
+    <div class="container mx-auto">
+      <img
+        class="bf-hero-full"
+        src="/images/cyber-monday/hero-full.png"
+        alt="Oferte Cyber Monday Young Living, 23-25 noiembrie 2026. Reduceri speciale la produsele tale preferate, bundle-uri avantajoase și cadouri exclusive — reduceri până la 50%. Cadou la 550 PV: Difuzor Aria, Aromatizator Knitted Ceramic, ulei Vanilla, The Gift și Cassia. Transport gratuit la primele comenzi de 100 PV+, sau la comenzi de 125 PV+ pentru Brand Partners."
+        loading="eager"
+      />
     </div>
     )}
 
@@ -271,24 +272,6 @@ const filters: { key: 'all' | Tier; label: string }[] = [
   .bf-hero-full {
     display: block;
     width: 100%;
-  }
-
-  .bf-hero-text {
-    margin-top: clamp(2.5rem, 6vw, 4rem);
-  }
-  .bf-hero-text h1 {
-    margin: 0.5rem 0 1rem;
-    font-family: var(--font-display);
-    font-style: italic;
-    font-size: clamp(2rem, 5vw, 2.8rem);
-    color: var(--accent-terracotta-deep);
-  }
-  .bf-hero-text p {
-    max-width: 52ch;
-    margin: 0 auto;
-    font-size: 1.05rem;
-    line-height: 1.7;
-    color: var(--text-secondary);
   }
 
   .bf-products-title {
