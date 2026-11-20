@@ -572,6 +572,11 @@ const offers: Offer[] = [
 <p><strong>Utilizare:</strong> Diluează EndoFlex în V-6 și masează delicat tălpile, gâtul, abdomenul inferior și zona suprarenalelor.</p>` },
 ];
 
+// Campania de Black Friday s-a încheiat (18-20 nov 2026). Pagina rămâne
+// pregătită pentru Cyber Monday — același mecanism, alte produse: pune
+// CAMPAIGN_OPEN pe true și actualizează offers[] cu noile oferte.
+const CAMPAIGN_OPEN = false;
+
 const filters: { key: 'all' | Tier; label: string }[] = [
   { key: 'all', label: `Toate produsele (${offers.length})` },
   { key: '50', label: `-50% (${offers.filter((o) => o.tier === '50').length})` },
@@ -587,6 +592,7 @@ const filters: { key: 'all' | Tier; label: string }[] = [
 <BaseLayout title="Oferte Black Friday — Team Maja" noindex>
   <article class="bf">
     <h1 class="sr-only">Oferte Black Friday Young Living — reduceri până la 50%</h1>
+    {CAMPAIGN_OPEN && (
     <div class="container mx-auto">
       <img
         class="bf-hero-full"
@@ -595,7 +601,21 @@ const filters: { key: 'all' | Tier; label: string }[] = [
         loading="eager"
       />
     </div>
+    )}
 
+    {!CAMPAIGN_OPEN && (
+      <div class="container-narrow mx-auto bf-closed">
+        <span class="eyebrow">Black Friday s-a încheiat</span>
+        <h2>Mulțumim pentru comenzi!</h2>
+        <p>
+          Oferta de Black Friday s-a încheiat — nu se mai pot plasa comenzi pe această pagină.
+          Urmează însă <strong>Cyber Monday</strong>, cu reduceri noi la alte produse. Revino aici
+          în curând sau urmărește-mă pentru anunț.
+        </p>
+      </div>
+    )}
+
+    {CAMPAIGN_OPEN && (<>
     <div class="container-narrow mx-auto bf-products-title text-center">
       <span class="eyebrow">Oferte de 3 zile</span>
       <h2>Produse în promoție</h2>
@@ -660,8 +680,10 @@ const filters: { key: 'all' | Tier; label: string }[] = [
       Comenzile pot fi plasate doar pe comandă unică, nu pe puncte. Reducerile
       la bundle-uri se aplică la achiziția produselor împreună.
     </p>
+    </>)}
   </article>
 
+  {CAMPAIGN_OPEN && (<>
   <div class="bf-panel-overlay" data-bf-panel-overlay hidden></div>
   <aside class="bf-panel" data-bf-panel hidden aria-label="Detalii produs" role="dialog" aria-modal="true">
     <button type="button" class="bf-panel-close" data-bf-panel-close aria-label="Închide">×</button>
@@ -678,6 +700,7 @@ const filters: { key: 'all' | Tier; label: string }[] = [
   </aside>
 
   <BlackFridayBag />
+  </>)}
 </BaseLayout>
 
 <style>
@@ -700,6 +723,25 @@ const filters: { key: 'all' | Tier; label: string }[] = [
 
   .bf-products-title {
     margin-top: clamp(3rem, 6vw, 4rem);
+  }
+
+  .bf-closed {
+    margin-top: clamp(4rem, 10vw, 7rem);
+    margin-bottom: clamp(4rem, 10vw, 7rem);
+    text-align: center;
+  }
+  .bf-closed h2 {
+    margin: 0.5rem 0 1.2rem;
+    font-family: var(--font-display);
+    font-size: clamp(1.8rem, 3.5vw, 2.4rem);
+    color: var(--text-main);
+  }
+  .bf-closed p {
+    max-width: 46ch;
+    margin: 0 auto;
+    font-size: 1rem;
+    line-height: 1.7;
+    color: var(--text-secondary);
   }
 
   .bf-filters {
