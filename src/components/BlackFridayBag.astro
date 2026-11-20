@@ -300,8 +300,8 @@ import { WHATSAPP_NUMBER } from '../lib/atelier';
       const total = totalLei();
       const totalLine = total > 0 ? `\n(cam ${total} lei)` : '';
       const nameLine = name
-        ? `Bună, Alexandra! Sunt ${name}. Aș vrea să mă ajuți cu informații despre produsele de mai jos, de Black Friday:\n`
-        : `Bună, Alexandra! Aș vrea să mă ajuți cu informații despre produsele de mai jos, de Black Friday:\n`;
+        ? `Bună, Alexandra! Sunt ${name}. Aș vrea să mă ajuți cu informații despre produsele de mai jos:\n`
+        : `Bună, Alexandra! Aș vrea să mă ajuți cu informații despre produsele de mai jos:\n`;
       return `${nameLine}${itemLines().map((l) => `• ${l}`).join('\n')}${totalLine}`;
     };
 
